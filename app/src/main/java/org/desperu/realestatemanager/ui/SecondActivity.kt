@@ -1,7 +1,8 @@
-package org.desperu.realestatemanager
+package org.desperu.realestatemanager.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import org.desperu.realestatemanager.R
 
 class SecondActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager
+package org.desperu.realestatemanager.utils
 
 import android.content.Context
 import android.net.wifi.WifiManager

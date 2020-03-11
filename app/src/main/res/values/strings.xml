@@ -1,3 +1,17 @@
 <resources>
+
+    <!-- ACTIVITY AND FRAGMENT NAME -->
     <string name="app_name">Real Estate Manager</string>
+
+    <!-- MENU -->
+    <!-- Nav Drawer -->
+    <string name="navigation_drawer_your_lunch">YOUR LUNCH</string>
+    <string name="navigation_drawer_settings">SETTINGS</string>
+    <string name="navigation_drawer_log_out">LOGOUT</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- Menu Search -->
+    <string name="menu_item_search">Search</string>
+    <string name="activity_main_search_edit_text_hint">Search estate</string>
+
 </resources>

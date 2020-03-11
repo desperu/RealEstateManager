@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+
+        android:theme="@style/ToolbarTheme"
+        app:titleTextColor="@android:color/white" />
+
+<!--    TODO use standard visualisation ??-->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/toolbar_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_search_view_height"
+        android:background="@android:color/white"
+        android:layout_margin="@dimen/toolbar_search_view_margin"
+        android:visibility="gone"
+        app:queryHint="@string/activity_main_search_edit_text_hint"/>
+
+</RelativeLayout>

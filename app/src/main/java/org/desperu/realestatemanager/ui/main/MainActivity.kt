@@ -1,8 +1,10 @@
-package org.desperu.realestatemanager
+package org.desperu.realestatemanager.ui.main
 
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import org.desperu.realestatemanager.R
+import org.desperu.realestatemanager.utils.Utils
 
 class MainActivity : AppCompatActivity() {
 

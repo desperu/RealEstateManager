@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Support standard layout value -->
+    <item name="match_parent" format="integer" type="dimen">-1</item>
+    <item name="wrap_content" format="integer" type="dimen">-2</item>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="default_large_margin">20dip</dimen>
+    <dimen name="default_margin">10dip</dimen>
+    <dimen name="default_title_size">20sp</dimen>
+    <dimen name="default_text_size">14sp</dimen>
+    <dimen name="default_text_size_mini">10sp</dimen>
+
+    <!-- MENU -->
+
+    <!-- Toolbar -->
+    <dimen name="toolbar_search_view_height">36dp</dimen>
+    <dimen name="toolbar_search_view_margin">10dp</dimen>
+
+</resources>
