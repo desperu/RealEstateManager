@@ -18,6 +18,6 @@ data class Estate(@PrimaryKey(autoGenerate = true)
                   var address: String, // Create other table ??
                   var interestPlaces: String, // Create other table ??
                   var state: Int, // 0 to sale, 1 sold
-                  var saleDate: Date,
-                  var soldDate: Date,
+                  var saleDate: String, // Convert function Date to String and String to Date
+                  var soldDate: String,
                   var realtor: String)
