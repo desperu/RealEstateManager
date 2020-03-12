@@ -3,13 +3,13 @@ package org.desperu.realestatemanager.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.desperu.realestatemanager.base.BaseViewModel
-import org.desperu.realestatemanager.database.dao.EstateDao
-import org.desperu.realestatemanager.database.dao.ImageDao
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
+import org.desperu.realestatemanager.repositories.EstateDataRepository
+import org.desperu.realestatemanager.repositories.ImageDataRepository
 
-class EstateViewModel(private val estateDao: EstateDao,
-                      private val imageDao: ImageDao,
+class EstateViewModel(private val estateDataRepository: EstateDataRepository,
+                      private val imageDataRepository: ImageDataRepository,
                       private val estateId: Long): BaseViewModel() {
 
     // FOR DATA
@@ -17,8 +17,8 @@ class EstateViewModel(private val estateDao: EstateDao,
     private val images = MutableLiveData<List<Image>>()
 
     init {
-        estate.value = estateDao.getEstate(estateId).value
-        images.value = imageDao.getImages(estateId).value
+        estate.value = estateDataRepository.getEstate(estateId).value
+        images.value = imageDataRepository.getImages(estateId).value
     }
 
     // -------------
@@ -30,14 +30,14 @@ class EstateViewModel(private val estateDao: EstateDao,
     var getImages: LiveData<List<Image>> = images
 
     fun insertEstate(estate: Estate) {
-        estateDao.insertEstate(estate)
+        estateDataRepository.createEstate(estate)
     }
 
     fun updateEstate(estate: Estate) {
-        estateDao.insertEstate(estate)
+        estateDataRepository.updateEstate(estate)
     }
 
     fun deleteEstate(estateId: Long) {
-        estateDao.deleteEstate(estateId)
+        estateDataRepository.deleteEstate(estateId)
     }
 }

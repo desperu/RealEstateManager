@@ -10,6 +10,9 @@ import org.desperu.realestatemanager.model.Image
 @Dao
 interface ImageDao {
 
+    @Query("SELECT * FROM Image WHERE id = :imageId")
+    fun getImage(imageId: Long): LiveData<Image>
+
     @Query("SELECT * FROM Image WHERE estateId = :estateId")
     fun getImages(estateId: Long): LiveData<List<Image>>
 

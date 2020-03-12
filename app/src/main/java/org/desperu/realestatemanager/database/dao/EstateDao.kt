@@ -11,7 +11,7 @@ interface EstateDao {
     fun getEstate(estateId: Long): LiveData<Estate>
 
     @get:Query("SELECT * FROM Estate")
-    val getAll: List<Estate>
+    val getAll: LiveData<List<Estate>>
 
     @Insert
     fun insertEstate(estate: Estate)
