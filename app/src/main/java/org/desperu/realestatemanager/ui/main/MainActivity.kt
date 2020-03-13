@@ -1,33 +1,324 @@
 package org.desperu.realestatemanager.ui.main
 
-import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import android.os.Build
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
+import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.utils.Utils
+import org.desperu.realestatemanager.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
 
-    private var textViewMain: TextView? = null
-    private var textViewQuantity: TextView? = null
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        textViewMain = findViewById(R.id.activity_main_activity_text_view_main)
-        textViewQuantity = findViewById(R.id.activity_main_activity_text_view_quantity)
-        configureTextViewMain()
-        configureTextViewQuantity()
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    // FOR DATA
+//    private val estateListFragment: EstateListFragment
+
+    // --------------
+    // BASE METHODS
+    // --------------
+
+    override fun getActivityLayout(): Int = R.layout.activity_main
+
+    override fun configureDesign() {
+        configureToolBar()
+        configureDrawerLayout()
+        configureNavigationView()
     }
 
-    private fun configureTextViewMain() {
-        textViewMain!!.textSize = 15f
-        textViewMain!!.text = "Le premier bien immobilier enregistré vaut "
+    // -----------------
+    // CONFIGURATION
+    // -----------------
+    /**
+     * Configure Drawer layout.
+     */
+    private fun configureDrawerLayout() {
+        val toggle = ActionBarDrawerToggle(this, activity_main_drawer_layout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        activity_main_drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
     }
 
-    private fun configureTextViewQuantity() {
-        val quantity = Utils.convertDollarToEuro(100)
-        textViewQuantity!!.textSize = 20f
-        textViewQuantity!!.text = quantity.toString()
+    /**
+     * Configure Navigation Drawer.
+     */
+    private fun configureNavigationView() {
+        // Support status bar for KitKat.
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
+            activity_main_nav_view.setPadding(0, 0, 0, 0)
+        activity_main_nav_view.setNavigationItemSelectedListener(this)
+    }
+
+//    /**
+//     * Configure and show corresponding fragment.
+//     * @param fragmentKey Key for fragment.
+//     */
+//    private fun configureAndShowFragment(fragmentKey: Int) {
+//        var titleActivity = getString(R.string.title_activity_main)
+//        val bundle = Bundle()
+//        fragment = supportFragmentManager
+//                .findFragmentById(R.id.activity_main_frame_layout)
+//        if (currentFragment !== fragmentKey) {
+//            when (fragmentKey) {
+//                MAP_FRAGMENT -> {
+//                    fragment = MapsFragment.newInstance()
+//                    bundle.putStringArrayList(PLACE_ID_LIST_MAPS, placeIdList)
+//                    if (this.bounds != null) bundle.putParcelable(CAMERA_POSITION, cameraPosition)
+//                    if (this.queryTerm != null && !this.queryTerm.isEmpty()) bundle.putString(QUERY_TERM_MAPS, queryTerm)
+//                    bundle.putBoolean(MapsFragment.IS_QUERY_FOR_RESTAURANT_MAPS, isQueryForRestaurant)
+//                    fragment.setArguments(bundle)
+//                }
+//                LIST_FRAGMENT -> {
+//                    fragment = RestaurantListFragment.newInstance()
+//                    bundle.putStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST, placeIdList)
+//                    bundle.putParcelable(BOUNDS, bounds)
+//                    if (this.queryTerm != null && !this.queryTerm.isEmpty()) bundle.putString(QUERY_TERM_LIST, queryTerm)
+//                    bundle.putBoolean(IS_QUERY_FOR_RESTAURANT_LIST, isQueryForRestaurant)
+//                    bundle.putParcelable(NEARBY_BOUNDS, nearbyBounds)
+//                    bundle.putParcelable(USER_LOCATION, userLocation)
+//                    fragment.setArguments(bundle)
+//                }
+//                WORKMATES_FRAGMENT -> {
+//                    fragment = WorkmatesFragment.newInstance()
+//                    if (this.queryTerm != null && !this.queryTerm.isEmpty()) bundle.putString(QUERY_TERM_WORKMATES, queryTerm)
+//                    fragment.setArguments(bundle)
+//                    titleActivity = getString(R.string.title_fragment_workmates)
+//                }
+//                CHAT_FRAGMENT -> {
+//                    fragment = ChatFragment.newInstance()
+//                    this.hideSearchViewIfVisible()
+//                    titleActivity = getString(R.string.title_fragment_chat)
+//                }
+//            }
+//            supportFragmentManager.beginTransaction()
+//                    .replace(R.id.activity_main_frame_layout, fragment)
+//                    .commit()
+//            this.setTitleActivity(titleActivity)
+//            if (toolbar.findViewById(R.id.activity_main_menu_search) != null) toolbar.findViewById(R.id.activity_main_menu_search).setVisibility(
+//                    if (fragmentKey != CHAT_FRAGMENT) View.VISIBLE else View.GONE)
+//        }
+//        currentFragment = fragmentKey
+//    }
+
+//    /**
+//     * Configure data binding for Navigation View Header with user info.
+//     */
+//    private fun configureDataBindingForHeader() {
+//        // Enable Data binding for user info
+//        if (activityMainNavHeaderBinding == null) {
+//            val headerView: View = navigationView!!.getHeaderView(0)
+//            activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView)
+//        }
+//        userAuthViewModel = UserAuthViewModel()
+//        activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel)
+//    }
+
+    // --------------
+    // FRAGMENT
+    // --------------
+
+//    private fun configureAndShowMainFragment() {
+//        mainFragment = supportFragmentManager.findFragmentById(R.id.frame_layout_main) as MainFragment?
+//        if (mainFragment == null && findViewById<View?>(R.id.frame_layout_main) != null) {
+//            mainFragment = MainFragment()
+//            supportFragmentManager.beginTransaction()
+//                    .add(R.id.frame_layout_main, mainFragment)
+//                    .commit()
+//        }
+//    }
+//
+//    private fun configureAndShowDetailFragment() {
+//        detailFragment = supportFragmentManager.findFragmentById(R.id.frame_layout_detail) as DetailFragment?
+//        if (detailFragment == null && findViewById<View?>(R.id.frame_layout_detail) != null) {
+//            detailFragment = DetailFragment()
+//            supportFragmentManager.beginTransaction()
+//                    .add(R.id.frame_layout_detail, detailFragment)
+//                    .commit()
+//        }
+//    }
+
+    // -----------------
+    // METHODS OVERRIDE
+    // -----------------
+
+    override fun onResume() {
+        super.onResume()
+//        if (this.isCurrentUserLogged()) {
+//            configureAndShowFragment(if (this.currentFragment >= 0) currentFragment else MAP_FRAGMENT)
+//            configureDataBindingForHeader()
+//            this.loadOrCreateUserInFirestore()
+//            enableNotifications()
+//            this.manageResetBookedRestaurant()
+//        } else this.startSignInActivity()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // Handle SignIn Activity response on activity result.
+//        this.handleResponseAfterSignIn(requestCode, resultCode, data)
+    }
+
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.activity_main_menu_drawer_estate_list -> this.showRestaurantDetailActivity("id")
+            R.id.activity_main_menu_drawer_estate_map -> this.showSettingsActivity()
+            R.id.activity_main_menu_drawer_estate_new -> this.showToast("New Estate")
+//            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
+//            R.id.activity_main_menu_bottom_list -> configureAndShowFragment(LIST_FRAGMENT)
+//            R.id.activity_main_menu_bottom_workmates -> configureAndShowFragment(WORKMATES_FRAGMENT)
+//            R.id.activity_main_menu_bottom_chat -> configureAndShowFragment(CHAT_FRAGMENT)
+            else -> {
+            }
+        }
+        activity_main_drawer_layout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START)) activity_main_drawer_layout.closeDrawer(GravityCompat.START)
+        else if (toolbar_search_view != null && toolbar_search_view.isShown) {
+            this.hideSearchViewIfVisible()
+        } else super.onBackPressed()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main_menu, menu)
+        toolbar_search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+//                onSearchTextChange(query)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+//                onSearchTextChange(s)
+                return false
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.activity_main_menu_add -> return true
+            R.id.activity_main_menu_update -> {
+                return true
+            }
+            R.id.activity_main_menu_search -> {
+                toolbar_search_view.visibility = View.VISIBLE
+                toolbar_search_view.onActionViewExpanded()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    // --------------------
+    // ACTION
+    // --------------------
+
+//    fun onClickedMarker(id: String) { showRestaurantDetailActivity(id) }
+//
+//    fun onNewQuerySearch(isQueryForRestaurant: Boolean) { isQueryForRestaurant = isQueryForRestaurant }
+//
+//    fun saveNearbyBounds(nearbyBounds: RectangularBounds) { nearbyBounds = nearbyBounds }
+//
+//    fun onNewUserLocation(userLocation: Location) { userLocation = userLocation }
+//
+//    fun onNewPlacesIdList(placeIdList: ArrayList<String?>) { placeIdList = placeIdList }
+//
+//    fun onNewBounds(bounds: RectangularBounds) { bounds = bounds }
+//
+//    fun onNewCameraPosition(cameraPosition: CameraPosition) { cameraPosition = cameraPosition }
+//
+//    fun onItemClick(restaurantId: String) { showRestaurantDetailActivity(restaurantId) }
+//
+//    /**
+//     * Manage click on Your Lunch button.
+//     */
+//    private fun onClickYourLunch() {
+//        if (userDBViewModel.getUser().get() != null
+//                && Objects.requireNonNull(userDBViewModel.getUser().get()).getBookedRestaurantId() != null)
+//            showRestaurantDetailActivity(Objects.requireNonNull(userDBViewModel.getUser().get()).getBookedRestaurantId())
+//        else Snackbar.make(drawerLayout, R.string.activity_main_message_no_booked_restaurant, Snackbar.LENGTH_SHORT).show()
+//    }
+//
+//    /**
+//     * Fetch restaurant on search text change, and send query term to corresponding fragment.
+//     * @param query Query term to search.
+//     */
+//    private fun onSearchTextChange(query: String) {
+//        this.queryTerm = query
+//        when (fragment) {
+//            is MapsFragment -> { isQueryForRestaurant = true
+//                val mapsFragment: MapsFragment = this.fragment as MapsFragment
+//                mapsFragment.onSearchQueryTextChange(query)
+//            }
+//            fragment.getClass() === RestaurantListFragment::class.java -> {
+//                isQueryForRestaurant = true
+//                val restaurantListFragment: RestaurantListFragment = this.fragment as RestaurantListFragment
+//                restaurantListFragment.onSearchQueryTextChange(query)
+//            }
+//            fragment.getClass() === WorkmatesFragment::class.java -> {
+//                isQueryForRestaurant = false
+//                val workmatesFragment: WorkmatesFragment = this.fragment as WorkmatesFragment
+//                workmatesFragment.onSearchQueryTextChange(query)
+//            }
+//        }
+//    }
+
+    // -----------------
+    // ACTIVITY
+    // -----------------
+
+    /**
+     * Start restaurant detail activity.
+     * @param id Place id.
+     */
+    private fun showRestaurantDetailActivity(id: String) {
+//        startActivity(Intent(this, RestaurantDetailActivity::class.java).putExtra(RestaurantDetailActivity.RESTAURANT_ID, id))
+    }
+
+    /**
+     * Start settings activity.
+     */
+    private fun showSettingsActivity() {
+//        startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
+    // -----------------
+    // UI
+    // -----------------
+
+    /**
+     * Set title activity name.
+     * @param titleActivity Fragment title.
+     */
+    private fun setTitleActivity(titleActivity: String) {
+        this.title = titleActivity
+    }
+
+    /**
+     * Hide search view if visible, and clear query.
+     */
+    private fun hideSearchViewIfVisible() {
+        if (toolbar_search_view != null && toolbar_search_view.isShown) {
+            toolbar_search_view.visibility = View.GONE
+            toolbar_search_view.setQuery(null, true)
+        }
+    }
+
+    /**
+     * Show Toast with corresponding message.
+     * @param message Message to show.
+     */
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

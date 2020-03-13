@@ -12,7 +12,15 @@
     <dimen name="default_text_size">14sp</dimen>
     <dimen name="default_text_size_mini">10sp</dimen>
 
+    <!-- LAYOUTS -->
+
+    <!-- Main Activity -->
+    <dimen name="nav_view_padding_top">24dp</dimen>
+
     <!-- MENU -->
+
+    <!-- Menu Drawer -->
+    <dimen name="nav_header_height">220dp</dimen>
 
     <!-- Toolbar -->
     <dimen name="toolbar_search_view_height">36dp</dimen>

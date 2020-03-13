@@ -22,10 +22,6 @@ android {
     dataBinding {
         enabled = true
     }
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
 }
 
 dependencies {
@@ -57,11 +53,6 @@ dependencies {
 
     //EASY PERMISSIONS
     implementation 'pub.devrel:easypermissions:1.1.1'
-
-    //BUTTER KNIFE
-    //noinspection AnnotationProcessorOnCompilePath
-    implementation "com.jakewharton:butterknife:$butterknife_version"
-    kapt "com.jakewharton:butterknife-compiler:$butterknife_version"
 
     // Ice Pick
     implementation "frankiesardo:icepick:$icepick_version"

@@ -2,10 +2,8 @@ package org.desperu.realestatemanager.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import butterknife.ButterKnife
 import icepick.Icepick
-import org.desperu.realestatemanager.R
+import kotlinx.android.synthetic.main.toolbar.*
 
 
 abstract class BaseActivity: AppCompatActivity() {
@@ -25,7 +23,6 @@ abstract class BaseActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.setContentView(getActivityLayout())
         Icepick.restoreInstanceState(this, savedInstanceState)
-        ButterKnife.bind(this) //Configure ButterKnife
         configureDesign()
     }
 
@@ -39,7 +36,6 @@ abstract class BaseActivity: AppCompatActivity() {
     // --------------------
 
     protected open fun configureToolBar() {
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
     }
 
