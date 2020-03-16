@@ -3,6 +3,10 @@
     <!-- ACTIVITY AND FRAGMENT NAME -->
     <string name="app_name">Real Estate Manager</string>
 
+    <!-- LAYOUTS -->
+    <!-- Fragment Estate Item -->
+    <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate !</string>
+
     <!-- MENU -->
     <!-- Nav Drawer -->
     <string name="navigation_drawer_estate_list">Estate List</string>

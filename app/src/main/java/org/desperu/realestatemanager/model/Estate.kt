@@ -1,8 +1,8 @@
 package org.desperu.realestatemanager.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import java.util.*
 
 /**
  * Class witch provides a model for estate
@@ -20,4 +20,6 @@ data class Estate(@PrimaryKey(autoGenerate = true)
                   var state: Int, // 0 to sale, 1 sold
                   var saleDate: String, // Convert function Date to String and String to Date
                   var soldDate: String,
-                  var realtor: String)
+                  var realEstateAgent: String) {
+    @Ignore lateinit var images: List<Image>
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.desperu.realestatemanager.ui.EstateViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/fragment_estate_list_item_image"
+            android:layout_width="@dimen/fragment_estate_list_item_image_width_height"
+            android:layout_height="@dimen/fragment_estate_list_item_image_width_height"
+            android:contentDescription="@null"
+            app:image="@{viewModel.primaryImage}"/>
+<!--            app:srcCompat="@{viewModel.getImages.get(1)}" />-->
+
+        <LinearLayout
+            android:id="@+id/fragment_estate_list_item_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/fragment_estate_list_item_linear_padding" >
+
+            <TextView
+                android:id="@+id/fragment_estate_list_item_text_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/fragment_estate_list_item_text_type_size"
+                android:textStyle="bold"
+                android:text="@{viewModel.estate.type}" />
+
+            <TextView
+                android:id="@+id/fragment_estate_list_item_text_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fragment_estate_list_item_text_location_margin_top_and_bottom"
+                android:layout_marginBottom="@dimen/fragment_estate_list_item_text_location_margin_top_and_bottom"
+                android:textColor="@color/colorLightGrey"
+                android:textSize="@dimen/fragment_estate_list_item_text_location_size"
+                android:text="@{viewModel.estate.address}" />
+
+            <TextView
+                android:id="@+id/fragment_estate_list_item_text_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPink"
+                android:textSize="@dimen/fragment_estate_list_item_text_price_size"
+                android:text="@{viewModel.estate.price}" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

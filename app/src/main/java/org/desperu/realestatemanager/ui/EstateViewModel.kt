@@ -1,43 +1,56 @@
 package org.desperu.realestatemanager.ui
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.desperu.realestatemanager.base.BaseViewModel
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.repositories.EstateDataRepository
-import org.desperu.realestatemanager.repositories.ImageDataRepository
 
-class EstateViewModel(private val estateDataRepository: EstateDataRepository,
-                      private val imageDataRepository: ImageDataRepository,
-                      private val estateId: Long): BaseViewModel() {
+class EstateViewModel(estate: Estate): BaseViewModel() {
 
     // FOR DATA
-    private val estate = MutableLiveData<Estate>()
-    private val images = MutableLiveData<List<Image>>()
+    val estate = MutableLiveData<Estate>()
+    val images = MutableLiveData<List<Image>>()
+    val primaryImage = MutableLiveData<Image>()
 
     init {
-        estate.value = estateDataRepository.getEstate(estateId).value
-        images.value = imageDataRepository.getImages(estateId).value
+        setEstate(estate)
+    }
+
+    fun bind(estate: Estate) {
+        this.estate.value = estate
+        this.images.value = estate.images
+        this.primaryImage.value = images.value!![0] // TODO use boolean master photo
     }
 
     // -------------
-    // FOR ESTATE
+    // SET ESTATE
     // -------------
 
-    var getEstate: LiveData<Estate> = estate
-
-    var getImages: LiveData<List<Image>> = images
-
-    fun insertEstate(estate: Estate) {
-        estateDataRepository.createEstate(estate)
+    private fun setEstate(estate: Estate) {
+        this.estate.value = estate
+        this.images.value = estate.images
+        this.primaryImage.value = images.value!![0] // TODO use boolean master photo
     }
 
-    fun updateEstate(estate: Estate) {
-        estateDataRepository.updateEstate(estate)
-    }
+    // --- GETTERS ---
 
-    fun deleteEstate(estateId: Long) {
-        estateDataRepository.deleteEstate(estateId)
-    }
+//    val getEstate: LiveData<Estate> = this.estate // TODO getter or public field?
+
+//    val getImages: LiveData<List<Image>> = images
+
+//    val getPrimaryImage: LiveData<Image> = primaryImage
+
+    // --- MANAGE ---
+
+//    fun insertEstate(estate: Estate) {
+//        estateDataRepository.createEstate(estate)
+//    }
+//
+//    fun updateEstate(estate: Estate) {
+//        estateDataRepository.updateEstate(estate)
+//    }
+//
+//    fun deleteEstate(estateId: Long) {
+//        estateDataRepository.deleteEstate(estateId)
+//    }
 }

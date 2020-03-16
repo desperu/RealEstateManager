@@ -6,20 +6,22 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 
-
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     // FOR DATA
-//    private val estateListFragment: EstateListFragment
+    private var estateListFragment: EstateListFragment? = EstateListFragment()
+    private var fragment: Fragment? = Fragment()
 
     // --------------
     // BASE METHODS
@@ -31,6 +33,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         configureToolBar()
         configureDrawerLayout()
         configureNavigationView()
+        configureAndShowEstateListFragment()
     }
 
     // -----------------
@@ -134,12 +137,28 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        }
 //    }
 //
-//    private fun configureAndShowDetailFragment() {
-//        detailFragment = supportFragmentManager.findFragmentById(R.id.frame_layout_detail) as DetailFragment?
-//        if (detailFragment == null && findViewById<View?>(R.id.frame_layout_detail) != null) {
-//            detailFragment = DetailFragment()
+    private fun configureAndShowEstateListFragment() {
+        estateListFragment = supportFragmentManager.findFragmentById(R.id.activity_main_frame_layout) as EstateListFragment?
+
+        if (estateListFragment == null && activity_main_frame_layout != null) {
+            estateListFragment = EstateListFragment().newInstance()
+            supportFragmentManager.beginTransaction()
+                    .add(activity_main_frame_layout.id, estateListFragment!!)
+                    .commit()
+        }
+    }
+
+//    private fun configureAndShowFragment(fragmentClass: Class<*>, @IdRes frameLayout: Int) {
+//        when (fragmentClass) {
+////            EstateListFragment()::class.java -> fragment as EstateListFragment
+//            EstateListFragment::class.java -> fragment = estateListFragment as EstateListFragment
+//        }
+//
+//        fragment = supportFragmentManager.findFragmentById(frameLayout) as EstateListFragment?
+//        if (fragment == null && frameLayout != null) {
+//            fragment = EstateListFragment().newInstance()
 //            supportFragmentManager.beginTransaction()
-//                    .add(R.id.frame_layout_detail, detailFragment)
+//                    .add(frameLayout, fragment as EstateListFragment)
 //                    .commit()
 //        }
 //    }

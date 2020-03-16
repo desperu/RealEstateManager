@@ -12,6 +12,6 @@ import androidx.room.PrimaryKey
         childColumns = arrayOf("estateId"))])
 data class Image(@PrimaryKey(autoGenerate = true)
                  var id: Long,
-                 var imageUrl: String,
+                 var imageUri: String,
                  var estateId: Long,
                  var description: String)
