@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
@@ -16,6 +15,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
+import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
+import org.desperu.realestatemanager.utils.ESTATE_ID
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,6 +40,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // -----------------
     // CONFIGURATION
     // -----------------
+
     /**
      * Configure Drawer layout.
      */
@@ -186,9 +188,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
-            R.id.activity_main_menu_drawer_estate_list -> this.showRestaurantDetailActivity("id")
+            R.id.activity_main_menu_drawer_estate_list -> if (!estateListFragment?.isVisible!!) configureAndShowEstateListFragment()
             R.id.activity_main_menu_drawer_estate_map -> this.showSettingsActivity()
-            R.id.activity_main_menu_drawer_estate_new -> this.showToast("New Estate")
+            R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(null)
 //            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
 //            R.id.activity_main_menu_bottom_list -> configureAndShowFragment(LIST_FRAGMENT)
 //            R.id.activity_main_menu_bottom_workmates -> configureAndShowFragment(WORKMATES_FRAGMENT)
@@ -225,7 +227,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.activity_main_menu_add -> return true
+            R.id.activity_main_menu_add -> {
+                showManageEstateActivity(null)
+                return true
+            }
             R.id.activity_main_menu_update -> {
                 return true
             }
@@ -297,11 +302,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // -----------------
 
     /**
-     * Start restaurant detail activity.
-     * @param id Place id.
+     * Start manage estate activity.
+     * @param estateId Estate id.
      */
-    private fun showRestaurantDetailActivity(id: String) {
-//        startActivity(Intent(this, RestaurantDetailActivity::class.java).putExtra(RestaurantDetailActivity.RESTAURANT_ID, id))
+    private fun showManageEstateActivity(estateId: Long?) {
+        startActivity(Intent(this, ManageEstateActivity::class.java).putExtra(ESTATE_ID, estateId))
     }
 
     /**

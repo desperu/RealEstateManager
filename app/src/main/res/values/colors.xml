@@ -6,6 +6,7 @@
 
     <!-- Real Estate Manager Colors -->
     <color name="colorLightGrey">#974D4D4D</color>
+    <color name="colorDarkLight">#43000000</color>
     <color name="colorPink">#FF2ED1</color>
 
 </resources>

@@ -33,8 +33,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/nav_view_padding_top"
-        app:itemTextColor="@android:color/white"
-        app:itemIconTint="@android:color/white"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/activity_main_nav_header"

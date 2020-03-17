@@ -25,6 +25,17 @@
     <dimen name="fragment_estate_list_item_text_location_size">12sp</dimen>
     <dimen name="fragment_estate_list_item_text_price_size">18sp</dimen>
 
+    <!-- Manage Estate Activity -->
+    <dimen name="activity_manage_estate_linear_padding">10dp</dimen>
+    <dimen name="activity_manage_estate_text_category_margin">15dp</dimen>
+    <dimen name="activity_manage_estate_text_category_size">20sp</dimen>
+    <dimen name="activity_manage_estate_text_sub_category_margin">5dp</dimen>
+    <dimen name="activity_manage_estate_text_sub_category_size">16sp</dimen>
+    <dimen name="activity_manage_estate_spinner_margin_top">15dp</dimen>
+    <dimen name="activity_manage_estate_text_unity_margin_bottom">10dp</dimen>
+    <dimen name="activity_manage_estate_text_unity_size">20sp</dimen>
+    <dimen name="activity_manage_estate_button_create_text_size">18sp</dimen>
+
     <!-- MENU -->
 
     <!-- Menu Drawer -->

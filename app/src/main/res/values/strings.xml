@@ -2,10 +2,39 @@
 
     <!-- ACTIVITY AND FRAGMENT NAME -->
     <string name="app_name">Real Estate Manager</string>
+    <string name="activity_manage_estate">Manage Estate</string>
 
     <!-- LAYOUTS -->
     <!-- Fragment Estate Item -->
     <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate !</string>
+
+    <!-- Activity Manage Estate -->
+    <string name="activity_manage_estate_text_category_estate_data">Estate Data</string>
+    <string name="activity_manage_estate_text_type">Estate Type</string>
+    <string name="activity_manage_estate_text_price">Estate Price</string>
+    <string name="activity_manage_estate_text_price_unity">$</string>
+    <string name="activity_manage_estate_text_surface_area">Surface Area</string>
+    <string name="activity_manage_estate_text_surface_unity">m²</string>
+    <string name="activity_manage_estate_text_rooms_number">Rooms Number</string>
+    <string name="activity_manage_estate_text_description">Description</string>
+    <string name="activity_manage_estate_text_description_hint">Enter estate description here …</string>
+    <string name="activity_manage_estate_text_category_image">Image</string>
+    <string name="activity_manage_estate_text_address">Address</string>
+    <string name="activity_manage_estate_text_street_number">Street Number</string>
+    <string name="activity_manage_estate_text_street_name">Street Name</string>
+    <string name="activity_manage_estate_text_flat_building">Flat/Building</string>
+    <string name="activity_manage_estate_text_postal_code">Postal Code</string>
+    <string name="activity_manage_estate_text_city">City</string>
+    <string name="activity_manage_estate_text_country">Country</string>
+    <string name="activity_manage_estate_text_category_interest_places">Interest Places</string>
+    <string name="activity_manage_estate_text_interest_places_add">Add Interest Place</string>
+    <string name="activity_manage_estate_text_category_sale_data">Sale Data</string>
+    <string name="activity_manage_estate_text_sale_date">Sale Date</string>
+    <string name="activity_manage_estate_text_sold_out_date">Sold Out Date</string>
+    <string name="activity_manage_estate_text_state">State</string>
+    <string name="activity_manage_estate_text_real_estate_agent">Real Estate Agent</string>
+    <string name="activity_manage_estate_button_valid">Create</string>
+
 
     <!-- MENU -->
     <!-- Nav Drawer -->
