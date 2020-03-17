@@ -13,3 +13,7 @@ val estateTypeList = arrayOf("Flat", "Duplex","House",  "Penthouse")
 val estateInterestPlacesList = arrayOf("School", "Shop", "Park")
 
 val estateStateList = arrayOf("For Sale", "Sold Out")
+
+// FOR EXCHANGE
+
+const val exchangeRate = 0.812
