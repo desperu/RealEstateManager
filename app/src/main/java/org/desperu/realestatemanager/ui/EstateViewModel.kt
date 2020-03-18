@@ -5,7 +5,7 @@ import org.desperu.realestatemanager.base.BaseViewModel
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
 
-class EstateViewModel(estate: Estate): BaseViewModel() {
+class EstateViewModel(private val givenEstate: Estate): BaseViewModel() {
 
     // FOR DATA
     val estate = MutableLiveData<Estate>()
@@ -13,7 +13,7 @@ class EstateViewModel(estate: Estate): BaseViewModel() {
     val primaryImage = MutableLiveData<Image>()
 
     init {
-        setEstate(estate)
+        setEstate(givenEstate)
     }
 
     fun bind(estate: Estate) {

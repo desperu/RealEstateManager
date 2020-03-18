@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseViewModel
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.repositories.AddressDataRepository
 import org.desperu.realestatemanager.repositories.EstateDataRepository
 import org.desperu.realestatemanager.repositories.ImageDataRepository
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
 
 class EstateListViewModel(private val estateDataRepository: EstateDataRepository,
-                          private val imageDataRepository: ImageDataRepository): BaseViewModel() {
+                          private val imageDataRepository: ImageDataRepository,
+                          private val addressDataRepository: AddressDataRepository): BaseViewModel() {
 
     // FOR DATA
     val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
@@ -31,8 +33,10 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
     private fun loadEstateList() {
         estateList.value = estateDataRepository.getAll.value
         if (estateList.value != null)
-            for (estate in estateList.value!!)
+            for (estate in estateList.value!!) {
                 estate.images = imageDataRepository.getImages(estate.id).value!!
+                estate.address = addressDataRepository.getAddress(estate.id).value!!
+            }
         onRetrieveEstateList()
     }
 
