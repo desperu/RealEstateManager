@@ -3,37 +3,65 @@
     <!-- ACTIVITY AND FRAGMENT NAME -->
     <string name="app_name">Real Estate Manager</string>
     <string name="activity_manage_estate">Manage Estate</string>
+    <!-- Fragment Manage Estate -->
+    <string-array name="tab_titles">
+        <item>Data</item>
+        <item>Images</item>
+        <item>Address</item>
+        <item>Sale</item>
+    </string-array>
 
     <!-- LAYOUTS -->
+    <!-- Main Activity -->
     <!-- Fragment Estate Item -->
     <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate !</string>
 
-    <!-- Activity Manage Estate -->
-    <string name="activity_manage_estate_text_category_estate_data">Estate Data</string>
-    <string name="activity_manage_estate_text_type">Estate Type</string>
-    <string name="activity_manage_estate_text_price">Estate Price</string>
-    <string name="activity_manage_estate_text_price_unity">$</string>
-    <string name="activity_manage_estate_text_surface_area">Surface Area</string>
-    <string name="activity_manage_estate_text_surface_unity">m²</string>
-    <string name="activity_manage_estate_text_rooms_number">Rooms Number</string>
-    <string name="activity_manage_estate_text_description">Description</string>
-    <string name="activity_manage_estate_text_description_hint">Enter estate description here …</string>
-    <string name="activity_manage_estate_text_category_image">Image</string>
-    <string name="activity_manage_estate_text_address">Address</string>
-    <string name="activity_manage_estate_text_street_number">Street Number</string>
-    <string name="activity_manage_estate_text_street_name">Street Name</string>
-    <string name="activity_manage_estate_text_flat_building">Flat/Building</string>
-    <string name="activity_manage_estate_text_postal_code">Postal Code</string>
-    <string name="activity_manage_estate_text_city">City</string>
-    <string name="activity_manage_estate_text_country">Country</string>
-    <string name="activity_manage_estate_text_category_interest_places">Interest Places</string>
-    <string name="activity_manage_estate_text_interest_places_add">Add Interest Place</string>
-    <string name="activity_manage_estate_text_category_sale_data">Sale Data</string>
-    <string name="activity_manage_estate_text_sale_date">Sale Date</string>
-    <string name="activity_manage_estate_text_sold_out_date">Sold Out Date</string>
-    <string name="activity_manage_estate_text_state">State</string>
-    <string name="activity_manage_estate_text_real_estate_agent">Real Estate Agent</string>
-    <string name="activity_manage_estate_button_valid">Create</string>
+    <!-- Manage Estate Activity -->
+    <!-- Estate Data Fragment -->
+    <string name="fragment_estate_data_text_category_estate_data">Estate Data</string>
+    <string name="fragment_estate_data_text_type">Estate Type</string>
+    <string name="fragment_estate_data_text_price">Estate Price</string>
+    <string name="fragment_estate_data_text_price_unity">$</string>
+    <string name="fragment_estate_data_text_surface_area">Surface Area</string>
+    <string name="fragment_estate_data_text_surface_unity">m²</string>
+    <string name="fragment_estate_data_text_rooms_number">Rooms Number</string>
+    <string name="fragment_estate_data_text_description">Description</string>
+    <string name="fragment_estate_data_text_description_hint">Enter estate description here …</string>
+    <!-- Estate Image Fragment -->
+    <string name="fragment_estate_image_text_category_image">Image</string>
+    <string name="fragment_estate_image_text_image_add">Add Image</string>
+    <!-- Estate Address Fragment -->
+    <string name="fragment_estate_address_text_address">Address</string>
+    <string name="fragment_estate_address_text_street_number">Street Number</string>
+    <string name="fragment_estate_address_text_street_name">Street Name</string>
+    <string name="fragment_estate_address_text_flat_building">Flat/Building</string>
+    <string name="fragment_estate_address_text_postal_code">Postal Code</string>
+    <string name="fragment_estate_address_text_city">City</string>
+    <string name="fragment_estate_address_text_country">Country</string>
+    <string name="fragment_estate_address_text_category_interest_places">Interest Places</string>
+    <string name="fragment_estate_address_text_interest_places_add">Add Interest Places</string>
+    <!-- Estate Sale Fragment -->
+    <string name="fragment_estate_sale_text_category_sale_data">Sale Data</string>
+    <string name="fragment_estate_sale_text_sale_date">Sale Date</string>
+    <string name="fragment_estate_sale_text_sold_out_date">Sold Out Date</string>
+    <string name="fragment_estate_sale_text_state">State</string>
+    <string name="fragment_estate_sale_text_real_estate_agent">Real Estate Agent</string>
+    <!-- Spinner list -->
+    <string-array name="estate_type_list">
+        <item>Flat</item>
+        <item>Duplex</item>
+        <item>House</item>
+        <item>Penthouse</item>
+    </string-array>
+    <string-array name="estate_interest_places_list">
+        <item>School</item>
+        <item>Shop</item>
+        <item>Park</item>
+    </string-array>
+    <string-array name="estate_state_list">
+        <item>For Sale</item>
+        <item>Sold Out</item>
+    </string-array>
 
 
     <!-- MENU -->

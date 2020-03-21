@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_estate_data_text_category_estate_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
+                android:text="@string/fragment_estate_data_text_category_estate_data"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="@dimen/fragments_manage_estate_text_category_size" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
+                android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
+                android:background="@color/colorDarkLight" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/fragments_manage_estate_linear_padding"
+                android:baselineAligned="false">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/fragment_estate_data_text_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_data_text_type"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size" />
+
+                    <Spinner
+                        android:id="@+id/fragment_estate_data_spinner_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
+                        android:layout_below="@+id/fragment_estate_data_text_type"
+                        android:tag="spinnerType"
+                        app:setItem="@{viewModel.estate.type}"
+                        app:onItemSelected="@{viewModel.typeListener}" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/fragment_estate_data_text_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_data_text_price"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <EditText
+                        android:id="@+id/fragment_estate_data_edit_text_price"
+                        android:layout_width="@dimen/fragments_manage_estate_edit_price_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fragment_estate_data_text_price"
+                        android:layout_marginStart="@dimen/fragments_manage_estate_edit_margin_start"
+                        android:inputType="number"
+                        android:textAlignment="viewEnd"
+                        android:hint="@null"
+                        android:importantForAutofill="no"
+                        android:text="@{String.valueOf(viewModel.estate.price)}"
+                        app:onTextChanged="@{viewModel.editTextListener(0)}"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/fragments_manage_estate_text_unity_margin_bottom"
+                        android:text="@string/fragment_estate_data_text_price_unity"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_unity_size"
+                        android:textColor="@android:color/black"
+                        android:layout_alignBottom="@+id/fragment_estate_data_edit_text_price"
+                        android:layout_toEndOf="@+id/fragment_estate_data_edit_text_price"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/fragments_manage_estate_linear_padding"
+                android:baselineAligned="false">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/fragment_estate_data_text_surface_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_data_text_surface_area"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <EditText
+                        android:id="@+id/fragment_estate_data_edit_text_surface_area"
+                        android:layout_width="@dimen/fragments_manage_estate_edit_surface_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fragment_estate_data_text_surface_area"
+                        android:layout_marginStart="@dimen/fragments_manage_estate_edit_margin_start"
+                        android:inputType="number"
+                        android:hint="@null"
+                        android:importantForAutofill="no"
+                        android:maxLength="5"
+                        android:text="@{String.valueOf(viewModel.estate.surfaceArea)}"
+                        app:onTextChanged="@{viewModel.editTextListener(1)}"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/fragments_manage_estate_text_unity_margin_bottom"
+                        android:text="@string/fragment_estate_data_text_surface_unity"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_unity_size"
+                        android:textColor="@android:color/black"
+                        android:layout_alignBottom="@+id/fragment_estate_data_edit_text_surface_area"
+                        android:layout_toEndOf="@+id/fragment_estate_data_edit_text_surface_area"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/fragment_estate_data_text_rooms_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_data_text_rooms_number"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <EditText
+                        android:id="@+id/fragment_estate_data_edit_text_rooms_number"
+                        android:layout_width="@dimen/fragments_manage_estate_edit_rooms_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fragment_estate_data_text_rooms_number"
+                        android:layout_marginStart="@dimen/fragments_manage_estate_edit_margin_start"
+                        android:inputType="number"
+                        android:hint="@null"
+                        android:importantForAutofill="no"
+                        android:text="@{String.valueOf(viewModel.estate.rooms)}"
+                        app:onTextChanged="@{viewModel.editTextListener(2)}"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
+                android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
+                android:background="@color/colorDarkLight" />
+
+            <TextView
+                android:id="@+id/fragment_estate_data_text_category_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
+                android:text="@string/fragment_estate_data_text_description"
+                android:textStyle="bold"
+                android:textSize="@dimen/fragments_manage_estate_text_category_size"
+                android:textColor="@android:color/black"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
+                android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
+                android:background="@color/colorDarkLight" />
+
+            <EditText
+                android:id="@+id/fragment_estate_data_edit_text_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
+                android:padding="@dimen/fragments_manage_estate_edit_description_padding"
+                android:gravity="top"
+                android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
+                android:hint="@string/fragment_estate_data_text_description_hint"
+                android:minLines="5"
+                android:maxLines="15"
+                android:importantForAutofill="no"
+                android:background="@drawable/edit_text_border"
+                android:text="@{viewModel.estate.description}"
+                app:onTextChanged="@{viewModel.editTextListener(3)}"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

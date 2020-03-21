@@ -21,7 +21,6 @@ import org.desperu.realestatemanager.utils.ESTATE_ID
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     // FOR DATA
-    private var estateListFragment: EstateListFragment? = EstateListFragment()
     private var fragment: Fragment? = Fragment()
 
     // --------------
@@ -34,7 +33,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         configureToolBar()
         configureDrawerLayout()
         configureNavigationView()
-        configureAndShowEstateListFragment()
+        configureAndShowFragment(EstateListFragment::class.java)
     }
 
     // -----------------
@@ -139,13 +138,16 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        }
 //    }
 //
-    private fun configureAndShowEstateListFragment() {
-        estateListFragment = supportFragmentManager.findFragmentById(R.id.activity_main_frame_layout) as EstateListFragment?
+    private fun configureAndShowFragment(fragmentClass: Class<*>) {
+        if (fragment?.javaClass != fragmentClass) {
+            fragment = supportFragmentManager.findFragmentById(R.id.activity_main_frame_layout)
 
-        if (estateListFragment == null && activity_main_frame_layout != null) {
-            estateListFragment = EstateListFragment().newInstance()
+            when (fragmentClass) {
+                EstateListFragment::class.java -> fragment = EstateListFragment()
+            }
+
             supportFragmentManager.beginTransaction()
-                    .add(activity_main_frame_layout.id, estateListFragment!!)
+                    .replace(activity_main_frame_layout.id, fragment!!)
                     .commit()
         }
     }
@@ -188,7 +190,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
-            R.id.activity_main_menu_drawer_estate_list -> if (!estateListFragment?.isVisible!!) configureAndShowEstateListFragment()
+            R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java)
             R.id.activity_main_menu_drawer_estate_map -> this.showSettingsActivity()
             R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(null)
 //            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
@@ -203,7 +205,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onBackPressed() {
-        if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START)) activity_main_drawer_layout.closeDrawer(GravityCompat.START)
+        if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
+            activity_main_drawer_layout.closeDrawer(GravityCompat.START)
         else if (toolbar_search_view != null && toolbar_search_view.isShown) {
             this.hideSearchViewIfVisible()
         } else super.onBackPressed()

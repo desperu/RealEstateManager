@@ -4,16 +4,17 @@ package org.desperu.realestatemanager.utils
 
 const val ESTATE_ID: String = "estate_id"
 
-// CONSTANT VALUES
-
-// FOR MANAGE ESTATE ACTIVITY
-
-val estateTypeList = arrayOf("Flat", "Duplex","House",  "Penthouse")
-
-val estateInterestPlacesList = arrayOf("School", "Shop", "Park")
-
-val estateStateList = arrayOf("For Sale", "Sold Out")
-
 // FOR EXCHANGE
 
 const val exchangeRate = 0.812
+
+// FOR VIEW PAGER
+
+const val numberOfPage = 4
+
+// FOR BINDING VIEW IDENTIFIER FOR LISTENERS
+
+const val PRICE_ID = 0
+const val SURFACE_ID = 1
+const val ROOMS_ID = 2
+const val DESCRIPTION_ID = 3
