@@ -2,6 +2,7 @@ package org.desperu.realestatemanager.ui
 
 import androidx.lifecycle.MutableLiveData
 import org.desperu.realestatemanager.base.BaseViewModel
+import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
 
@@ -9,7 +10,8 @@ class EstateViewModel(private val givenEstate: Estate): BaseViewModel() {
 
     // FOR DATA
     val estate = MutableLiveData<Estate>()
-    val images = MutableLiveData<List<Image>>()
+//    val images = MutableLiveData<List<Image>>()
+//    val address = MutableLiveData<Address>()
     val primaryImage = MutableLiveData<Image>()
 
     init {
@@ -18,8 +20,9 @@ class EstateViewModel(private val givenEstate: Estate): BaseViewModel() {
 
     fun bind(estate: Estate) {
         this.estate.value = estate
-        this.images.value = estate.images
-        this.primaryImage.value = images.value!![0] // TODO use boolean master photo
+//        this.images.value = estate.images
+//        this.address.value = estate.address
+        this.primaryImage.value = estate.images[0] // TODO use boolean master photo
     }
 
     // -------------
@@ -28,8 +31,9 @@ class EstateViewModel(private val givenEstate: Estate): BaseViewModel() {
 
     private fun setEstate(estate: Estate) {
         this.estate.value = estate
-        this.images.value = estate.images
-        this.primaryImage.value = images.value!![0] // TODO use boolean master photo
+//        this.images.value = estate.images
+//        this.address.value = estate.address
+        this.primaryImage.value = estate.images[0] // TODO use boolean master photo
     }
 
     // --- GETTERS ---

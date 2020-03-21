@@ -17,13 +17,13 @@
     <!-- Main Activity -->
     <dimen name="nav_view_padding_top">24dp</dimen>
 
-    <!-- Fragment Estate List Item -->
-    <dimen name="fragment_estate_list_item_image_width_height">100dp</dimen>
-    <dimen name="fragment_estate_list_item_linear_padding">10dp</dimen>
-    <dimen name="fragment_estate_list_item_text_type_size">14sp</dimen>
-    <dimen name="fragment_estate_list_item_text_location_margin_top_and_bottom">10dp</dimen>
-    <dimen name="fragment_estate_list_item_text_location_size">12sp</dimen>
-    <dimen name="fragment_estate_list_item_text_price_size">18sp</dimen>
+    <!-- Item Estate -->
+    <dimen name="item_estate_image_width_height">100dp</dimen>
+    <dimen name="item_estate_linear_padding">10dp</dimen>
+    <dimen name="item_estate_text_type_size">14sp</dimen>
+    <dimen name="item_estate_text_location_margin_top_and_bottom">10dp</dimen>
+    <dimen name="item_estate_text_location_size">12sp</dimen>
+    <dimen name="item_estate_text_price_size">18sp</dimen>
 
     <!-- Manage Estate Activity -->
     <dimen name="activity_manage_estate_linear_padding">10dp</dimen>

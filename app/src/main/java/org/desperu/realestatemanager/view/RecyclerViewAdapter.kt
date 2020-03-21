@@ -6,7 +6,6 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import org.desperu.realestatemanager.model.Estate
 
 class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
@@ -19,7 +18,7 @@ class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        list[position].let { holder.bind(it as Estate) }
+        list[position].let { holder.bind(it) }
 //        holder.bind2(list2?.get(position))
     }
 
