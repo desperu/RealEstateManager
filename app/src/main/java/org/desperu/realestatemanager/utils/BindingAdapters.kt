@@ -2,6 +2,7 @@ package org.desperu.realestatemanager.utils
 
 import android.net.Uri
 import android.text.TextWatcher
+import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.ImageView
@@ -17,7 +18,14 @@ import org.desperu.realestatemanager.model.Image
 fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: MutableLiveData<Boolean>?) {
     val parentActivity: AppCompatActivity? = swipeRefreshLayout.context as AppCompatActivity
     if (parentActivity != null && refreshing != null)
-        refreshing.observe(parentActivity, Observer { value -> swipeRefreshLayout.isRefreshing = value } )
+        refreshing.observe(parentActivity, Observer { value -> swipeRefreshLayout.isRefreshing = value })
+}
+
+@BindingAdapter("mutableVisibility")
+fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
+    val parentActivity:AppCompatActivity? = view.context as AppCompatActivity?
+    if(parentActivity != null && visibility != null)
+        visibility.observe(parentActivity, Observer { value -> view.visibility = value })
 }
 
 @BindingAdapter("image")

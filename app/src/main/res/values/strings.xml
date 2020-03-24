@@ -23,6 +23,8 @@
     <!-- Estate Image Fragment -->
     <string name="fragment_estate_image_text_category_image">Image</string>
     <string name="fragment_estate_image_text_image_add">Add Image</string>
+    <string name="fragment_estate_image_popup_title_permission_files_access">This application need storage permission.</string>
+    <string name="fragment_estate_image_toast_title_no_image_chosen">No image chosen&#8230;</string>
     <!-- Estate Address Fragment -->
     <string name="fragment_estate_address_text_address">Address</string>
     <string name="fragment_estate_address_text_street_number">Street Number</string>

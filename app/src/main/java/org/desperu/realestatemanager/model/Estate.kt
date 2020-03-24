@@ -11,12 +11,12 @@ import androidx.room.PrimaryKey
 data class Estate(@PrimaryKey(autoGenerate = true)
                   var id: Long,
                   var type: String, // TODO use val instead var
-                  var price: Int,
+                  var price: Long,
                   var surfaceArea: Int,
                   var rooms: Int,
                   var description: String,
                   var interestPlaces: String, // Create other table ??
-                  var state: Int, // 0 to sale, 1 sold
+                  var state: String, // 0 to sale, 1 sold
                   var saleDate: String, // Convert function Date to String and String to Date
                   var soldDate: String,
                   var realEstateAgent: String) {

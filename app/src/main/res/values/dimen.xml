@@ -17,6 +17,10 @@
     <!-- Main Activity -->
     <dimen name="nav_view_padding_top">24dp</dimen>
 
+    <!-- Fragment Estate List -->
+    <dimen name="fragment_estate_list_text_empty_margin">20dp</dimen>
+    <dimen name="fragment_estate_list_text_empty_size">18sp</dimen>
+
     <!-- Item Estate -->
     <dimen name="item_estate_image_width_height">100dp</dimen>
     <dimen name="item_estate_linear_padding">10dp</dimen>
