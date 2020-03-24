@@ -23,6 +23,7 @@ class ManageEstateActivity: BaseActivity() {
     override fun configureDesign() {
         configureToolBar()
         configureUpButton()
+        setViewModel()
         configureViewPagerAndTabs()
     }
 
@@ -33,31 +34,36 @@ class ManageEstateActivity: BaseActivity() {
     /**
      * Get Estate Id from intent.
      */
-    private fun getEstateId(): Long? = intent.getLongExtra(ESTATE_ID, 0)
+    private fun getEstateId(): Long = intent.getLongExtra(ESTATE_ID, 0)
+
+    /**
+     * Set view model instance.
+     */
+    private fun setViewModel() {
+        if (viewModel == null) {
+            viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
+            viewModel!!.setEstate(getEstateId())
+        }
+    }
 
     /**
      * Configure Tab layout and View pager.
      */
     private fun configureViewPagerAndTabs() {
         activity_manage_estate_view_pager.adapter = ViewPagerAdapter(this, supportFragmentManager,
-                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getViewModel())
+                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
         val tabLayout: TabLayout = activity_manage_estate_pager_tabs
         tabLayout.setupWithViewPager(activity_manage_estate_view_pager)
         tabLayout.tabMode = TabLayout.MODE_FIXED
     }
 
+    // --- GETTERS ---
+
     /**
      * Get view model instance.
      */
-    private fun getViewModel(): ManageEstateViewModel {
-        if (viewModel == null) {
-            viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
-            getEstateId()?.let { viewModel!!.setEstate(it) }
-        }
+    fun getViewModel(): ManageEstateViewModel {
+        if (viewModel == null) setViewModel()
         return viewModel as ManageEstateViewModel
     }
-
-    // -----------------
-    // ACTION
-    // -----------------
 }

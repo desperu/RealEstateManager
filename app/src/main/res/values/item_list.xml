@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Fragment Manage Estate -->
+    <string-array name="tab_titles">
+        <item>Data</item>
+        <item>Images</item>
+        <item>Address</item>
+        <item>Sale</item>
+    </string-array>
+
+
+    <!-- Spinner list -->
+    <!-- Estate Data Fragment -->
+    <string-array name="estate_type_list">
+        <item>Flat</item>
+        <item>Duplex</item>
+        <item>House</item>
+        <item>Penthouse</item>
+    </string-array>
+    <!-- Estate Address Fragment -->
+    <string-array name="estate_interest_places_list">
+        <item>School</item>
+        <item>Shop</item>
+        <item>Park</item>
+    </string-array>
+    <!-- Estate Sale Fragment -->
+    <string-array name="estate_state_list">
+        <item>For Sale</item>
+        <item>Sold Out</item>
+    </string-array>
+
+</resources>

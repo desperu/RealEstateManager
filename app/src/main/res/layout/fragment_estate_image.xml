@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fragment_estate_image_text_category_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
+            android:text="@string/fragment_estate_image_text_category_image"
+            android:textStyle="bold"
+            android:textSize="@dimen/fragments_manage_estate_text_category_size"
+            android:textColor="@android:color/black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
+            android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
+            android:background="@color/colorDarkLight" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_estate_image_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
+                app:adapter="@{viewModel.getImageListAdapter}"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_estate_image_floating_add_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/activity_manage_estate_floating_button_margin"
+                app:srcCompat="@drawable/ic_baseline_add_circle_black_24"
+                app:backgroundTint="@android:color/holo_green_dark" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>

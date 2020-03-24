@@ -14,4 +14,9 @@
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
+    <!-- Date Picker Dialog Theme -->
+    <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
 </resources>

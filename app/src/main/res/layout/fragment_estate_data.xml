@@ -63,7 +63,7 @@
                         android:layout_below="@+id/fragment_estate_data_text_type"
                         android:tag="spinnerType"
                         app:setItem="@{viewModel.estate.type}"
-                        app:onItemSelected="@{viewModel.typeListener}" />
+                        app:onItemSelected="@{viewModel.spinnerListener}" />
 
                 </RelativeLayout>
 

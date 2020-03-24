@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPink"
                 android:textSize="@dimen/item_estate_text_price_size"
-                android:text="@{viewModel.estate.price}" />
+                android:text="@{String.valueOf(viewModel.estate.price)}" />
 
         </LinearLayout>
 

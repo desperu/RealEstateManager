@@ -12,6 +12,12 @@ const val exchangeRate = 0.812
 
 const val numberOfPage = 4
 
+// Fragment identifier
+const val ESTATE_DATA = 0
+const val ESTATE_IMAGE = 1
+const val ESTATE_ADDRESS = 2
+const val ESTATE_SALE = 3
+
 // FOR BINDING VIEW IDENTIFIER FOR LISTENERS
 
 const val PRICE_ID = 0

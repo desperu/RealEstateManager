@@ -3,17 +3,10 @@
     <!-- ACTIVITY AND FRAGMENT NAME -->
     <string name="app_name">Real Estate Manager</string>
     <string name="activity_manage_estate">Manage Estate</string>
-    <!-- Fragment Manage Estate -->
-    <string-array name="tab_titles">
-        <item>Data</item>
-        <item>Images</item>
-        <item>Address</item>
-        <item>Sale</item>
-    </string-array>
 
     <!-- LAYOUTS -->
     <!-- Main Activity -->
-    <!-- Fragment Estate Item -->
+    <!-- Estate Item Fragment -->
     <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate !</string>
 
     <!-- Manage Estate Activity -->
@@ -46,23 +39,6 @@
     <string name="fragment_estate_sale_text_sold_out_date">Sold Out Date</string>
     <string name="fragment_estate_sale_text_state">State</string>
     <string name="fragment_estate_sale_text_real_estate_agent">Real Estate Agent</string>
-    <!-- Spinner list -->
-    <string-array name="estate_type_list">
-        <item>Flat</item>
-        <item>Duplex</item>
-        <item>House</item>
-        <item>Penthouse</item>
-    </string-array>
-    <string-array name="estate_interest_places_list">
-        <item>School</item>
-        <item>Shop</item>
-        <item>Park</item>
-    </string-array>
-    <string-array name="estate_state_list">
-        <item>For Sale</item>
-        <item>Sold Out</item>
-    </string-array>
-
 
     <!-- MENU -->
     <!-- Nav Drawer -->

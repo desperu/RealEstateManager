@@ -192,7 +192,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (menuItem.itemId) {
             R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java)
             R.id.activity_main_menu_drawer_estate_map -> this.showSettingsActivity()
-            R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(null)
+            R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(0)
 //            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
 //            R.id.activity_main_menu_bottom_list -> configureAndShowFragment(LIST_FRAGMENT)
 //            R.id.activity_main_menu_bottom_workmates -> configureAndShowFragment(WORKMATES_FRAGMENT)
@@ -231,7 +231,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.activity_main_menu_add -> {
-                showManageEstateActivity(null)
+                showManageEstateActivity(0)
                 return true
             }
             R.id.activity_main_menu_update -> {
@@ -306,9 +306,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     /**
      * Start manage estate activity.
-     * @param estateId Estate id.
+     * @param estateId Estate id, 0 for create estate.
      */
-    private fun showManageEstateActivity(estateId: Long?) {
+    private fun showManageEstateActivity(estateId: Long) {
         startActivity(Intent(this, ManageEstateActivity::class.java).putExtra(ESTATE_ID, estateId))
     }
 
