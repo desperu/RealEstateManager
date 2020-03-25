@@ -24,3 +24,14 @@ const val PRICE_ID = 0
 const val SURFACE_ID = 1
 const val ROOMS_ID = 2
 const val DESCRIPTION_ID = 3
+
+// FOR PERMISSIONS
+
+const val PERMS_STORAGE = 100
+const val RC_CHOOSE_PHOTO = 200
+const val PERMS_PHOTO = 300
+const val RC_TAKE_PHOTO = 400
+
+// FOR SAVE IMAGE
+
+const val FOLDER_NAME = "EstateImages"

@@ -32,7 +32,8 @@
     <!-- Manage Estate Activity -->
     <dimen name="activity_manage_estate_floating_button_margin">20dp</dimen>
 
-    <!-- Fragments Manage Estate -->
+    <!-- Fragments Manage Estate (data, image, address, sale) -->
+    <dimen name="fragments_manage_estate_linear_root_padding_bottom">100dp</dimen>
     <dimen name="fragments_manage_estate_linear_padding">10dp</dimen>
     <dimen name="fragments_manage_estate_text_category_margin">15dp</dimen>
     <dimen name="fragments_manage_estate_text_category_size">20sp</dimen>
@@ -44,7 +45,7 @@
     <dimen name="fragments_manage_estate_text_unity_margin_bottom">10dp</dimen>
     <dimen name="fragments_manage_estate_text_unity_size">20sp</dimen>
     <dimen name="fragments_manage_estate_edit_surface_width">100dp</dimen>
-    <dimen name="fragments_manage_estate_edit_rooms_width">30dp</dimen>
+    <dimen name="fragments_manage_estate_edit_rooms_width">50dp</dimen>
     <dimen name="fragments_manage_estate_edit_description_padding">5dp</dimen>
     <dimen name="fragments_manage_estate_interest_places_add_padding">10dp</dimen>
 

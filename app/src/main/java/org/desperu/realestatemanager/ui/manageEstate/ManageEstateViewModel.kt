@@ -13,8 +13,13 @@ import org.desperu.realestatemanager.model.Image
 import org.desperu.realestatemanager.repositories.AddressDataRepository
 import org.desperu.realestatemanager.repositories.EstateDataRepository
 import org.desperu.realestatemanager.repositories.ImageDataRepository
+import org.desperu.realestatemanager.ui.ImageViewModel
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ManageEstateViewModel(private val estateDataRepository: EstateDataRepository,
                             private val imageDataRepository: ImageDataRepository,
@@ -33,7 +38,9 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     // FOR DATA
     private val imageListAdapter = RecyclerViewAdapter(R.layout.item_image)
     val estate = MutableLiveData<Estate>()
-    private val imageList = MutableLiveData<List<Image>>()
+//    private val imageList = MutableLiveData<ArrayList<Image>>()
+    private var imageList = ArrayList<Image>()
+//    var price = ObservableField<String>()
     val city = ObservableField<String>()
     val country = MutableLiveData<String>()
 
@@ -47,19 +54,39 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     fun setEstate(estateId: Long) {
         if (estateId != 0.toLong()) {
             estate.value = estateDataRepository.getEstate(estateId).value
-            imageList.value = imageDataRepository.getImages(estateId).value
+            imageList = imageDataRepository.getImages(estateId).value as ArrayList<Image>
 //            estate.value!!.images = imageDataRepository.getImages(estateId).value!!
 //            estate.value!!.address = addressDataRepository.getAddress(estateId).value!!
         } //else
 //            estate.value = Estate()
     }
 
+    // -------------
+    // UPDATE DATA
+    // -------------
+
     /**
      * Update Recycler Image List.
      */
     fun updateRecyclerImageList() {
-        imageList.value?.let { imageListAdapter.updateList(it) }
+        val imageViewModelList = ArrayList<ImageViewModel>()
+//        if (imageList != null) {
+            for (image in imageList)
+                imageViewModelList.add(ImageViewModel(image))
+//        }
+        imageViewModelList.add(ImageViewModel(Image(0,0,"content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F123/ORIGINAL/NONE/2100203926",false,"toto")))
+        imageListAdapter.updateList(imageViewModelList)
+//        imageList.value?.let { imageListAdapter.updateList(it) }
 //        mutableRefreshing.value = false
+    }
+
+    /**
+     * Add new image to image list.
+     * @param imageUri Image uri.
+     */
+    fun addImageToImageList(imageUri: String) {
+        imageList.add(Image(0, 0, imageUri, false, "")) // TODO not good
+        updateRecyclerImageList()
     }
 
     // -------------
@@ -87,9 +114,24 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
      */
     fun editTextListener(id: Int) = object: TextWatcher {
 
+        var isEditing = false
         override fun afterTextChanged(s: Editable?) {
             when (id) {
-                PRICE_ID -> price = s.toString().toLong()
+                PRICE_ID -> {
+                    price = s.toString().toLong()
+//                    if (s.isNullOrBlank()) { price.set(""); return }
+//                    if (isEditing) return
+//                    isEditing = true
+//
+//                    val s1: Double = s.replace(Regex.fromLiteral(","), "")
+//                            .toString().toDouble()
+//
+//                    val nf2: NumberFormat = NumberFormat.getInstance(Locale.ENGLISH)
+//                    (nf2 as DecimalFormat).applyPattern("###,###,###")
+//                    price.set(nf2.format(s1))
+//
+//                    isEditing = false
+                }
                 SURFACE_ID -> surface = s.toString().toInt()
                 ROOMS_ID -> roomNumber = s.toString().toInt()
                 DESCRIPTION_ID -> description = s.toString()

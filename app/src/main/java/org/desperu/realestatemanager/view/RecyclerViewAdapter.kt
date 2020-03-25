@@ -18,8 +18,7 @@ class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        list[position].let { holder.bind(it) }
-//        holder.bind2(list2?.get(position))
+        holder.bind(list[position])
     }
 
     override fun getItemViewType(position: Int) = layoutId
@@ -35,11 +34,6 @@ class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Ad
 
         fun bind(any: Any?) {
             binding.setVariable(org.desperu.realestatemanager.BR.viewModel, any)
-            binding.executePendingBindings()
-        }
-
-        fun bind2(any2: Any?) {
-//            binding.setVariable(org.desperu.realestatemanager.BR.any2, any2)
             binding.executePendingBindings()
         }
     }
