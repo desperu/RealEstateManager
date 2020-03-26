@@ -8,7 +8,7 @@ import org.desperu.realestatemanager.database.AppDatabase
 import org.desperu.realestatemanager.repositories.AddressDataRepository
 import org.desperu.realestatemanager.repositories.EstateDataRepository
 import org.desperu.realestatemanager.repositories.ImageDataRepository
-import org.desperu.realestatemanager.ui.EstateListViewModel
+import org.desperu.realestatemanager.ui.main.EstateListViewModel
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel
 
 class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvider.Factory {

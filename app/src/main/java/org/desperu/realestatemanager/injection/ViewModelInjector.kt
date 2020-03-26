@@ -1,8 +1,8 @@
 package org.desperu.realestatemanager.injection
 
 import dagger.Component
-import org.desperu.realestatemanager.ui.EstateListViewModel
-import org.desperu.realestatemanager.ui.EstateViewModel
+import org.desperu.realestatemanager.ui.main.EstateListViewModel
+import org.desperu.realestatemanager.ui.main.EstateViewModel
 import javax.inject.Singleton
 
 /**
@@ -10,7 +10,7 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component
-interface ViewModelInjector {
+interface ViewModelInjector { // TODO remove if unused
 
     /**
      * Inject required dependencies into the specified EstateViewModel.

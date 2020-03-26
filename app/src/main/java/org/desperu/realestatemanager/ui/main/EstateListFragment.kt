@@ -11,7 +11,6 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
 import org.desperu.realestatemanager.injection.ViewModelFactory
-import org.desperu.realestatemanager.ui.EstateListViewModel
 
 class EstateListFragment: BaseBindingFragment() {
 

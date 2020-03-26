@@ -9,38 +9,53 @@
     </data>
 
     <RelativeLayout
-        android:layout_width="@dimen/item_image_relative_width_height"
-        android:layout_height="@dimen/item_image_relative_width_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:background="@drawable/container_border"
         android:layout_margin="@dimen/item_image_relative_margin">
 
-        <ImageView
-            android:id="@+id/item_image_photo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            app:image="@{viewModel.getImage}"/>
-
-        <TextView
-            android:id="@+id/item_image_text_description"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_image_text_description_height"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:background="@color/colorLightGrey"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/item_image_text_description_size"
-            android:textStyle="bold"
-            android:text="@{viewModel.getImage.description}" />
-
-        <ImageView
-            android:id="@+id/item_image_primary_marker"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/item_image_floating_primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/item_image_primary_marker_margin"
-            android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_baseline_add_circle_black_24" />
+            android:layout_margin="@dimen/activity_manage_estate_floating_button_margin" />
+
+        <RelativeLayout
+            android:layout_width="@dimen/item_image_relative_width"
+            android:layout_height="@dimen/item_image_relative_height"
+            android:layout_margin="@dimen/item_image_relative_margin">
+
+            <ImageView
+                android:id="@+id/item_image_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                app:image="@{viewModel.getImage}"/>
+
+            <TextView
+                android:id="@+id/item_image_text_description"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_image_text_description_height"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:background="@color/colorLightDark"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/item_image_text_description_size"
+                android:textStyle="bold"
+                android:text="@{viewModel.getImage.description}" />
+
+            <ImageView
+                android:id="@+id/item_image_primary_marker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/item_image_primary_marker_margin"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_baseline_add_circle_black_24" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

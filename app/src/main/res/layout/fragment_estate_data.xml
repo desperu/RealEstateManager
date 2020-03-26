@@ -33,7 +33,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
                 android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-                android:background="@color/colorDarkLight" />
+                android:background="@color/colorLightDark" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -199,7 +199,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
                 android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-                android:background="@color/colorDarkLight" />
+                android:background="@color/colorLightDark" />
 
             <TextView
                 android:id="@+id/fragment_estate_data_text_category_description"
@@ -216,7 +216,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
                 android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-                android:background="@color/colorDarkLight" />
+                android:background="@color/colorLightDark" />
 
             <EditText
                 android:id="@+id/fragment_estate_data_edit_text_description"

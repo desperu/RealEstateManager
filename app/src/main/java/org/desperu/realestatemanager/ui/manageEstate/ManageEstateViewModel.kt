@@ -71,14 +71,10 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
      */
     fun updateRecyclerImageList() {
         val imageViewModelList = ArrayList<ImageViewModel>()
-//        if (imageList != null) {
-            for (image in imageList)
-                imageViewModelList.add(ImageViewModel(image))
-//        }
-        imageViewModelList.add(ImageViewModel(Image(0,0,"content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F123/ORIGINAL/NONE/2100203926",false,"toto")))
+        for (image in imageList)
+            imageViewModelList.add(ImageViewModel(image))
+//        imageViewModelList.add(ImageViewModel(Image(0, 0, "content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F123/ORIGINAL/NONE/2100203926", false, "toto")))
         imageListAdapter.updateList(imageViewModelList)
-//        imageList.value?.let { imageListAdapter.updateList(it) }
-//        mutableRefreshing.value = false
     }
 
     /**

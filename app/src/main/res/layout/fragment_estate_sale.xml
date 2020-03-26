@@ -28,7 +28,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
             android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-            android:background="@color/colorDarkLight" />
+            android:background="@color/colorLightDark" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.EstateViewModel" />
+            type="org.desperu.realestatemanager.ui.main.EstateViewModel" />
     </data>
 
     <RelativeLayout
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/item_estate_text_location_margin_top_and_bottom"
                 android:layout_marginBottom="@dimen/item_estate_text_location_margin_top_and_bottom"
-                android:textColor="@color/colorLightGrey"
+                android:textColor="@color/colorGrey"
                 android:textSize="@dimen/item_estate_text_location_size"
                 android:text="@{viewModel.estate.address.city}" />
 
