@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.os.Environment
 import android.widget.Toast
+import androidx.core.content.FileProvider.getUriForFile
+import org.desperu.realestatemanager.BuildConfig
 import org.desperu.realestatemanager.R
 import java.io.*
 
@@ -96,7 +98,7 @@ object StorageUtils { // TODO to clean unused functions
     }
 
     private fun writeOnFile(context: Context, byte: ByteArrayOutputStream, file: File): String {
-        var path = String()
+        var stringUri = String()
         try {
             file.parentFile!!.mkdirs()
             val fos = FileOutputStream(file)
@@ -106,12 +108,12 @@ object StorageUtils { // TODO to clean unused functions
                 fos.fd.sync()
             } finally {
                 fos.close()
+                stringUri = getUriForFile(context.applicationContext, BuildConfig.APPLICATION_ID + ".fileprovider", file).toString()
                 Toast.makeText(context, context.getString(R.string.storage_utils_saved), Toast.LENGTH_LONG).show()
-                path = file.toURI().toString()
             }
         } catch (e: IOException) {
             Toast.makeText(context, context.getString(R.string.storage_utils_error_happened), Toast.LENGTH_LONG).show()
         }
-        return  path
+        return  stringUri
     }
 }

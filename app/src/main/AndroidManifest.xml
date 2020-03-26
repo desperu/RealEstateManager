@@ -29,6 +29,17 @@
             android:name=".ui.manageEstate.ManageEstateActivity"
             android:label="@string/activity_manage_estate"
             android:parentActivityName=".ui.main.MainActivity" />
+
+        <!-- FileProvider - Expose File -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="org.desperu.realestatemanager.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

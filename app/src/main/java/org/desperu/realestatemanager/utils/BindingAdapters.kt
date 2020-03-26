@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.desperu.realestatemanager.model.Image
+import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 
 @BindingAdapter("refreshingSwipe")
 fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: MutableLiveData<Boolean>?) {
@@ -46,7 +47,28 @@ fun Spinner.setOnItemSelected(listener: AdapterView.OnItemSelectedListener) {
     onItemSelectedListener = listener
 }
 
+@BindingAdapter("priceText")
+fun EditText.setPriceText(str: String?) {
+    // Remove listener to prevent cycle round
+    this.removeTextChangedListener(listenerSave)
+    val cursorPosition = this.selectionStart
+    var strLength = 0
+    var str1 = ""
+    // Convert price to pattern price
+    if (str != null) {
+        str1 = convertPriceToPatternPrice(str, false)
+        strLength = str.length
+    }
+    // Set pattern price to edit text, cursor with corrected position if needed, and set listener
+    this.setText(str1)
+    this.setSelection(if (cursorPosition > 0) cursorPosition + str1.length - strLength else cursorPosition)
+    this.addTextChangedListener(listenerSave)
+}
+
+lateinit var listenerSave: TextWatcher
+
 @BindingAdapter("onTextChanged")
 fun EditText.setOnTextChanged(listener: TextWatcher) {
+    listenerSave = listener
     addTextChangedListener(listener)
 }

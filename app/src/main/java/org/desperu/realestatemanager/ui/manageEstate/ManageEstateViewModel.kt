@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseViewModel
@@ -14,22 +15,17 @@ import org.desperu.realestatemanager.repositories.AddressDataRepository
 import org.desperu.realestatemanager.repositories.EstateDataRepository
 import org.desperu.realestatemanager.repositories.ImageDataRepository
 import org.desperu.realestatemanager.ui.ImageViewModel
-import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ManageEstateViewModel(private val estateDataRepository: EstateDataRepository,
                             private val imageDataRepository: ImageDataRepository,
                             private val addressDataRepository: AddressDataRepository): BaseViewModel() {
 
     private var type = ""
-    private var price: Long = 0
-    private var surface = 0
-    private var roomNumber = 0
-    private var description = ""
+//    private var price: Long = 0
+//    private var surface = 0
+//    private var roomNumber = 0
+//    private var description = ""
 
     private var interestPlaces = ""
 
@@ -40,7 +36,12 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     val estate = MutableLiveData<Estate>()
 //    private val imageList = MutableLiveData<ArrayList<Image>>()
     private var imageList = ArrayList<Image>()
-//    var price = ObservableField<String>()
+    var price = ObservableField<String>()
+    var priceNoPattern = String()
+    var surfaceArea = ObservableInt()
+    var roomNumber = ObservableInt()
+    var description = ObservableField<String>()
+
     val city = ObservableField<String>()
     val country = MutableLiveData<String>()
 
@@ -94,7 +95,7 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     // -------------
 
     /**
-     * Spinner listener.
+     * Spinner listener, for type, interest places and state spinners.
      */
     val spinnerListener = object: AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -109,34 +110,10 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     }
 
     /**
-     * Edit Text Listener.
-     * @param id Identifier for each edit text.
+     * Edit Text Listener for price edit text.
      */
-    fun editTextListener(id: Int) = object: TextWatcher {
-
-        var isEditing = false
-        override fun afterTextChanged(s: Editable?) {
-            when (id) {
-                PRICE_ID -> {
-                    price = s.toString().toLong()
-//                    if (s.isNullOrBlank()) { price.set(""); return }
-//                    if (isEditing) return
-//                    isEditing = true
-//
-//                    val s1: Double = s.replace(Regex.fromLiteral(","), "")
-//                            .toString().toDouble()
-//
-//                    val nf2: NumberFormat = NumberFormat.getInstance(Locale.ENGLISH)
-//                    (nf2 as DecimalFormat).applyPattern("###,###,###")
-//                    price.set(nf2.format(s1))
-//
-//                    isEditing = false
-                }
-                SURFACE_ID -> surface = s.toString().toInt()
-                ROOMS_ID -> roomNumber = s.toString().toInt()
-                DESCRIPTION_ID -> description = s.toString()
-            }
-        }
+    val editTextListener = object: TextWatcher {
+        override fun afterTextChanged(s: Editable?) { price.set(s.toString()) }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

@@ -2,6 +2,8 @@ package org.desperu.realestatemanager.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,6 +32,40 @@ object Utils {
      * @return Converted dollar value.
      */
     fun convertEuroToDollar(euro: Int): Int = (euro / exchangeRate).roundToInt()
+
+    // -----------------
+    // CONVERT PRICE
+    // -----------------
+
+    // Marker to prevent mistakes
+    private var isEditing = false
+
+    /**
+     * Convert simple string price (12000000) to pattern string price (12,000,000) or ($ 12,000,000).
+     * @param s Simple string price to convert.
+     * @param moneyUnity With or without money unity ($).
+     */
+    fun convertPriceToPatternPrice(s: String, moneyUnity: Boolean): String {
+        if (isEditing) return s
+        isEditing = true
+
+        if (s.isBlank() || s == "0") return ""
+
+        val s1: Double = s.replace(Regex.fromLiteral(","), "").toDouble()
+
+        val pattern = if (moneyUnity) "$ ###,###,###" else "###,###,###"
+        val nf2: NumberFormat = NumberFormat.getInstance(Locale.ENGLISH)
+        (nf2 as DecimalFormat).applyPattern(pattern)
+
+        isEditing = false
+        return nf2.format(s1)
+    }
+
+    /**
+     * Convert string pattern price to simple string price.
+     * @param str String pattern price to convert.
+     */
+    fun convertPatternPriceToString(str: String): String = str.replace(",","", false)
 
     // -----------------
     // CONVERT DATE

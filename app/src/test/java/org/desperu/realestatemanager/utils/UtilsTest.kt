@@ -6,6 +6,8 @@ import android.net.NetworkInfo
 import junit.framework.TestCase.assertEquals
 import org.desperu.realestatemanager.utils.Utils.convertDollarToEuro
 import org.desperu.realestatemanager.utils.Utils.convertEuroToDollar
+import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
+import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 import org.desperu.realestatemanager.utils.Utils.dateToString
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.isInternetAvailable
@@ -41,6 +43,26 @@ class UtilsTest {
         val euro = 7
         val expected: Int = (euro / exchangeRate).roundToInt()
         val output = convertEuroToDollar(euro)
+        assertEquals(expected, output)
+    }
+
+    @Test
+    fun given_priceString_When_convertPriceToPatternPrice_Then_checkPatternPrice() {
+        val price = "12000000"
+        val expected = "12,000,000"
+        val output = convertPriceToPatternPrice(price, false)
+        assertEquals(expected, output)
+
+        val expected2 = "$ 12,000,000"
+        val output2 = convertPriceToPatternPrice(price, true)
+        assertEquals(expected2, output2)
+    }
+
+    @Test
+    fun given_patternPrice_When_convertEuroToDollar_Then_checkDollarValue() {
+        val patternPrice = "17,000,000"
+        val expected = "17000000"
+        val output = convertPatternPriceToString(patternPrice)
         assertEquals(expected, output)
     }
 
@@ -126,7 +148,7 @@ class UtilsTest {
         assertEquals(expected, output)
     }
 
-//    @Test
+//    @Test // TODO remove if unused
 //    fun Given_sectionsArrayList_When_askConcatenateStringSectionsFromArrayList_Then_checkString() {
 //        val expected = "news_desk.contains:(\"Politics\" \"Business\" \"Entrepreneurs\")"
 //        val sections: ArrayList<String> = ArrayList()
