@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.ui.manageEstate
 
+import android.view.View
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.tabs.TabLayout
@@ -42,7 +43,7 @@ class ManageEstateActivity: BaseActivity() {
     private fun setViewModel() {
         if (viewModel == null) {
             viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
-            viewModel!!.setEstate(getEstateId())
+            viewModel?.setEstate(getEstateId())
         }
     }
 
@@ -56,6 +57,15 @@ class ManageEstateActivity: BaseActivity() {
         tabLayout.setupWithViewPager(activity_manage_estate_view_pager)
         tabLayout.tabMode = TabLayout.MODE_FIXED
     }
+
+    // -----------------
+    // ACTION
+    // -----------------
+
+    /**
+     * On click add estate button.
+     */
+    fun onClickAddEstate(v: View) { viewModel?.createOrUpdateEstate() }
 
     // --- GETTERS ---
 

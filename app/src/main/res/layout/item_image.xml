@@ -43,7 +43,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/item_image_text_description_size"
                 android:textStyle="bold"
-                android:text="@{viewModel.getImage.description}" />
+                android:text="@={viewModel.image.description}" />
 
             <ImageView
                 android:id="@+id/item_image_primary_marker"

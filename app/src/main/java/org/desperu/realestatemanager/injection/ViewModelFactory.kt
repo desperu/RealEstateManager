@@ -10,6 +10,8 @@ import org.desperu.realestatemanager.repositories.EstateDataRepository
 import org.desperu.realestatemanager.repositories.ImageDataRepository
 import org.desperu.realestatemanager.ui.main.EstateListViewModel
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvider.Factory {
 
@@ -25,8 +27,11 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
             @Suppress("UNCHECKED_CAST")
             return ManageEstateViewModel(EstateDataRepository(db.estateDao()),
                     ImageDataRepository(db.imageDao()),
-                    AddressDataRepository(db.addressDao())) as T
+                    AddressDataRepository(db.addressDao()),
+                    getExecutor()) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+
+    private fun getExecutor(): Executor = Executors.newSingleThreadExecutor()
 }

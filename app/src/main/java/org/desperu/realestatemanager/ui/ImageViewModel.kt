@@ -8,19 +8,19 @@ import org.desperu.realestatemanager.model.Image
 class ImageViewModel(private val givenImage: Image): BaseViewModel() {
 
     // FOR DATA
-    private val image = MutableLiveData<Image>()
+    val image = MutableLiveData<Image>()
 
     init {
-        setImage()
+        setGivenImage()
     }
 
     // -------------
     // SET IMAGE
     // -------------
 
-    private fun setImage() { image.value = givenImage }
+    private fun setGivenImage() { image.value = givenImage }
 
     // --- GETTERS ---
 
-    val getImage: LiveData<Image> = image // TODO getter or public field?
+    val getImage: LiveData<Image> = image
 }
