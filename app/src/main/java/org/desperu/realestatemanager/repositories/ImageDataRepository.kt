@@ -9,15 +9,21 @@ class ImageDataRepository(private val imageDao: ImageDao) {
     // --- GET ---
     fun getImage(imageId: Long) = imageDao.getImage(imageId)
 
-    // --- GET LIST---
-    fun getImages(estateId: Long): LiveData<List<Image>> = imageDao.getImages(estateId)
+    // --- GET LIST ---
+    fun getImageList(estateId: Long): LiveData<List<Image>> = imageDao.getImageList(estateId)
 
     // --- CREATE ---
-    fun createEstate(image: Image) { imageDao.insertImage(image) }
+    fun createImage(image: Image) { imageDao.insertImage(image) }
+
+    // --- CREATE LIST ---
+    fun createImageList(imageList: List<Image>) { for (image in imageList) imageDao.insertImage(image) }
 
     // --- UPDATE ---
-    fun updateEstate(image: Image) { imageDao.updateImage(image) }
+    fun updateImage(image: Image) { imageDao.updateImage(image) }
+
+    // --- UPDATE ---
+    fun updateImageList(imageList: List<Image>) { for (image in imageList) imageDao.updateImage(image) }
 
     // --- DELETE ---
-    fun deleteEstate(imageId: Long) { imageDao.deleteImage(imageId) }
+    fun deleteImage(imageId: Long) { imageDao.deleteImage(imageId) }
 }

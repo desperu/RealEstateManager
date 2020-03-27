@@ -27,7 +27,7 @@
     <!-- Estate Image Fragment -->
     <string name="fragment_estate_image_text_category_image">Image</string>
     <string name="fragment_estate_image_text_image_add">Add Image</string>
-    <string name="fragment_estate_image_toast_error_write_external_storage">Error : can\'t write in internal storage (user storage)!</string>
+    <string name="fragment_estate_image_toast_error_write_external_storage">Error : can\'t write on internal storage (user storage)!</string>
     <!-- Alert Dialog Image -->
     <string name="alert_dialog_image_title">Select Action</string>
     <string name="alert_dialog_image_button_choose">Select photo from gallery</string>

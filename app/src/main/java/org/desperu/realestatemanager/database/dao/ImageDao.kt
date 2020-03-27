@@ -14,7 +14,7 @@ interface ImageDao {
     fun getImage(imageId: Long): LiveData<Image>
 
     @Query("SELECT * FROM Image WHERE estateId = :estateId")
-    fun getImages(estateId: Long): LiveData<List<Image>>
+    fun getImageList(estateId: Long): LiveData<List<Image>>
 
     @Insert
     fun insertImage(image: Image)

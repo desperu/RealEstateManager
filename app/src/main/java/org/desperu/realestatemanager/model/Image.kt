@@ -7,14 +7,19 @@ import androidx.room.PrimaryKey
 
 /**
  * Class witch provides a model for image
+ * @param id Unique identifier of the image.
+ * @param estateId Unique identifier of the estate.
+ * @param imageUri Uri of the image.
+ * @param isPrimary True if this image is the primary image of the estate.
+ * @param description Description of the image.
  */
 @Entity(foreignKeys = [ForeignKey(entity = Estate::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("estateId"))],
-        indices = [Index(name = "estateId_index", value = ["estateId"])])
+        parentColumns = ["id"],
+        childColumns = ["estateId"])])
+//        indices = [Index(name = "estateId_index", value = ["estateId"])]) // Todo needed???
 data class Image(@PrimaryKey(autoGenerate = true)
-                 val id: Long,
-                 val estateId: Long,
-                 val imageUri: String,
-                 val isPrimary: Boolean = false,
-                 val description: String)
+                 val id: Long = 0,
+                 var estateId: Long = 0,
+                 var imageUri: String = "",
+                 var isPrimary: Boolean = false,
+                 var description: String = "")

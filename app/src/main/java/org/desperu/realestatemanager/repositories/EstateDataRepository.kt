@@ -13,7 +13,7 @@ class EstateDataRepository(private val estateDao: EstateDao) {
     val getAll = estateDao.getAll
 
     // --- CREATE ---
-    fun createEstate(estate: Estate) { estateDao.insertEstate(estate) }
+    fun createEstate(estate: Estate): Long { return estateDao.insertEstate(estate) }
 
     // --- UPDATE ---
     fun updateEstate(estate: Estate) { estateDao.updateEstate(estate) }
