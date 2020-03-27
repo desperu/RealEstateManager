@@ -41,7 +41,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.3.3'
     androidTestImplementation 'org.mockito:mockito-android:3.3.3'
 
-    // LiveData & ViewModel
+    // Lifecycle Extension
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
     // Room
@@ -53,15 +53,18 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger2_version"
     compileOnly "org.glassfish:javax.annotation:3.1.1"
 
-    // Leak Canary
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
-
     //EASY PERMISSIONS
     implementation 'pub.devrel:easypermissions:1.1.1'
 
     // Ice Pick
     implementation "frankiesardo:icepick:$icepick_version"
     kapt "frankiesardo:icepick-processor:$icepick_version"
+
+    // Stetho to check DataBase // TODO for test only, to remove
+    implementation 'com.facebook.stetho:stetho:1.5.1'
+
+    // Leak Canary
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 }
 repositories {
     mavenCentral()

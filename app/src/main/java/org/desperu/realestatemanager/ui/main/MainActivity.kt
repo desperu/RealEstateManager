@@ -10,6 +10,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import com.facebook.stetho.Stetho
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -30,6 +31,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun getActivityLayout(): Int = R.layout.activity_main
 
     override fun configureDesign() {
+        Stetho.initializeWithDefaults(this) // TODO For test only, to remove
         configureToolBar()
         configureDrawerLayout()
         configureNavigationView()

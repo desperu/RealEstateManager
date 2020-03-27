@@ -88,11 +88,10 @@ class ManageEstateFragment(): BaseBindingFragment() {
      */
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, getFragmentLayout(), container, false)
-        configureImageRecycler()
-
         viewModel = (requireActivity() as ManageEstateActivity).getViewModel()
+
         binding.setVariable(org.desperu.realestatemanager.BR.viewModel, viewModel)
-        updateRecyclerImageList() // TODO to perfect
+        configureImageRecycler()
         return binding.root
     }
 
@@ -123,12 +122,14 @@ class ManageEstateFragment(): BaseBindingFragment() {
     }
 
     /**
-     * Configure Linear Layout Manager for Image Recycler.
+     * Configure Linear Layout Manager for Image Recycler, and update data list.
      */
     private fun configureImageRecycler() {
-        if (fragmentKey == ESTATE_IMAGE)
+        if (fragmentKey == ESTATE_IMAGE) {
             (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView.layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            viewModel.updateRecyclerImageList()
+        }
     }
 
     // --------------
@@ -184,14 +185,6 @@ class ManageEstateFragment(): BaseBindingFragment() {
     // -----------------
 
     /**
-     * Update Recycler Image List.
-     */
-    private fun updateRecyclerImageList() {
-        if (fragmentKey == ESTATE_IMAGE)
-            viewModel.updateRecyclerImageList()
-    }
-
-    /**
      * Add image to image list.
      */
     private fun addImageToImageList(imageUri: String) = viewModel.addImageToImageList(imageUri)
@@ -204,29 +197,14 @@ class ManageEstateFragment(): BaseBindingFragment() {
         dialog.setTitle(R.string.alert_dialog_image_title)
         dialog.setItems(arrayOf(
                 getString(R.string.alert_dialog_image_button_choose),
-                getString(R.string.alert_dialog_image_button_take))) { dialog1, which ->
-            when (which) {
-                0 -> chooseImageFromPhone()
-                1 -> takePhotoWithCamera()
-            }
-            dialog1.cancel()
-        }
+                getString(R.string.alert_dialog_image_button_take))) {
+                    dialog1, which -> when (which) {
+                        0 -> chooseImageFromPhone()
+                        1 -> takePhotoWithCamera()
+                    }
+                    dialog1.cancel()
+                }
         dialog.show()
-    }
-
-    // -----------------
-    // UTILS
-    // -----------------
-
-    /**
-     * Get corresponding fragment layout, depending of fragmentKey value.
-     */
-    private fun getFragmentLayout() = when (fragmentKey) {
-        ESTATE_DATA -> R.layout.fragment_estate_data
-        ESTATE_IMAGE -> R.layout.fragment_estate_image
-        ESTATE_ADDRESS -> R.layout.fragment_estate_address
-        ESTATE_SALE -> R.layout.fragment_estate_sale
-        else -> R.layout.fragment_estate_data
     }
 
     // --------------------
@@ -257,6 +235,21 @@ class ManageEstateFragment(): BaseBindingFragment() {
         }
         // Launch an "Take Photo" Activity
         startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE), RC_TAKE_PHOTO)
+    }
+
+    // -----------------
+    // UTILS
+    // -----------------
+
+    /**
+     * Get corresponding fragment layout, depending of fragmentKey value.
+     */
+    private fun getFragmentLayout() = when (fragmentKey) {
+        ESTATE_DATA -> R.layout.fragment_estate_data
+        ESTATE_IMAGE -> R.layout.fragment_estate_image
+        ESTATE_ADDRESS -> R.layout.fragment_estate_address
+        ESTATE_SALE -> R.layout.fragment_estate_sale
+        else -> R.layout.fragment_estate_data
     }
 
     /**
