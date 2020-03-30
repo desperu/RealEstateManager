@@ -25,7 +25,7 @@ class EstateViewModel(private val givenEstate: Estate): BaseViewModel() {
      */
     private fun setEstate() {
         estate.value = givenEstate
-        if (givenEstate.imageList.isNullOrEmpty()) {
+        if (!givenEstate.imageList.isNullOrEmpty()) {
             for (image in givenEstate.imageList)
                 if (image.isPrimary) primaryImage.value = image
             if (primaryImage.value == null)

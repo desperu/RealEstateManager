@@ -10,6 +10,7 @@
     <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate !</string>
 
     <!-- Manage Estate Activity -->
+    <string name="activity_manage_estate_create_estate_message">Estate created!</string>
     <!-- Manage Estate Fragment -->
     <string name="fragment_estate_image_popup_title_permission_files_access">This application need storage permission.</string>
     <string name="fragment_estate_image_popup_title_permission_write_storage_and_camera">This application need write storage, and camera permissions.</string>

@@ -11,12 +11,13 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
 import org.desperu.realestatemanager.injection.ViewModelFactory
+import org.desperu.realestatemanager.view.enableSwipe
 
 class EstateListFragment: BaseBindingFragment() {
 
     // FOR DATA
     private lateinit var binding: FragmentEstateListBinding
-    private lateinit var viewModel: EstateListViewModel
+    private var viewModel: EstateListViewModel? = null
 
     // --------------
     // BASE METHODS
@@ -28,6 +29,7 @@ class EstateListFragment: BaseBindingFragment() {
 
     override fun updateDesign() {
         configureSwipeRefresh()
+        configureSwipeToDeleteForRecycler()
     }
 
 
@@ -51,6 +53,22 @@ class EstateListFragment: BaseBindingFragment() {
      * Configure swipe to refresh layout.
      */
     private fun configureSwipeRefresh() {
-        fragment_recycler_view_swipe_refresh.setOnRefreshListener { viewModel.reloadEstateList() }
+        fragment_recycler_view_swipe_refresh.setOnRefreshListener { viewModel?.reloadEstateList() }
     }
+
+    /**
+     * Configure swipe to delete gesture for recycler view.
+     */
+    private fun configureSwipeToDeleteForRecycler() {
+        viewModel?.getEstateList?.value?.let {
+            viewModel?.getEstateListAdapter?.let { it1 ->
+                enableSwipe(requireActivity() as MainActivity, it1, it as ArrayList<Any>)
+                        .attachToRecyclerView(fragment_recycler_view_recycler_view)
+            }
+        }
+    }
+
+    // --- GETTERS ---
+
+    fun getViewModel(): EstateListViewModel = viewModel as EstateListViewModel
 }

@@ -17,6 +17,7 @@ import org.desperu.realestatemanager.repositories.ImageDataRepository
 import org.desperu.realestatemanager.ui.ImageViewModel
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import org.desperu.realestatemanager.view.updateList
 import java.util.concurrent.*
 
 class ManageEstateViewModel(private val estateDataRepository: EstateDataRepository,
@@ -62,9 +63,10 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
      * Update Recycler Image List.
      */
     fun updateRecyclerImageList() {
-        val imageViewModelList = ArrayList<ImageViewModel>()
+        val imageViewModelList = ArrayList<Any>()
         estate.value?.imageList?.let { for (image in it) imageViewModelList.add(ImageViewModel(image)) }
         imageListAdapter.updateList(imageViewModelList)
+        updateList(imageViewModelList)
     }
 
     /**
@@ -167,7 +169,7 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
 
     private fun updateImageList(imageList: List<Image>) { executor.execute { imageDataRepository.updateImageList(imageList) } }
 
-    private fun deleteImage(imageId: Long) { executor.execute { imageDataRepository.deleteImage(imageId) } }
+    fun deleteImage(imageId: Long) { executor.execute { imageDataRepository.deleteImage(imageId) } }
 
     // ADDRESS
     private fun createAddress(address: Address) { executor.execute { addressDataRepository.createAddress(address) } }

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-    private lateinit var list: List<*>
+    private lateinit var list: ArrayList<Any>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(
@@ -25,9 +25,21 @@ class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Ad
 
     override fun getItemCount(): Int = list.size
 
-    fun updateList(list: List<*>) {
+    fun updateList(list: ArrayList<Any>) {
         this.list = list
         notifyDataSetChanged()
+    }
+
+    fun removeItem(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, list.size)
+    }
+
+    fun restoreItem(any: Any, position: Int) {
+        list.add(position, any)
+        // notify item added by position
+        notifyItemInserted(position)
     }
 
     class ViewHolder(private val binding: ViewDataBinding): RecyclerView.ViewHolder(binding.root) {

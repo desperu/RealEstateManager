@@ -6,6 +6,9 @@ import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.graphics.ImageDecoder.createSource
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
@@ -30,8 +33,10 @@ import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritabl
 import org.desperu.realestatemanager.utils.StorageUtils.setImageInStorage
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.todayDate
+import org.desperu.realestatemanager.view.enableSwipe
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ManageEstateFragment(): BaseBindingFragment() {
@@ -61,6 +66,7 @@ class ManageEstateFragment(): BaseBindingFragment() {
 
     override fun updateDesign() {
         configureCorrespondingLayout()
+        configureSwipeToDeleteForRecycler()
     }
 
     // --------------------
@@ -132,6 +138,16 @@ class ManageEstateFragment(): BaseBindingFragment() {
         }
     }
 
+    /**
+     * Configure swipe to delete gesture for recycler view.
+     */
+    private fun configureSwipeToDeleteForRecycler() {
+        viewModel.estate.value?.imageList?.let {
+            enableSwipe(requireActivity() as ManageEstateActivity, viewModel.getImageListAdapter, it as ArrayList<Any>)
+                    .attachToRecyclerView(fragment_estate_image_recycler_view)
+        }
+    }
+
     // --------------
     // DATE PICKERS
     // --------------
@@ -150,6 +166,7 @@ class ManageEstateFragment(): BaseBindingFragment() {
         datePickerSold = OnDateSetListener { _, year, month, dayOfMonth ->
             soldDate = intDateToString(dayOfMonth, month, year)
             fragment_estate_sale_date_picker_sold_out_date.text = soldDate
+            viewModel.estate.value?.soldDate = soldDate
         }
     }
 
@@ -208,7 +225,7 @@ class ManageEstateFragment(): BaseBindingFragment() {
     }
 
     // --------------------
-    // FILE MANAGEMENT
+    // IMAGE MANAGEMENT
     // --------------------
 
     /**
@@ -260,17 +277,17 @@ class ManageEstateFragment(): BaseBindingFragment() {
      */
     private fun handleResponse(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) { //SUCCESS
-            if (requestCode == RC_CHOOSE_PHOTO) {
-                addImageToImageList(data?.data.toString())
-            } else if (requestCode == RC_TAKE_PHOTO) {
-                if (isExternalStorageWritable()) {
-                    val photo: Bitmap = data?.extras?.get("data") as Bitmap
-                    addImageToImageList(setImageInStorage(activity?.getExternalFilesDir(
-                            Environment.DIRECTORY_PICTURES)!!, context!!,
-                            Date().time.toString() + ".jpg", FOLDER_NAME, photo))
-                } else
-                    Toast.makeText(context, getString(R.string.fragment_estate_image_toast_error_write_external_storage), Toast.LENGTH_SHORT).show()
-            }
+            if (isExternalStorageWritable()) {
+                lateinit var bitmap: Bitmap
+                when (requestCode) {
+                    RC_CHOOSE_PHOTO -> bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, data?.data)
+                    RC_TAKE_PHOTO -> bitmap = data?.extras?.get("data") as Bitmap
+                }
+                addImageToImageList(setImageInStorage(activity?.getExternalFilesDir(
+                        Environment.DIRECTORY_PICTURES)!!, context!!,
+                        Date().time.toString() + ".jpg", FOLDER_NAME, bitmap))
+            } else
+                Toast.makeText(context, getString(R.string.fragment_estate_image_toast_error_write_external_storage), Toast.LENGTH_SHORT).show()
         } else
             Toast.makeText(context, getString(R.string.fragment_estate_image_toast_title_no_image_chosen), Toast.LENGTH_SHORT).show()
     }

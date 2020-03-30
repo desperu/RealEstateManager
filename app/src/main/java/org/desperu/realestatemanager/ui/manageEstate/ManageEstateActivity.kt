@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.ui.manageEstate
 
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.tabs.TabLayout
@@ -65,7 +66,11 @@ class ManageEstateActivity: BaseActivity() {
     /**
      * On click add estate button.
      */
-    fun onClickAddEstate(v: View) { viewModel?.createOrUpdateEstate() }
+    fun onClickAddEstate(v: View) {
+        viewModel?.createOrUpdateEstate()
+        showToast(getString(R.string.activity_manage_estate_create_estate_message))
+        this.finishAfterTransition() // TODO to check and perform
+    }
 
     // --- GETTERS ---
 
@@ -76,4 +81,13 @@ class ManageEstateActivity: BaseActivity() {
         if (viewModel == null) setViewModel()
         return viewModel as ManageEstateViewModel
     }
+
+    // -----------------
+    // UI
+    // -----------------
+
+    /**
+     * Show Toast message.
+     */
+    private fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

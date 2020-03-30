@@ -11,10 +11,13 @@ import org.desperu.realestatemanager.repositories.AddressDataRepository
 import org.desperu.realestatemanager.repositories.EstateDataRepository
 import org.desperu.realestatemanager.repositories.ImageDataRepository
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import org.desperu.realestatemanager.view.updateList
+import java.util.concurrent.Executor
 
 class EstateListViewModel(private val estateDataRepository: EstateDataRepository,
                           private val imageDataRepository: ImageDataRepository,
-                          private val addressDataRepository: AddressDataRepository): BaseViewModel() {
+                          private val addressDataRepository: AddressDataRepository,
+                          private val executor: Executor): BaseViewModel() {
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
@@ -34,17 +37,20 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
      * Load estate list with image for each, from database.
      */
     private fun loadEstateList() {
+        estateList.value = ArrayList<Estate>()
         estateDataRepository.getAll.observeForever {
             t -> estateList.value = t //} // TODO remove LiveData from estateDao
             estateList.value?.let { it ->
                 for (estate in it) {
-                    estate.imageList = arrayListOf(Image())
+                    estate.imageList = ArrayList<Image>()
                     estate.address = Address()
                     imageDataRepository.getImageList(estate.id).observeForever {
                         t -> if (t.isNotEmpty()) estate.imageList = t as ArrayList<Image>
                         onRetrieveEstateList()
                     }
-                    addressDataRepository.getAddress(estate.id).observeForever { t -> estate.address = t; onRetrieveEstateList() }
+                    addressDataRepository.getAddress(estate.id).observeForever {
+                        t -> if (t != null) estate.address = t
+                        onRetrieveEstateList() }
                 }
             }
         }
@@ -64,9 +70,10 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
      * Push data to recycler view when retrieve, and stop swipe refreshing animation.
      */
     private fun onRetrieveEstateList() {
-        val estateViewModelList = ArrayList<EstateViewModel>()
+        val estateViewModelList = ArrayList<Any>()
         estateList.value?.let { for (estate in it) estateViewModelList.add(EstateViewModel(estate)) }
         estateListAdapter.updateList(estateViewModelList)
+        updateList(estateViewModelList)
         // For UI
         mutableRefreshing.value = false
         mutableVisibility.value = if (estateViewModelList.isEmpty()) View.VISIBLE else View.GONE
@@ -76,7 +83,16 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
 
     val getEstateListAdapter = estateListAdapter
 
+    val getEstateList = estateList
+
     val getMutableRefreshing = mutableRefreshing
 
     val getMutableVisibility = mutableVisibility
+
+    // --- MANAGE ---
+
+    fun deleteFullEstate(estateId: Long) { executor.execute {
+        addressDataRepository.deleteAddress(estateId)
+        imageDataRepository.deleteEstateImages(estateId)
+        estateDataRepository.deleteEstate(estateId) } }
 }

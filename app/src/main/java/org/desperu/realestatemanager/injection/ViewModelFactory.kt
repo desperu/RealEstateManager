@@ -21,7 +21,8 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
             @Suppress("UNCHECKED_CAST")
             return EstateListViewModel(EstateDataRepository(db.estateDao()),
                     ImageDataRepository(db.imageDao()),
-                    AddressDataRepository(db.addressDao())) as T
+                    AddressDataRepository(db.addressDao()),
+                    getExecutor()) as T
         } else if (modelClass.isAssignableFrom(ManageEstateViewModel::class.java)) {
             val db = Room.databaseBuilder(activity.applicationContext, AppDatabase::class.java, "estate").build()
             @Suppress("UNCHECKED_CAST")

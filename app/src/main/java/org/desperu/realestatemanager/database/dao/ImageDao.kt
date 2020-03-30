@@ -24,4 +24,7 @@ interface ImageDao {
 
     @Query("DELETE FROM Image WHERE id = :imageId")
     fun deleteImage(imageId: Long)
+
+    @Query("DELETE FROM Image WHERE estateId = :estateId")
+    fun deleteEstateImages(estateId: Long)
 }

@@ -26,4 +26,7 @@ class ImageDataRepository(private val imageDao: ImageDao) {
 
     // --- DELETE ---
     fun deleteImage(imageId: Long) { imageDao.deleteImage(imageId) }
+
+    // --- DELETE ---
+    fun deleteEstateImages(estateId: Long) { imageDao.deleteEstateImages(estateId) }
 }
