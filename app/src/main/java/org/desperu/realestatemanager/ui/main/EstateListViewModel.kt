@@ -2,8 +2,11 @@ package org.desperu.realestatemanager.ui.main
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.base.BaseViewModel
 import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
@@ -17,13 +20,17 @@ import java.util.concurrent.Executor
 class EstateListViewModel(private val estateDataRepository: EstateDataRepository,
                           private val imageDataRepository: ImageDataRepository,
                           private val addressDataRepository: AddressDataRepository,
-                          private val executor: Executor): BaseViewModel() {
+                          private val executor: Executor): ViewModel() {
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
-    private val estateList = MutableLiveData<List<Estate>>()
+    private var estateList = ArrayList<Estate>()
     private val mutableRefreshing = MutableLiveData<Boolean>()
     private val mutableVisibility = MutableLiveData<Int>()
+
+    private lateinit var subscribeEstate: Disposable
+    private lateinit var subscribeImages: Disposable
+    private lateinit var subscribeAddress: Disposable
 
     init {
         loadEstateList()
@@ -34,27 +41,50 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
     // -------------
 
     /**
-     * Load estate list with image for each, from database.
+     * Load estate list, from database.
      */
     private fun loadEstateList() {
-        estateList.value = ArrayList<Estate>()
-        estateDataRepository.getAll.observeForever {
-            t -> estateList.value = t //} // TODO remove LiveData from estateDao
-            estateList.value?.let { it ->
-                for (estate in it) {
-                    estate.imageList = ArrayList<Image>()
-                    estate.address = Address()
-                    imageDataRepository.getImageList(estate.id).observeForever {
-                        t -> if (t.isNotEmpty()) estate.imageList = t as ArrayList<Image>
-                        onRetrieveEstateList()
-                    }
-                    addressDataRepository.getAddress(estate.id).observeForever {
-                        t -> if (t != null) estate.address = t
-                        onRetrieveEstateList() }
-                }
-            }
-        }
-        onRetrieveEstateList()
+        subscribeEstate = estateDataRepository.getAll
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { estateList -> this.estateList = estateList as ArrayList<Estate>
+                            for (estate in estateList) {
+                                estate.imageList = ArrayList() // TODO set in Estate() ??
+                                loadImagesForEstate(estate)
+                                estate.address = Address()
+                                loadAddressForEstate(estate)
+                            }
+                        },
+                        { mutableVisibility.value = View.VISIBLE }
+                )
+        onRetrieveEstateList() // To set recycler view list (it's a lateinit var)
+    }
+
+    /**
+     * Load images list for estate.
+     */
+    private fun loadImagesForEstate(estate: Estate) {
+        subscribeImages = imageDataRepository.getImageList(estate.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { imageList -> estate.imageList = imageList as ArrayList<Image>; onRetrieveEstateList() },
+                        { mutableVisibility.value = View.VISIBLE }
+                )
+    }
+
+    /**
+     * Load address for estate.
+     */
+    private fun loadAddressForEstate(estate: Estate) {
+        subscribeAddress = addressDataRepository.getAddress(estate.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { address -> estate.address = address; onRetrieveEstateList() },
+                        { mutableVisibility.value = View.VISIBLE }
+                )
     }
 
     /**
@@ -71,7 +101,7 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
      */
     private fun onRetrieveEstateList() {
         val estateViewModelList = ArrayList<Any>()
-        estateList.value?.let { for (estate in it) estateViewModelList.add(EstateViewModel(estate)) }
+        for (estate in estateList) estateViewModelList.add(EstateViewModel(estate))
         estateListAdapter.updateList(estateViewModelList)
         updateList(estateViewModelList)
         // For UI
@@ -91,8 +121,11 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
 
     // --- MANAGE ---
 
-    fun deleteFullEstate(estateId: Long) { executor.execute {
-        addressDataRepository.deleteAddress(estateId)
-        imageDataRepository.deleteEstateImages(estateId)
-        estateDataRepository.deleteEstate(estateId) } }
+    fun deleteFullEstate(estateId: Long) {
+        executor.execute {
+            addressDataRepository.deleteAddress(estateId)
+            imageDataRepository.deleteEstateImages(estateId)
+            estateDataRepository.deleteEstate(estateId)
+        }
+    }
 }

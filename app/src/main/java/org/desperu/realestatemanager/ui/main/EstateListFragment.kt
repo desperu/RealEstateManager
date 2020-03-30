@@ -42,7 +42,7 @@ class EstateListFragment: BaseBindingFragment() {
      */
     private fun configureViewModel(inflater: LayoutInflater, container: ViewGroup?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_estate_list, container, false)
-        binding.fragmentRecyclerViewRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.fragmentEstateListRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
         binding.viewModel = viewModel
@@ -53,18 +53,16 @@ class EstateListFragment: BaseBindingFragment() {
      * Configure swipe to refresh layout.
      */
     private fun configureSwipeRefresh() {
-        fragment_recycler_view_swipe_refresh.setOnRefreshListener { viewModel?.reloadEstateList() }
+        fragment_estate_list_swipe_refresh.setOnRefreshListener { viewModel?.reloadEstateList() }
     }
 
     /**
      * Configure swipe to delete gesture for recycler view.
      */
     private fun configureSwipeToDeleteForRecycler() {
-        viewModel?.getEstateList?.value?.let {
-            viewModel?.getEstateListAdapter?.let { it1 ->
-                enableSwipe(requireActivity() as MainActivity, it1, it as ArrayList<Any>)
-                        .attachToRecyclerView(fragment_recycler_view_recycler_view)
-            }
+        viewModel?.getEstateListAdapter?.let {
+            enableSwipe(requireActivity() as MainActivity, it, viewModel?.getEstateList as ArrayList<Any>)
+                    .attachToRecyclerView(fragment_estate_list_recycler_view)
         }
     }
 

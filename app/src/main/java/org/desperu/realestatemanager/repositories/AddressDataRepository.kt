@@ -1,20 +1,22 @@
 package org.desperu.realestatemanager.repositories
 
-import androidx.lifecycle.LiveData
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Single
 import org.desperu.realestatemanager.database.dao.AddressDao
 import org.desperu.realestatemanager.model.Address
 
 class AddressDataRepository(private val addressDao: AddressDao) {
 
     // --- GET ---
-    fun getAddress(estateId: Long): LiveData<Address> = addressDao.getAddress(estateId)
+    fun getAddress(estateId: Long): Flowable<Address> = addressDao.getAddress(estateId)
 
     // --- CREATE ---
-    fun createAddress(address: Address) { addressDao.insertAddress(address) }
+    fun createAddress(address: Address): Maybe<Long> { return addressDao.insertAddress(address) }
 
     // --- UPDATE ---
-    fun updateAddress(address: Address) { addressDao.updateAddress(address) }
+    fun updateAddress(address: Address): Single<Int> { return addressDao.updateAddress(address) }
 
     // --- DELETE ---
-    fun deleteAddress(estateId: Long) { addressDao.deleteAddress(estateId) }
+    fun deleteAddress(estateId: Long): Single<Int> { return addressDao.deleteAddress(estateId) }
 }

@@ -49,20 +49,20 @@ fun Spinner.setOnItemSelected(listener: AdapterView.OnItemSelectedListener) {
 
 @BindingAdapter("priceText")
 fun EditText.setPriceText(str: String?) {
-    // Remove listener to prevent cycle round
-    this.removeTextChangedListener(listenerSave)
-    val cursorPosition = this.selectionStart
-    var strLength = 0
-    var str1 = ""
-    // Convert price to pattern price
+    // Remove listener to prevent infinite loop
+    removeTextChangedListener(listenerSave)
     if (str != null) {
+        val cursorPosition = selectionStart
+        var str1 = ""
+        // Convert price to pattern price
         str1 = convertPriceToPatternPrice(str, false)
-        strLength = str.length
+        val strLength: Int = str.length
+        // Set pattern price to edit text, cursor with corrected position if needed, and set listener
+        setText(str1)
+        val newCursorPosition = cursorPosition + str1.length - strLength
+        setSelection(if (cursorPosition > 0 && newCursorPosition < cursorPosition) newCursorPosition else cursorPosition)
     }
-    // Set pattern price to edit text, cursor with corrected position if needed, and set listener
-    this.setText(str1)
-    this.setSelection(if (cursorPosition > 0) cursorPosition + str1.length - strLength else cursorPosition)
-    this.addTextChangedListener(listenerSave)
+    addTextChangedListener(listenerSave)
 }
 
 lateinit var listenerSave: TextWatcher

@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.base.BaseViewModel
 import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
@@ -23,7 +23,7 @@ import java.util.concurrent.*
 class ManageEstateViewModel(private val estateDataRepository: EstateDataRepository,
                             private val imageDataRepository: ImageDataRepository,
                             private val addressDataRepository: AddressDataRepository,
-                            private val executor: Executor): BaseViewModel() {
+                            private val executor: Executor): ViewModel() {
 
     // FOR DATA
     private val imageListAdapter = RecyclerViewAdapter(R.layout.item_image)
@@ -45,9 +45,12 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
      */
     fun setEstate(estateId: Long) {
         if (estateId != 0.toLong()) {
-            estate.value = estateDataRepository.getEstate(estateId).value
-            estate.value?.imageList = imageDataRepository.getImageList(estateId).value!! as ArrayList<Image>
-            estate.value?.address = addressDataRepository.getAddress(estateId).value!!
+            estateDataRepository.getEstate(estateId).subscribe( { estate -> this.estate.value = estate } )
+            imageDataRepository.getImageList(estateId).subscribe( { imageList -> estate.value?.imageList = imageList as ArrayList<Image> } )
+            addressDataRepository.getAddress(estateId).subscribe( { address -> estate.value?.address = address } )
+//            estate.value = estateDataRepository.getEstate(estateId)
+//            estate.value?.imageList = imageDataRepository.getImageList(estateId).value!! as ArrayList<Image>
+//            estate.value?.address = addressDataRepository.getAddress(estateId).value!!
         } else {
             estate.value = Estate()
             estate.value?.imageList = ArrayList<Image>()
@@ -121,7 +124,7 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
         bindDataInEstate()
 
         if (estate.value?.id == 0L) {
-            estate.value?.let { setEstateIdInOtherTables(createEstate(it)) }
+            estate.value?.let { createEstate(it) }
             estate.value?.imageList?.let { createImageList(it) }
             estate.value?.address?.let { createAddress(it) }
         } else {
@@ -135,7 +138,7 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     private fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
 
-        // Spinners values
+        // Spinners values // TODO set default spinner values
         estate.value?.type = type
         estate.value?.interestPlaces = interestPlaces
         estate.value?.state = state
@@ -148,12 +151,8 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     }
 
     // ESTATE
-    private fun createEstate(estate: Estate): Long {
-        val callableTask: () -> Long = { estateDataRepository.createEstate(estate) }
-        val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-        val rowCount: Future<Long>
-        rowCount = executorService.schedule(callableTask, 1, TimeUnit.SECONDS)
-        return rowCount.get()
+    private fun createEstate(estate: Estate) {
+        executor.execute { setEstateIdInOtherTables(estateDataRepository.createEstate(estate).blockingGet()) }
     }
 
     private fun updateEstate(estate: Estate) { executor.execute { estateDataRepository.updateEstate(estate) } }

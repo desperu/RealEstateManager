@@ -9,7 +9,7 @@
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/fragment_recycler_view_swipe_refresh"
+        android:id="@+id/fragment_estate_list_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:refreshingSwipe="@{viewModel.getMutableRefreshing}">
@@ -19,7 +19,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/fragment_recycler_view_text_empty"
+                android:id="@+id/fragment_estate_list_text_empty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -30,9 +30,10 @@
                 app:mutableVisibility="@{viewModel.getMutableVisibility}"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/fragment_recycler_view_recycler_view"
+                android:id="@+id/fragment_estate_list_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorPassedWhite"
                 app:adapter="@{viewModel.getEstateListAdapter}"/>
 
         </RelativeLayout>

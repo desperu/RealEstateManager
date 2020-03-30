@@ -38,23 +38,28 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // Mockito
-    testImplementation 'org.mockito:mockito-core:3.3.3'
-    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
 
-    // Lifecycle Extension
+    // LiveData & ViewModel
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
     // Room
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    kapt "android.arch.persistence.room:compiler:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
+    // RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
 
-    // Dagger 2
-    implementation "com.google.dagger:dagger:$dagger2_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
-    compileOnly "org.glassfish:javax.annotation:3.1.1"
+// TODO to clean unused library
+
+    //RxJava
+//    implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     //EASY PERMISSIONS
-    implementation 'pub.devrel:easypermissions:1.1.1'
+    implementation "pub.devrel:easypermissions:$easypermission_version"
 
     // Ice Pick
     implementation "frankiesardo:icepick:$icepick_version"

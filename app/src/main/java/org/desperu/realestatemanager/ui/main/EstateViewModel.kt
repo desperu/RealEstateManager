@@ -2,11 +2,11 @@ package org.desperu.realestatemanager.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import org.desperu.realestatemanager.base.BaseViewModel
+import androidx.lifecycle.ViewModel
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
 
-class EstateViewModel(private val givenEstate: Estate): BaseViewModel() {
+class EstateViewModel(private val givenEstate: Estate): ViewModel() {
 
     // FOR DATA
     private val estate = MutableLiveData<Estate>()
