@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/activity_main_menu_add"
-        android:icon="@drawable/ic_baseline_add_white_24"
+        android:icon="@drawable/ic_baseline_add_white_48"
         app:showAsAction="ifRoom"
         android:title="@string/menu_item_add">
     </item>

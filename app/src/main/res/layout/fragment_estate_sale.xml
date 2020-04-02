@@ -8,144 +8,180 @@
             type="org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/fragment_estate_sale_text_category_sale_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
-            android:text="@string/fragment_estate_sale_text_category_sale_data"
-            android:textStyle="bold"
-            android:textSize="@dimen/fragments_manage_estate_text_category_size"
-            android:textColor="@android:color/black"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
-            android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-            android:background="@color/colorLightDark" />
+        android:background="@color/colorPassedWhite">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/fragments_manage_estate_linear_padding"
-            android:baselineAligned="false">
+            android:orientation="vertical"
+            android:background="@color/colorPassedWhite">
 
-            <RelativeLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/fragment_estate_sale_text_category_sale_data"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:text="@string/fragment_estate_sale_text_category_sale_data"
+                style="@style/ManageCategoryTheme"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_sale_text_sale_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
-                    android:text="@string/fragment_estate_sale_text_sale_date"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
-
-                <TextView
-                    android:id="@+id/fragment_estate_sale_date_picker_sale_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/fragment_estate_sale_text_sale_date"
-                    android:layout_marginStart="@dimen/fragments_manage_estate_text_sub_category_margin"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:orientation="horizontal"
+                android:padding="@dimen/fragments_manage_estate_linear_padding"
+                android:baselineAligned="false">
 
-                <TextView
-                    android:id="@+id/fragment_estate_sale_text_sold_out_date"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
-                    android:text="@string/fragment_estate_sale_text_sold_out_date"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+                    android:layout_weight="1"
+                    style="@style/ManageContainerTheme">
 
-                <TextView
-                    android:id="@+id/fragment_estate_sale_date_picker_sold_out_date"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/fragment_estate_sale_text_sale_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_sale_text_sale_date"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_sale_date_picker_sale_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fragment_estate_sale_text_sale_date"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
+                        android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
+                        android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/fragment_estate_sale_date_picker_sale_date"
+                        android:layout_alignStart="@+id/fragment_estate_sale_date_picker_sale_date"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_alignEnd="@+id/fragment_estate_sale_date_picker_sale_date"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:background="@color/colorLightDark" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/fragment_estate_sale_text_sold_out_date"
-                    android:layout_marginStart="@dimen/fragments_manage_estate_text_sub_category_margin"/>
+                    android:layout_weight="1"
+                    style="@style/ManageContainerTheme">
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/fragment_estate_sale_text_sold_out_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_sale_text_sold_out_date"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_sale_date_picker_sold_out_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fragment_estate_sale_text_sold_out_date"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
+                        android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
+                        android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/fragment_estate_sale_date_picker_sold_out_date"
+                        android:layout_alignStart="@+id/fragment_estate_sale_date_picker_sold_out_date"
+                        android:layout_alignEnd="@+id/fragment_estate_sale_date_picker_sold_out_date"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:background="@color/colorLightDark" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/fragments_manage_estate_linear_padding"
+                android:baselineAligned="false">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/ManageContainerTheme">
+
+                    <TextView
+                        android:id="@+id/fragment_estate_sale_text_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_sale_text_state"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <Spinner
+                        android:id="@+id/fragment_estate_sale_spinner_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
+                        android:layout_marginBottom="@dimen/fragments_manage_estate_spinner_margin_bottom"
+                        android:layout_below="@+id/fragment_estate_sale_text_state"
+                        android:tag="spinnerState"
+                        app:setItem="@{viewModel.estate.state}"
+                        app:onItemSelected="@{viewModel.spinnerListener}"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/ManageContainerTheme">
+
+                    <TextView
+                        android:id="@+id/fragment_estate_sale_text_real_estate_agent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:text="@string/fragment_estate_sale_text_real_estate_agent"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+
+                    <EditText
+                        android:id="@+id/fragment_estate_sale_edit_text_real_estate_agent"
+                        android:layout_width="@dimen/fragments_manage_estate_edit_price_width"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragments_manage_estate_edit_margin_start"
+                        android:layout_below="@+id/fragment_estate_sale_text_real_estate_agent"
+                        android:inputType="text"
+                        android:hint="@null"
+                        android:importantForAutofill="no" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/fragments_manage_estate_linear_padding"
-            android:baselineAligned="false">
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/fragment_estate_sale_text_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
-                    android:text="@string/fragment_estate_sale_text_state"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
-
-                <Spinner
-                    android:id="@+id/fragment_estate_sale_spinner_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
-                    android:layout_below="@+id/fragment_estate_sale_text_state"
-                    android:tag="spinnerState"
-                    app:setItem="@{viewModel.estate.state}"
-                    app:onItemSelected="@{viewModel.spinnerListener}"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/fragment_estate_sale_text_real_estate_agent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
-                    android:text="@string/fragment_estate_sale_text_real_estate_agent"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
-
-                <EditText
-                    android:id="@+id/fragment_estate_sale_edit_text_real_estate_agent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragments_manage_estate_edit_margin_start"
-                    android:layout_below="@+id/fragment_estate_sale_text_real_estate_agent"
-                    android:inputType="text"
-                    android:hint="@null"
-                    android:importantForAutofill="no" />
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
 </layout>

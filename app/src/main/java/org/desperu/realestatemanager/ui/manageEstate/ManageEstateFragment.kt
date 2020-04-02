@@ -6,9 +6,6 @@ import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.graphics.ImageDecoder.createSource
-import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
@@ -36,7 +33,6 @@ import org.desperu.realestatemanager.utils.Utils.todayDate
 import org.desperu.realestatemanager.view.enableSwipe
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class ManageEstateFragment(): BaseBindingFragment() {
@@ -107,7 +103,6 @@ class ManageEstateFragment(): BaseBindingFragment() {
     private fun configureCorrespondingLayout() {
         when (fragmentKey) {
             ESTATE_DATA -> configureSpinner(fragment_estate_data_spinner_type, R.array.estate_type_list)
-            ESTATE_IMAGE -> setOnClickAddImageListener()
             ESTATE_ADDRESS -> configureSpinner(fragment_estate_address_spinner_interest_places, R.array.estate_interest_places_list)
             ESTATE_SALE -> { configureSpinner(fragment_estate_sale_spinner_state, R.array.estate_state_list)
                     configureDatePicker()}
@@ -193,9 +188,7 @@ class ManageEstateFragment(): BaseBindingFragment() {
     /**
      * Set on click listener for add image floating button.
      */
-    private fun setOnClickAddImageListener() {
-        fragment_estate_image_floating_add_image.setOnClickListener { alertDialogImage() }
-    }
+    fun onClickAddImage() { alertDialogImage() }
 
     // -----------------
     // UI

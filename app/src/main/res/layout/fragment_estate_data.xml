@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -16,24 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/fragments_manage_estate_linear_root_padding_bottom">
+            android:paddingBottom="@dimen/fragments_manage_estate_linear_root_padding_bottom"
+            android:background="@color/colorPassedWhite">
 
             <TextView
                 android:id="@+id/fragment_estate_data_text_category_estate_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
-                android:text="@string/fragment_estate_data_text_category_estate_data"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/fragments_manage_estate_text_category_size" />
-
-            <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
-                android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-                android:background="@color/colorLightDark" />
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_estate_data_text_category_estate_data"
+                style="@style/ManageCategoryTheme"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,7 +37,8 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    style="@style/ManageContainerTheme">
 
                     <TextView
                         android:id="@+id/fragment_estate_data_text_type"
@@ -61,6 +54,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
+                        android:layout_marginBottom="@dimen/fragments_manage_estate_spinner_margin_bottom"
                         android:layout_below="@+id/fragment_estate_data_text_type"
                         android:tag="spinnerType"
                         app:setItem="@{viewModel.estate.type}"
@@ -71,7 +65,8 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    style="@style/ManageContainerTheme">
 
                     <TextView
                         android:id="@+id/fragment_estate_data_text_price"
@@ -103,10 +98,11 @@
                         android:inputType="numberDecimal"
                         android:digits="0123456789,"
                         android:maxLines="1"
-                        android:maxLength="17"
+                        android:maxLength="14"
                         android:hint="@null"
                         android:importantForAutofill="no"
                         android:textColor="@android:color/holo_green_dark"
+                        android:theme="@style/EditTextPriceTheme"
                         app:onTextChanged="@{viewModel.editTextListener}"
                         app:priceText="@{viewModel.price}" />
 
@@ -124,12 +120,14 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    style="@style/ManageContainerTheme">
 
                     <TextView
                         android:id="@+id/fragment_estate_data_text_surface_area"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
                         android:text="@string/fragment_estate_data_text_surface_area"
                         android:textStyle="bold"
@@ -147,7 +145,7 @@
                         android:hint="@null"
                         android:importantForAutofill="no"
                         android:maxLength="5"
-                        android:text="@={`` + viewModel.estate.surfaceArea}"/>
+                        android:text="@={viewModel.estate.surfaceArea}"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -165,7 +163,9 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="@drawable/container_border"
+                    style="@style/ManageContainerTheme">
 
                     <TextView
                         android:id="@+id/fragment_estate_data_text_rooms_number"
@@ -188,35 +188,18 @@
                         android:hint="@null"
                         android:importantForAutofill="no"
                         android:maxLength="4"
-                        android:text="@={`` + viewModel.estate.roomNumber}"/>
+                        android:text="@={viewModel.estate.roomNumber}"/>
 
                 </RelativeLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
-                android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-                android:background="@color/colorLightDark" />
-
             <TextView
                 android:id="@+id/fragment_estate_data_text_category_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
-                android:text="@string/fragment_estate_data_text_description"
-                android:textStyle="bold"
-                android:textSize="@dimen/fragments_manage_estate_text_category_size"
-                android:textColor="@android:color/black"/>
-
-            <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
-                android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
-                android:background="@color/colorLightDark" />
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_estate_data_text_description"
+                style="@style/ManageCategoryTheme"/>
 
             <EditText
                 android:id="@+id/fragment_estate_data_edit_text_description"
@@ -225,12 +208,14 @@
                 android:layout_margin="@dimen/fragments_manage_estate_text_category_margin"
                 android:padding="@dimen/fragments_manage_estate_edit_description_padding"
                 android:gravity="top"
+                android:background="@drawable/edit_text_border"
+                android:elevation="@dimen/default_elevation"
                 android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
                 android:hint="@string/fragment_estate_data_text_description_hint"
                 android:minLines="5"
                 android:importantForAutofill="no"
-                android:background="@drawable/edit_text_border"
-                android:text="@={viewModel.estate.description}"/>
+                android:text="@={viewModel.estate.description}"
+                tools:ignore="UnusedAttribute" />
 
         </LinearLayout>
 

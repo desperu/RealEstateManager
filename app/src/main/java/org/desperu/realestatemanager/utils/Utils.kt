@@ -46,7 +46,7 @@ object Utils {
      * @param moneyUnity With or without money unity ($).
      */
     fun convertPriceToPatternPrice(s: String, moneyUnity: Boolean): String {
-        if (isEditing) return s
+        if (isEditing && !moneyUnity) return s
         isEditing = true
 
         if (s.isBlank() || s == "0") return ""

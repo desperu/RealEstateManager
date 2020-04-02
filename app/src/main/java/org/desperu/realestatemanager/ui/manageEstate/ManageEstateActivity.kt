@@ -2,6 +2,7 @@ package org.desperu.realestatemanager.ui.manageEstate
 
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.tabs.TabLayout
@@ -10,6 +11,8 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.injection.ViewModelFactory
 import org.desperu.realestatemanager.utils.ESTATE_ID
+import org.desperu.realestatemanager.utils.ESTATE_IMAGE
+import org.desperu.realestatemanager.view.MyPagerTransformer
 import org.desperu.realestatemanager.view.ViewPagerAdapter
 
 class ManageEstateActivity: BaseActivity() {
@@ -54,6 +57,7 @@ class ManageEstateActivity: BaseActivity() {
     private fun configureViewPagerAndTabs() {
         activity_manage_estate_view_pager.adapter = ViewPagerAdapter(this, supportFragmentManager,
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+        activity_manage_estate_view_pager.setPageTransformer(true, MyPagerTransformer(activity_manage_estate_view_pager))
         val tabLayout: TabLayout = activity_manage_estate_pager_tabs
         tabLayout.setupWithViewPager(activity_manage_estate_view_pager)
         tabLayout.tabMode = TabLayout.MODE_FIXED
@@ -70,6 +74,17 @@ class ManageEstateActivity: BaseActivity() {
         viewModel?.createOrUpdateEstate()
         showToast(getString(R.string.activity_manage_estate_create_estate_message))
         this.finishAfterTransition() // TODO to check and perform
+    }
+
+    /**
+     * On click add image.
+     */
+    fun onClickAddImage(v: View) {
+        val currentItem = activity_manage_estate_view_pager.currentItem
+        val page: Fragment? = supportFragmentManager.findFragmentByTag(
+                "android:switcher:" + R.id.activity_manage_estate_view_pager.toString() + ":" + currentItem)
+        if (currentItem == ESTATE_IMAGE && page != null)
+            (page as ManageEstateFragment).onClickAddImage()
     }
 
     // --- GETTERS ---

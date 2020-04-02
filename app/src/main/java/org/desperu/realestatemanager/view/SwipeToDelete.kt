@@ -4,10 +4,12 @@ import android.graphics.*
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.desperu.realestatemanager.R
+import org.desperu.realestatemanager.ui.ImageViewModel
 import org.desperu.realestatemanager.ui.main.EstateListFragment
 import org.desperu.realestatemanager.ui.main.EstateViewModel
 import org.desperu.realestatemanager.ui.main.MainActivity
@@ -50,9 +52,9 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
                 val width = height / 3
                 if (dX > 0) {
                     p.color = Color.parseColor("#388E3C")
-                    val background = RectF(itemView.left.toFloat(), itemView.top.toFloat(), dX, itemView.bottom.toFloat())
+                    val background = RectF(itemView.left.toFloat(), itemView.top.toFloat(), itemView.left.toFloat() + dX, itemView.bottom.toFloat())
                     c.drawRect(background, p)
-                    icon = BitmapFactory.decodeResource(activity.resources, R.drawable.ic_baseline_delete_forever_black_24)
+                    icon = BitmapFactory.decodeResource(activity.resources, R.drawable.ic_baseline_update_white_24)
                     val iconDest = RectF(itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left.toFloat() + 2 * width, itemView.bottom.toFloat() - width)
                     c.drawBitmap(icon, null, iconDest, p)
                 } else {
@@ -75,10 +77,10 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
 fun updateList(newList: ArrayList<Any>) { list = newList }
 
 private fun removeItem(activity: AppCompatActivity, adapter: RecyclerViewAdapter, position: Int) {
-    val estateId: Long = (list[position] as EstateViewModel).getEstate.value?.id!!
+    val itemId = getItemId(list[position], (list[position] as ViewModel)::class.java)
     adapter.removeItem(position)
     restored = false
-    Handler().postDelayed( { if (!restored) removeDataSource(activity, estateId) }, 5000)
+    Handler().postDelayed( { if (!restored) removeDataSource(activity, itemId) }, 5000)
 }
 
 private fun restoreItem(adapter: RecyclerViewAdapter, deletedItem: Any, position: Int) {
@@ -86,14 +88,24 @@ private fun restoreItem(adapter: RecyclerViewAdapter, deletedItem: Any, position
     restored = true
 }
 
-private fun removeDataSource(activity: AppCompatActivity, estateId: Long) {
+private fun <T : ViewModel?> getItemId(swipedItem: Any, modelClass: Class<T>): Long {
+    if (modelClass.isAssignableFrom(EstateViewModel::class.java)) {
+        return (swipedItem as EstateViewModel).getEstate.value?.id!!
+    }
+    else if (modelClass.isAssignableFrom(ImageViewModel::class.java)) {
+        return (swipedItem as ImageViewModel).image.value?.id!!
+    }
+    throw IllegalArgumentException("Unknown View Model class")
+}
+
+private fun removeDataSource(activity: AppCompatActivity, itemId: Long) {
     if (activity::class.java.isAssignableFrom(MainActivity::class.java)) {
         ((activity as MainActivity).supportFragmentManager
                 .findFragmentById(R.id.activity_main_frame_layout) as EstateListFragment?)
-                ?.getViewModel()?.deleteFullEstate(estateId)
+                ?.getViewModel()?.deleteFullEstate(itemId)
         return
     } else if (activity::class.java.isAssignableFrom(ManageEstateActivity::class.java)) {
-        (activity as ManageEstateActivity).getViewModel().deleteImage(0L)
+        (activity as ManageEstateActivity).getViewModel().deleteImage(itemId)
         return
     }
     throw IllegalArgumentException("Unknown Activity class")

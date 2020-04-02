@@ -19,8 +19,4 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
     // -------------
 
     private fun setGivenImage() { image.value = givenImage }
-
-    // --- GETTERS ---
-
-    val getImage: LiveData<Image> = image
 }

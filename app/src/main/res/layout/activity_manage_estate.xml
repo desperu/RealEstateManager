@@ -35,9 +35,25 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="@dimen/activity_manage_estate_floating_button_margin"
-            app:srcCompat="@drawable/ic_baseline_update_white_24"
+            app:elevation="@dimen/default_elevation"
+            app:maxImageSize="@dimen/activity_manage_estate_floating_max_image_size"
+            app:srcCompat="@drawable/ic_baseline_check_white_48"
             app:backgroundTint="@android:color/holo_green_dark"
             android:onClick="onClickAddEstate"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/activity_manage_estate_floating_add_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/activity_manage_estate_floating_button_margin"
+            android:visibility="gone"
+            app:elevation="@dimen/default_elevation"
+            app:maxImageSize="@dimen/activity_manage_estate_floating_max_image_size"
+            app:srcCompat="@drawable/ic_baseline_add_white_48"
+            app:backgroundTint="@android:color/holo_green_dark"
+            android:onClick="onClickAddImage"/>
 
     </RelativeLayout>
 

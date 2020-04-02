@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center_horizontal">
 
     <data>
         <variable
@@ -8,55 +9,90 @@
             type="org.desperu.realestatemanager.ui.ImageViewModel" />
     </data>
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:background="@drawable/container_border"
-        android:layout_margin="@dimen/item_image_relative_margin">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/item_image_floating_primary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_manage_estate_floating_button_margin" />
+        android:layout_height="@dimen/item_image_relative_height"
+        android:layout_margin="@dimen/item_image_relative_margin"
+        android:splitMotionEvents="true"
+        app:cardElevation="20dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="45dp"
+        app:cardPreventCornerOverlap="true">
 
         <RelativeLayout
-            android:layout_width="@dimen/item_image_relative_width"
-            android:layout_height="@dimen/item_image_relative_height"
-            android:layout_margin="@dimen/item_image_relative_margin">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/item_image_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignBottom="@id/item_image_text_description"
                 android:contentDescription="@null"
-                app:image="@{viewModel.getImage}"/>
+                android:scaleType="centerCrop"
+                app:image="@{viewModel.image}"/>
 
             <TextView
-                android:id="@+id/item_image_text_description"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_image_text_description_height"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:background="@color/colorLightDark"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/item_image_text_description_size"
-                android:textStyle="bold"
-                android:text="@={viewModel.image.description}" />
-
-            <ImageView
                 android:id="@+id/item_image_primary_marker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/item_image_primary_marker_margin"
-                android:contentDescription="@null"
-                app:srcCompat="@drawable/ic_baseline_add_circle_black_24" />
+                android:text="@string/item_image_button_primary"
+                android:textSize="@dimen/item_image_primary_marker_text_size"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_green_dark"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/item_image_text_description"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_image_text_description_height"
+                android:layout_above="@id/item_image_toggle_button_container"
+                android:gravity="center"
+                android:background="@color/colorLightDark"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/item_image_text_description_size"
+                android:textStyle="bold"
+                android:hint="@string/fragment_estate_data_text_description"
+                android:textColorHint="@android:color/white"
+                android:text="@={viewModel.image.description}" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/item_image_toggle_button_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/item_image_button_primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    app:backgroundTint="@android:color/white"
+                    android:layout_gravity="center"
+                    android:text="@string/item_image_button_primary"
+                    android:textColor="@color/colorPurple"
+                    android:theme="@style/Theme.MaterialComponents"
+                    android:elevation="0dp"
+                    android:checkable="true"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/item_image_button_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@android:color/white"
+                    android:text="@string/item_image_button_delete"
+                    android:textColor="@color/colorPurple"
+                    app:elevation="0dp"
+                    android:theme="@style/Theme.MaterialComponents"/>
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
         </RelativeLayout>
 
-    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
 </layout>
