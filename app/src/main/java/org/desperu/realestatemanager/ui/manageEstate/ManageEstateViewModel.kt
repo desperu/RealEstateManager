@@ -45,17 +45,13 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
      */
     fun setEstate(estateId: Long) {
         if (estateId != 0.toLong()) {
-            estateDataRepository.getEstate(estateId).subscribe( { estate -> this.estate.value = estate } )
-            imageDataRepository.getImageList(estateId).subscribe( { imageList -> estate.value?.imageList = imageList as ArrayList<Image> } )
-            addressDataRepository.getAddress(estateId).subscribe( { address -> estate.value?.address = address } )
+            estateDataRepository.getEstate(estateId).subscribe { estate -> this.estate.value = estate }
+            imageDataRepository.getImageList(estateId).subscribe { imageList -> estate.value?.imageList = imageList as ArrayList<Image> }
+            addressDataRepository.getAddress(estateId).subscribe { address -> estate.value?.address = address }
 //            estate.value = estateDataRepository.getEstate(estateId)
 //            estate.value?.imageList = imageDataRepository.getImageList(estateId).value!! as ArrayList<Image>
 //            estate.value?.address = addressDataRepository.getAddress(estateId).value!!
-        } else {
-            estate.value = Estate()
-            estate.value?.imageList = ArrayList<Image>()
-            estate.value?.address = Address()
-        }
+        } else estate.value = Estate()
     }
 
     // -------------
@@ -78,7 +74,6 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
      */
     fun addImageToImageList(imageUri: String) {
         estate.value?.imageList?.add(Image(imageUri = imageUri))
-        estate.value?.imageList
         updateRecyclerImageList()
     }
 
@@ -138,7 +133,7 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     private fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
 
-        // Spinners values // TODO set default spinner values
+        // Spinners values
         estate.value?.type = type
         estate.value?.interestPlaces = interestPlaces
         estate.value?.state = state

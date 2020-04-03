@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-    private lateinit var list: ArrayList<Any>
+    private var list = ArrayList<Any>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(

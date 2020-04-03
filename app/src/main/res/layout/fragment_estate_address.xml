@@ -69,8 +69,9 @@
 
                     <TextView
                         android:id="@+id/fragment_estate_address_text_street_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
                         android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
                         android:text="@string/fragment_estate_address_text_street_name"
                         android:textStyle="bold"
@@ -80,7 +81,8 @@
                         android:id="@+id/fragment_estate_address_edit_text_street_name"
                         android:layout_width="@dimen/fragments_manage_estate_edit_price_width"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/fragments_manage_estate_edit_margin_start"
+                        android:layout_marginStart="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
+                        android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                         android:layout_below="@+id/fragment_estate_address_text_street_name"
                         android:inputType="text"
                         android:hint="@null"

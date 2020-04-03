@@ -38,6 +38,11 @@ object StorageUtils { // TODO to clean unused functions
         return createOrGetFile(rootDestination, fileName, folderName)
     }
 
+    fun deleteFileInStorage(rootDestination: File, context: Context, fileName: String, folderName: String): Boolean {
+        val file: File = createOrGetFile(rootDestination, fileName, folderName)
+        return file.delete()
+    }
+
     // ----------------------------------
     // EXTERNAL STORAGE
     // ----------------------------------

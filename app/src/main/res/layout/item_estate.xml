@@ -26,7 +26,7 @@
                 android:layout_width="@dimen/item_estate_image_width_height"
                 android:layout_height="@dimen/item_estate_image_width_height"
                 android:contentDescription="@null"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 app:image="@{viewModel.getPrimaryImage}"/>
 
             <LinearLayout
@@ -34,7 +34,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/item_estate_image"
-                android:layout_toStartOf="@+id/item_estate_button_edit"
                 android:orientation="vertical"
                 android:padding="@dimen/item_estate_linear_padding">
 
@@ -54,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/item_estate_text_location_margin_top_and_bottom"
                     android:layout_marginBottom="@dimen/item_estate_text_location_margin_top_and_bottom"
-                    android:textColor="@color/colorGrey"
+                    android:textColor="@color/colorLightDark"
                     android:textSize="@dimen/item_estate_text_location_size"
                     android:ellipsize="end"
                     android:text="@{viewModel.getEstate.address.city}" />
@@ -69,17 +68,6 @@
                     app:setPrice="@{viewModel.getEstate.price}" />
 
             </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/item_estate_button_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/default_margin"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@android:color/white"
-                android:contentDescription="@null"
-                app:srcCompat="@drawable/ic_baseline_update_primary_36" />
 
         </RelativeLayout>
 

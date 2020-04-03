@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
 @Entity(foreignKeys = [ForeignKey(entity = Estate::class,
         parentColumns = ["id"],
         childColumns = ["estateId"])],
-        indices = [Index(name = "estateId_index", value = ["estateId"])]) // Todo needed???
+        indices = [Index(name = "estateId_index", value = ["estateId"])])
 data class Image(@PrimaryKey(autoGenerate = true)
                  val id: Long = 0,
                  var estateId: Long = 0,

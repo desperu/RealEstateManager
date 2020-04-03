@@ -108,3 +108,8 @@ fun getNumber(textView: TextView): Int {
 //    if (str.contains(",")) return 123
     return if (str.isBlank()) 0 else str.toInt()
 }
+
+@BindingAdapter("onClick")
+fun Button.onClick(listener: View.OnClickListener) {
+    setOnClickListener(listener)
+}

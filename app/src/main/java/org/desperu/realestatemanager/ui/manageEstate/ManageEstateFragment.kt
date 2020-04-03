@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import icepick.State
 import kotlinx.android.synthetic.main.fragment_estate_address.*
 import kotlinx.android.synthetic.main.fragment_estate_data.*
-import kotlinx.android.synthetic.main.fragment_estate_image.*
 import kotlinx.android.synthetic.main.fragment_estate_sale.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
@@ -30,7 +29,6 @@ import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritabl
 import org.desperu.realestatemanager.utils.StorageUtils.setImageInStorage
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.todayDate
-import org.desperu.realestatemanager.view.enableSwipe
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 
@@ -62,7 +60,6 @@ class ManageEstateFragment(): BaseBindingFragment() {
 
     override fun updateDesign() {
         configureCorrespondingLayout()
-        configureSwipeToDeleteForRecycler()
     }
 
     // --------------------
@@ -133,16 +130,6 @@ class ManageEstateFragment(): BaseBindingFragment() {
         }
     }
 
-    /**
-     * Configure swipe to delete gesture for recycler view.
-     */
-    private fun configureSwipeToDeleteForRecycler() {
-        viewModel.estate.value?.imageList?.let {
-            enableSwipe(requireActivity() as ManageEstateActivity, viewModel.getImageListAdapter, it as ArrayList<Any>)
-                    .attachToRecyclerView(fragment_estate_image_recycler_view)
-        }
-    }
-
     // --------------
     // DATE PICKERS
     // --------------
@@ -151,11 +138,12 @@ class ManageEstateFragment(): BaseBindingFragment() {
      * Configure date picker.
      */
     private fun configureDatePicker() {
-        fragment_estate_sale_date_picker_sale_date.text = todayDate() // TODO to check
+        fragment_estate_sale_date_picker_sale_date.text = todayDate()
         fragment_estate_sale_date_picker_sale_date.setOnClickListener { configureDatePickerDialog(datePickerSale) }
         datePickerSale = OnDateSetListener { _, year, month, dayOfMonth ->
             saleDate = intDateToString(dayOfMonth, month, year)
             fragment_estate_sale_date_picker_sale_date.text = saleDate
+            viewModel.estate.value?.saleDate = saleDate
         }
         fragment_estate_sale_date_picker_sold_out_date.setOnClickListener { configureDatePickerDialog(datePickerSold) }
         datePickerSold = OnDateSetListener { _, year, month, dayOfMonth ->

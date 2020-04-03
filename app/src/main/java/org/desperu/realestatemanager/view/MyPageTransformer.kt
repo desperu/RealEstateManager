@@ -5,7 +5,7 @@ import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_manage_estate.view.*
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
 
-class MyPagerTransformer(private val viewPager: ViewPager): ViewPager.PageTransformer {
+class MyPageTransformer(private val viewPager: ViewPager): ViewPager.PageTransformer {
 
     override fun transformPage(page: View, position: Float) {
         val pageWidth: Int = page.width

@@ -12,7 +12,7 @@ import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.injection.ViewModelFactory
 import org.desperu.realestatemanager.utils.ESTATE_ID
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
-import org.desperu.realestatemanager.view.MyPagerTransformer
+import org.desperu.realestatemanager.view.MyPageTransformer
 import org.desperu.realestatemanager.view.ViewPagerAdapter
 
 class ManageEstateActivity: BaseActivity() {
@@ -57,7 +57,7 @@ class ManageEstateActivity: BaseActivity() {
     private fun configureViewPagerAndTabs() {
         activity_manage_estate_view_pager.adapter = ViewPagerAdapter(this, supportFragmentManager,
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-        activity_manage_estate_view_pager.setPageTransformer(true, MyPagerTransformer(activity_manage_estate_view_pager))
+        activity_manage_estate_view_pager.setPageTransformer(true, MyPageTransformer(activity_manage_estate_view_pager))
         val tabLayout: TabLayout = activity_manage_estate_pager_tabs
         tabLayout.setupWithViewPager(activity_manage_estate_view_pager)
         tabLayout.tabMode = TabLayout.MODE_FIXED

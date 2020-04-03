@@ -22,20 +22,20 @@ import androidx.room.PrimaryKey
 @Entity
 data class Estate(@PrimaryKey(autoGenerate = true)
                   val id: Long = 0,
-                  var type: String = "", // TODO use val instead var
+                  var type: String = "",
                   var price: Long = 0,
                   var surfaceArea: Int = 0,
                   var roomNumber: Int = 0,
                   var description: String = "",
-                  var interestPlaces: String = "", // Create other table ??
-                  var state: String = "", // 0 to sale, 1 sold
-                  var saleDate: String = "", // Convert function Date to String and String to Date
+                  var interestPlaces: String = "",
+                  var state: String = "",
+                  var saleDate: String = "",
                   var soldDate: String = "",
                   var realEstateAgent: String = "") {
 
     // Image list of the estate.
-    @Ignore lateinit var imageList: ArrayList<Image>
+    @Ignore var imageList = ArrayList<Image>()
 
     // Address of the estate.
-    @Ignore lateinit var address: Address
+    @Ignore var address = Address()
 }

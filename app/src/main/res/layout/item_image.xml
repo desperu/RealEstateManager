@@ -38,11 +38,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
+                android:padding="@dimen/item_image_primary_marker_padding"
                 android:layout_margin="@dimen/item_image_primary_marker_margin"
                 android:text="@string/item_image_button_primary"
                 android:textSize="@dimen/item_image_primary_marker_text_size"
                 android:textStyle="bold"
-                android:textColor="@android:color/holo_green_dark"/>
+                android:textColor="@android:color/holo_green_dark"
+                android:background="@drawable/container_border"
+                app:mutableVisibility="@{viewModel.getMutableVisibility}"/>
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_image_text_description"
@@ -67,17 +70,26 @@
                 android:gravity="center_horizontal">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/item_image_button_turn_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@android:color/white"
+                    android:theme="@style/Theme.MaterialComponents"
+                    app:icon="@drawable/ic_baseline_rotate_right_black_24"
+                    app:iconGravity="end"
+                    android:tag="turnRight"
+                    app:onClick="@{viewModel.buttonListener}"/>
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/item_image_button_primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
                     app:backgroundTint="@android:color/white"
-                    android:layout_gravity="center"
                     android:text="@string/item_image_button_primary"
                     android:textColor="@color/colorPurple"
                     android:theme="@style/Theme.MaterialComponents"
-                    android:elevation="0dp"
-                    android:checkable="true"/>
+                    android:tag="primary"
+                    app:onClick="@{viewModel.buttonListener}"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/item_image_button_delete"
@@ -86,8 +98,20 @@
                     app:backgroundTint="@android:color/white"
                     android:text="@string/item_image_button_delete"
                     android:textColor="@color/colorPurple"
-                    app:elevation="0dp"
-                    android:theme="@style/Theme.MaterialComponents"/>
+                    android:theme="@style/Theme.MaterialComponents"
+                    android:tag="delete"
+                    app:onClick="@{viewModel.buttonListener}"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/item_image_button_turn_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@android:color/white"
+                    android:theme="@style/Theme.MaterialComponents"
+                    app:icon="@drawable/ic_baseline_rotate_left_black_24"
+                    app:iconGravity="start"
+                    android:tag="turnLeft"
+                    app:onClick="@{viewModel.buttonListener}"/>
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
