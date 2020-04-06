@@ -9,7 +9,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_manage_estate.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
-import org.desperu.realestatemanager.injection.ViewModelFactory
+import org.desperu.realestatemanager.injection.Injection
 import org.desperu.realestatemanager.utils.ESTATE_ID
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
 import org.desperu.realestatemanager.view.MyPageTransformer
@@ -46,7 +46,7 @@ class ManageEstateActivity: BaseActivity() {
      */
     private fun setViewModel() {
         if (viewModel == null) {
-            viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
+            viewModel = ViewModelProviders.of(this, Injection().provideViewModelFactory(this)).get(ManageEstateViewModel::class.java)
             viewModel?.setEstate(getEstateId())
         }
     }

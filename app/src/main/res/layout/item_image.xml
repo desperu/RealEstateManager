@@ -12,7 +12,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_image_relative_height"
-        android:layout_margin="@dimen/item_image_relative_margin"
+        android:layout_marginStart="@dimen/item_image_relative_margin_start_and_end"
+        android:layout_marginEnd="@dimen/item_image_relative_margin_start_and_end"
+        android:layout_marginTop="@dimen/item_image_relative_margin_top_and_bottom"
+        android:layout_marginBottom="@dimen/item_image_relative_margin_top_and_bottom"
         android:splitMotionEvents="true"
         app:cardElevation="20dp"
         app:cardBackgroundColor="@android:color/white"
@@ -66,12 +69,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:layout_margin="0dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/item_image_button_turn_right"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/item_image_button_turn_width"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents"
@@ -104,7 +107,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/item_image_button_turn_left"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/item_image_button_turn_width"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents"

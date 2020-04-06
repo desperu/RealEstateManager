@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.fragment_estate_list.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
-import org.desperu.realestatemanager.injection.ViewModelFactory
+import org.desperu.realestatemanager.injection.Injection
 import org.desperu.realestatemanager.view.enableSwipe
 
 class EstateListFragment: BaseBindingFragment() {
@@ -32,7 +32,6 @@ class EstateListFragment: BaseBindingFragment() {
         configureSwipeToDeleteForRecycler()
     }
 
-
     // --------------
     // CONFIGURATION
     // --------------
@@ -44,7 +43,7 @@ class EstateListFragment: BaseBindingFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_estate_list, container, false)
         binding.fragmentEstateListRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, Injection().provideViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
         binding.viewModel = viewModel
         return binding.root
     }
@@ -60,6 +59,7 @@ class EstateListFragment: BaseBindingFragment() {
      * Configure swipe to delete gesture for recycler view.
      */
     private fun configureSwipeToDeleteForRecycler() {
+        @Suppress("UNCHECKED_CAST")
         viewModel?.getEstateListAdapter?.let {
             enableSwipe(requireActivity() as MainActivity, it, viewModel?.getEstateList as ArrayList<Any>)
                     .attachToRecyclerView(fragment_estate_list_recycler_view)

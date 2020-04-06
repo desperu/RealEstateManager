@@ -2,6 +2,7 @@ package org.desperu.realestatemanager.ui.main
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -28,8 +29,10 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
     private val mutableVisibility = MutableLiveData<Int>()
 
     private lateinit var subscribeEstate: Disposable
+    private lateinit var observeEstate: Observer<List<Estate>>
     private lateinit var subscribeImages: Disposable
     private lateinit var subscribeAddress: Disposable
+
     private var count = 0
 
     init {
@@ -44,20 +47,32 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
      * Load estate list, from database.
      */
     private fun loadEstateList() {
-        subscribeEstate = estateDataRepository.getAll
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { estateList -> this.estateList = estateList as ArrayList<Estate>
-                            count = 0
-                            for (estate in estateList) {
-                                count++
-                                loadImagesForEstate(estate)
-                                loadAddressForEstate(estate)
-                            }
-                        },
-                        { mutableVisibility.value = View.VISIBLE }
-                )
+        count = 0
+        observeEstate = Observer { estateList ->
+            this.estateList = estateList as ArrayList<Estate>
+            for (estate in estateList) {
+                loadImagesForEstate(estate)
+                loadAddressForEstate(estate)
+            }
+        }
+        estateDataRepository.getAll.observeForever(observeEstate)
+//        subscribeEstate = estateDataRepository.getAll//.safeSubscribe(subscribeAddress)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(
+//                        { estateList -> this.estateList = estateList as ArrayList<Estate>
+//                            for (estate in estateList) {
+//                                loadImagesForEstate(estate)
+//                                loadAddressForEstate(estate)
+//                            }
+//                        },
+//                        { mutableVisibility.value = View.VISIBLE }
+//                )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        estateDataRepository.getAll.removeObserver(observeEstate)
     }
 
     /**
@@ -69,6 +84,7 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { imageList -> estate.imageList = imageList as ArrayList<Image>
+                            count++
                             if (estateList.size == count) onRetrieveEstateList()
                         },
                         { mutableVisibility.value = View.VISIBLE }
