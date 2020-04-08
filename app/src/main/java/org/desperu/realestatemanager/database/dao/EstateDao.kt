@@ -1,29 +1,51 @@
 package org.desperu.realestatemanager.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Single
+import androidx.room.*
 import org.desperu.realestatemanager.model.Estate
 
+/**
+ * The database access object for estate.
+ */
 @Dao
 interface EstateDao {
 
+    /**
+     * Returns the estate from database ordered for given estate id.
+     * @param estateId the estate to get the corresponding estate from database.
+     * @return the corresponding estate.
+     */
     @Query("SELECT * FROM Estate WHERE id = :estateId")
-    fun getEstate(estateId: Long): Flowable<Estate>
+    suspend fun getEstate(estateId: Long): Estate
 
-    @get:Query("SELECT * FROM Estate")
-    val getAll: Flowable<List<Estate>>
+    /**
+     * Returns the estate list from database ordered from the most recent to the oldest.
+     * @return the estate list from database ordered from the most recent to the oldest.
+     */
+    @Transaction
+    @Query("SELECT * FROM Estate ORDER BY saleDate DESC")
+    suspend fun getAll(): List<Estate>
 
+    /**
+     * Inserts the given estate in database.
+     * @param estate the estate to insert in database.
+     * @return the row id for the inserted estate.
+     */
     @Insert
-    fun insertEstate(estate: Estate): Maybe<Long>
+    suspend fun insertEstate(estate: Estate): Long
 
+    /**
+     * Update the given estate in database.
+     * @param estate the estate to update in database.
+     * @return the number of row affected.
+     */
     @Update
-    fun updateEstate(estate: Estate): Single<Int>
+    suspend fun updateEstate(estate: Estate): Int
 
+    /**
+     * Delete the estate in database for the given estate id.
+     * @param estateId the estate id to delete in database.
+     * @return the number of row affected.
+     */
     @Query("DELETE FROM Estate WHERE id = :estateId")
-    fun deleteEstate(estateId: Long): Single<Int>
+    suspend fun deleteEstate(estateId: Long): Int
 }

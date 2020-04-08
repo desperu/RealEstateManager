@@ -7,23 +7,22 @@ import android.widget.AdapterView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.repositories.AddressDataRepository
-import org.desperu.realestatemanager.repositories.EstateDataRepository
-import org.desperu.realestatemanager.repositories.ImageDataRepository
+import org.desperu.realestatemanager.repositories.AddressRepository
+import org.desperu.realestatemanager.repositories.EstateRepository
+import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.ui.ImageViewModel
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
-import org.desperu.realestatemanager.view.updateList
-import java.util.concurrent.*
 
-class ManageEstateViewModel(private val estateDataRepository: EstateDataRepository,
-                            private val imageDataRepository: ImageDataRepository,
-                            private val addressDataRepository: AddressDataRepository,
-                            private val executor: Executor): ViewModel() {
+class ManageEstateViewModel(private val estateRepository: EstateRepository,
+                            private val imageRepository: ImageRepository,
+                            private val addressRepository: AddressRepository): ViewModel() {
 
     // FOR DATA
     private val imageListAdapter = RecyclerViewAdapter(R.layout.item_image)
@@ -41,17 +40,17 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
     // -------------
 
     /**
-     * Set estate data with images and address, with estateId from database.
+     * Set estate data with images and address. // TODO use parcelable for communication to reduce database access
      */
     fun setEstate(estateId: Long) {
         if (estateId != 0.toLong()) {
-            estateDataRepository.getEstate(estateId).subscribe { estate -> this.estate.value = estate }
-            imageDataRepository.getImageList(estateId).subscribe { imageList -> estate.value?.imageList = imageList as ArrayList<Image> }
-            addressDataRepository.getAddress(estateId).subscribe { address -> estate.value?.address = address }
-//            estate.value = estateDataRepository.getEstate(estateId)
-//            estate.value?.imageList = imageDataRepository.getImageList(estateId).value!! as ArrayList<Image>
-//            estate.value?.address = addressDataRepository.getAddress(estateId).value!!
-        } else estate.value = Estate()
+            viewModelScope.launch(Dispatchers.Main) {
+                estate.value = estateRepository.getEstate(estateId)
+                estate.value?.imageList = imageRepository.getEstateImages(estateId) as ArrayList<Image>
+                estate.value?.address = addressRepository.getAddress(estateId)
+            }
+        } else
+            estate.value = Estate()
     }
 
     // -------------
@@ -63,9 +62,8 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
      */
     fun updateRecyclerImageList() {
         val imageViewModelList = ArrayList<Any>()
-        estate.value?.imageList?.let { for (image in it) imageViewModelList.add(ImageViewModel(image)) }
+        estate.value?.imageList?.forEach { image -> imageViewModelList.add(ImageViewModel(image)) }
         imageListAdapter.updateList(imageViewModelList)
-        updateList(imageViewModelList)
     }
 
     /**
@@ -118,18 +116,15 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
 
         bindDataInEstate()
 
-        if (estate.value?.id == 0L) {
+        if (estate.value?.id == 0L)
             estate.value?.let { createEstate(it) }
-            estate.value?.imageList?.let { createImageList(it) }
-            estate.value?.address?.let { createAddress(it) }
-        } else {
+        else
             estate.value?.let { updateEstate(it) }
-            estate.value?.id?.let { setEstateIdInOtherTables(it) }
-            estate.value?.imageList?.let { updateImageList(it) }
-            estate.value?.address?.let { updateAddress(it) }
-        }
     }
 
+    /**
+     * Bind data in estate object.
+     */
     private fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
 
@@ -139,38 +134,43 @@ class ManageEstateViewModel(private val estateDataRepository: EstateDataReposito
         estate.value?.state = state
     }
 
+    /**
+     * Create new estate with image and address.
+     * @param estate the estate to create in database.
+     */
+    private fun createEstate(estate: Estate) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val estateId = estateRepository.createEstate(estate)
+            setEstateIdInOtherTables(estateId)
+            imageRepository.createImage(*estate.imageList.toTypedArray())
+            addressRepository.createAddress(estate.address)
+        }
+    }
+
+    /**
+     * Update estate with it's images and address.
+     * @param estate the estate to update in database.
+     */
+    private fun updateEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
+        estateRepository.updateEstate(estate)
+        setEstateIdInOtherTables(estate.id)
+        imageRepository.createImage(*estate.imageList.toTypedArray())
+        addressRepository.createAddress(estate.address)
+    }
+
+    /**
+     * Set the estate id in it's address and image objects for database.
+     * @param estateId the id of this estate.
+     */
     private fun setEstateIdInOtherTables(estateId: Long) {
         // Other tables
-        estate.value?.imageList?.let { for (image in it) image.estateId = estateId }
+        estate.value?.imageList?.forEach { image -> image.estateId = estateId }
         estate.value?.address?.estateId = estateId
     }
 
-    // ESTATE
-    private fun createEstate(estate: Estate) {
-        executor.execute { setEstateIdInOtherTables(estateDataRepository.createEstate(estate).blockingGet()) }
-    }
-
-    private fun updateEstate(estate: Estate) { executor.execute { estateDataRepository.updateEstate(estate) } }
-
-    private fun deleteEstate() { executor.execute { estateDataRepository.deleteEstate(estate.value!!.id) } }
-
     // IMAGE
-    private fun createImage(image: Image) { executor.execute { imageDataRepository.createImage(image) } }
 
-    private fun createImageList(imageList: List<Image>) { executor.execute { imageDataRepository.createImageList(imageList) } }
-
-    private fun updateImage(image: Image) { executor.execute { imageDataRepository.updateImage(image) } }
-
-    private fun updateImageList(imageList: List<Image>) { executor.execute { imageDataRepository.updateImageList(imageList) } }
-
-    fun deleteImage(imageId: Long) { executor.execute { imageDataRepository.deleteImage(imageId) } }
-
-    // ADDRESS
-    private fun createAddress(address: Address) { executor.execute { addressDataRepository.createAddress(address) } }
-
-    private fun updateAddress(address: Address) { executor.execute { addressDataRepository.updateAddress(address) } }
-
-    private fun deleteAddress() { executor.execute { addressDataRepository.deleteAddress(estate.value!!.id) } }
+    fun deleteImage(imageId: Long) { viewModelScope.launch(Dispatchers.Main) { imageRepository.deleteImage(imageId) } }
 
     // --- GETTERS ---
 

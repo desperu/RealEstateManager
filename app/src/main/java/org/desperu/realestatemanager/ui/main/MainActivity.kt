@@ -16,8 +16,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
+import org.desperu.realestatemanager.di.module.dbModule
+import org.desperu.realestatemanager.di.module.repositoryModule
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.utils.ESTATE_ID
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,6 +37,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun configureDesign() {
         Stetho.initializeWithDefaults(this) // TODO For test only, to remove
+        initKoin()
         configureToolBar()
         configureDrawerLayout()
         configureNavigationView()
@@ -60,6 +66,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
             activity_main_nav_view.setPadding(0, 0, 0, 0)
         activity_main_nav_view.setNavigationItemSelectedListener(this)
+    }
+
+
+    /**
+     * Initializes the application, by adding strict mode and starting koin.
+     */
+    private fun initKoin() {
+        startKoin {
+            androidLogger()
+            androidContext(this@MainActivity)
+            modules(listOf(dbModule, repositoryModule))
+        }
     }
 
 //    /**
@@ -199,8 +217,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //            R.id.activity_main_menu_bottom_list -> configureAndShowFragment(LIST_FRAGMENT)
 //            R.id.activity_main_menu_bottom_workmates -> configureAndShowFragment(WORKMATES_FRAGMENT)
 //            R.id.activity_main_menu_bottom_chat -> configureAndShowFragment(CHAT_FRAGMENT)
-            else -> {
-            }
+            else -> {}
         }
         activity_main_drawer_layout.closeDrawer(GravityCompat.START)
         return true

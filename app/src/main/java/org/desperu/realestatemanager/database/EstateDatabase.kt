@@ -9,12 +9,27 @@ import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
 
-@Database(entities = [Estate::class, Image::class, Address::class], version = 1, exportSchema = false)
-abstract class AppDatabase: RoomDatabase() {
+/**
+ * The database class of the application.
+ */
+@Database(entities = [Estate::class, Image::class, Address::class], version = 1)
+abstract class EstateDatabase: RoomDatabase() {
 
+    /**
+     * Returns the database access object for estate.
+     * @return the database access object for estate.
+     */
     abstract fun estateDao(): EstateDao
 
+    /**
+     * Returns the database access object for image.
+     * @return the database access object for image.
+     */
     abstract fun imageDao(): ImageDao
 
+    /**
+     * Returns the database access object for address.
+     * @return the database access object for address.
+     */
     abstract fun addressDao(): AddressDao
 }

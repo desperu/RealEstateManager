@@ -18,6 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_estate_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPassedWhite"
+                app:adapter="@{viewModel.getEstateListAdapter}"/>
+
             <TextView
                 android:id="@+id/fragment_estate_list_text_empty"
                 android:layout_width="match_parent"
@@ -28,13 +35,6 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/fragment_estate_list_text_empty_size"
                 app:mutableVisibility="@{viewModel.getMutableVisibility}"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/fragment_estate_list_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPassedWhite"
-                app:adapter="@{viewModel.getEstateListAdapter}"/>
 
         </RelativeLayout>
 

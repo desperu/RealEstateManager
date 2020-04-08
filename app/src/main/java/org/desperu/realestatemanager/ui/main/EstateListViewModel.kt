@@ -2,38 +2,28 @@ package org.desperu.realestatemanager.ui.main
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.repositories.AddressDataRepository
-import org.desperu.realestatemanager.repositories.EstateDataRepository
-import org.desperu.realestatemanager.repositories.ImageDataRepository
+import org.desperu.realestatemanager.repositories.AddressRepository
+import org.desperu.realestatemanager.repositories.EstateRepository
+import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
 import org.desperu.realestatemanager.view.updateList
-import java.util.concurrent.Executor
 
-class EstateListViewModel(private val estateDataRepository: EstateDataRepository,
-                          private val imageDataRepository: ImageDataRepository,
-                          private val addressDataRepository: AddressDataRepository,
-                          private val executor: Executor): ViewModel() {
+class EstateListViewModel(private val estateRepository: EstateRepository,
+                          private val imageRepository: ImageRepository,
+                          private val addressRepository: AddressRepository): ViewModel() {
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
     private var estateList = ArrayList<Estate>()
     private val mutableRefreshing = MutableLiveData<Boolean>()
     private val mutableVisibility = MutableLiveData<Int>()
-
-    private lateinit var subscribeEstate: Disposable
-    private lateinit var observeEstate: Observer<List<Estate>>
-    private lateinit var subscribeImages: Disposable
-    private lateinit var subscribeAddress: Disposable
-
-    private var count = 0
 
     init {
         loadEstateList()
@@ -44,66 +34,17 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
     // -------------
 
     /**
-     * Load estate list, from database.
+     * Load estate list with images and address for each, from database.
      */
     private fun loadEstateList() {
-        count = 0
-        observeEstate = Observer { estateList ->
-            this.estateList = estateList as ArrayList<Estate>
-            for (estate in estateList) {
-                loadImagesForEstate(estate)
-                loadAddressForEstate(estate)
+        viewModelScope.launch(Dispatchers.Main) {
+            estateList = estateRepository.getAll() as ArrayList<Estate>
+            estateList.forEach { estate ->
+                estate.imageList = imageRepository.getEstateImages(estate.id) as ArrayList<Image>
+                estate.address = addressRepository.getAddress(estate.id)
             }
+            onRetrieveEstateList()
         }
-        estateDataRepository.getAll.observeForever(observeEstate)
-//        subscribeEstate = estateDataRepository.getAll//.safeSubscribe(subscribeAddress)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(
-//                        { estateList -> this.estateList = estateList as ArrayList<Estate>
-//                            for (estate in estateList) {
-//                                loadImagesForEstate(estate)
-//                                loadAddressForEstate(estate)
-//                            }
-//                        },
-//                        { mutableVisibility.value = View.VISIBLE }
-//                )
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        estateDataRepository.getAll.removeObserver(observeEstate)
-    }
-
-    /**
-     * Load images list for estate.
-     */
-    private fun loadImagesForEstate(estate: Estate) {
-        subscribeImages = imageDataRepository.getImageList(estate.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { imageList -> estate.imageList = imageList as ArrayList<Image>
-                            count++
-                            if (estateList.size == count) onRetrieveEstateList()
-                        },
-                        { mutableVisibility.value = View.VISIBLE }
-                )
-    }
-
-    /**
-     * Load address for estate.
-     */
-    private fun loadAddressForEstate(estate: Estate) {
-        subscribeAddress = addressDataRepository.getAddress(estate.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { address -> estate.address = address
-                            if (estateList.size == count) onRetrieveEstateList()
-                        },
-                        { mutableVisibility.value = View.VISIBLE }
-                )
     }
 
     /**
@@ -120,19 +61,25 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
      */
     private fun onRetrieveEstateList() {
         val estateViewModelList = ArrayList<Any>()
-        for (estate in estateList) estateViewModelList.add(EstateViewModel(estate))
+        estateList.forEach { estate -> estateViewModelList.add(EstateViewModel(estate)) }
         estateListAdapter.updateList(estateViewModelList)
         updateList(estateViewModelList)
-        // For UI
+        updateUi()
+    }
+
+    /**
+     * Update Ui when received database request response.
+     */
+    private fun updateUi() {
         mutableRefreshing.value = false
-        mutableVisibility.value = if (estateViewModelList.isEmpty()) View.VISIBLE else View.GONE
+        mutableVisibility.value = if (estateList.isEmpty()) View.VISIBLE else View.GONE
     }
 
     // --- GETTERS ---
 
     val getEstateListAdapter = estateListAdapter
 
-    val getEstateList = estateList
+    val getEstateList = estateList // TODO remove field?
 
     val getMutableRefreshing = mutableRefreshing
 
@@ -141,10 +88,10 @@ class EstateListViewModel(private val estateDataRepository: EstateDataRepository
     // --- MANAGE ---
 
     fun deleteFullEstate(estateId: Long) {
-        executor.execute {
-            addressDataRepository.deleteAddress(estateId)
-            imageDataRepository.deleteEstateImages(estateId)
-            estateDataRepository.deleteEstate(estateId)
+        viewModelScope.launch(Dispatchers.Main) {
+            addressRepository.deleteAddress(estateId)
+            imageRepository.deleteEstateImages(estateId)
+            estateRepository.deleteEstate(estateId)
         }
     }
 }

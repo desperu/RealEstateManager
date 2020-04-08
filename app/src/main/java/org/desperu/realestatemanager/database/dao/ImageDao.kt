@@ -4,29 +4,59 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Single
 import org.desperu.realestatemanager.model.Image
 
+/**
+ * The database access object for images.
+ */
 @Dao
 interface ImageDao {
 
+    /**
+     * Returns the image from database ordered for given image id.
+     * @param imageId the image id to get the corresponding image from database.
+     * @return the corresponding image.
+     */
     @Query("SELECT * FROM Image WHERE id = :imageId")
-    fun getImage(imageId: Long): Flowable<Image>
+    suspend fun getImage(imageId: Long): Image
 
+    /**
+     * Returns the image list from database ordered for given estate id.
+     * @param estateId the estate id to get the corresponding image list from database.
+     * @return the corresponding image list.
+     */
     @Query("SELECT * FROM Image WHERE estateId = :estateId")
-    fun getImageList(estateId: Long): Flowable<List<Image>>
+    suspend fun getImageList(estateId: Long): List<Image>
 
+    /**
+     * Inserts the given image in database.
+     * @param image the image to insert in database.
+     * @return the rows ids list for the inserted images.
+     */
     @Insert
-    fun insertImage(image: Image): Maybe<Long>
+    suspend fun insertImage(vararg image: Image): List<Long>
 
+    /**
+     * Update the given image in database.
+     * @param image the image to update in database.
+     * @return the number of rows affected.
+     */
     @Update
-    fun updateImage(image: Image): Single<Int>
+    suspend fun updateImage(vararg image: Image): Int
 
+    /**
+     * Delete the image in database for the given image id.
+     * @param imageId the image id to delete in database.
+     * @return the number of row affected.
+     */
     @Query("DELETE FROM Image WHERE id = :imageId")
-    fun deleteImage(imageId: Long): Single<Int>
+    suspend fun deleteImage(imageId: Long): Int
 
+    /**
+     * Delete all images in database for the given estate id.
+     * @param estateId the estate id to delete all corresponding images in database.
+     * @return the number of row affected.
+     */
     @Query("DELETE FROM Image WHERE estateId = :estateId")
-    fun deleteEstateImages(estateId: Long): Single<Int>
+    suspend fun deleteEstateImages(estateId: Long): Int
 }
