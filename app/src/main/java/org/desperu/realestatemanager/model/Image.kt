@@ -1,9 +1,11 @@
 package org.desperu.realestatemanager.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Class witch provides a model for image
@@ -13,6 +15,7 @@ import androidx.room.PrimaryKey
  * @param isPrimary True if this image is the primary image of the estate.
  * @param description Description of the image.
  */
+@Parcelize
 @Entity(foreignKeys = [ForeignKey(entity = Estate::class,
         parentColumns = ["id"],
         childColumns = ["estateId"])],
@@ -22,4 +25,4 @@ data class Image(@PrimaryKey(autoGenerate = true)
                  var estateId: Long = 0,
                  var imageUri: String = "",
                  var isPrimary: Boolean = false,
-                 var description: String = "")
+                 var description: String = ""): Parcelable

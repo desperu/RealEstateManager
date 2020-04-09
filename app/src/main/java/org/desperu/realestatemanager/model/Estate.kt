@@ -1,8 +1,10 @@
 package org.desperu.realestatemanager.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Class witch provides a model for estate.
@@ -19,9 +21,10 @@ import androidx.room.PrimaryKey
  * @param soldDate Sold date of the estate.
  * @param realEstateAgent Real Estate Agent witch manage estate sale.
  */
+@Parcelize
 @Entity
 data class Estate(@PrimaryKey(autoGenerate = true)
-                  val id: Long = 0,
+                  var id: Long = 0,
                   var type: String = "",
                   var price: Long = 0,
                   var surfaceArea: Int = 0,
@@ -31,11 +34,16 @@ data class Estate(@PrimaryKey(autoGenerate = true)
                   var state: String = "",
                   var saleDate: String = "",
                   var soldDate: String = "",
-                  var realEstateAgent: String = "") {
+                  var realEstateAgent: String = "",
+                  @Ignore // TODO bad practice ???? needed for communication with parcelable. Must set id in var, val create bug no setter found
+                  var imageList: ArrayList<Image> = ArrayList(),
+                  @Ignore
+                  var address: Address = Address()
+): Parcelable {
 
-    // Image list of the estate.
-    @Ignore var imageList = ArrayList<Image>()
-
-    // Address of the estate.
-    @Ignore var address = Address()
+//    // Image list of the estate.
+//    @Ignore var imageList = ArrayList<Image>()
+//
+//    // Address of the estate.
+//    @Ignore var address = Address()
 }

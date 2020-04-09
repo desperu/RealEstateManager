@@ -30,13 +30,18 @@ class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Ad
         notifyDataSetChanged()
     }
 
+    fun updateItem(position: Int, any: Any) {
+        list.add(position, any)
+        notifyItemChanged(position)
+    }
+
     fun removeItem(position: Int) {
         list.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, list.size)
     }
 
-    fun restoreItem(any: Any, position: Int) {
+    fun addItem( position: Int, any: Any) {
         list.add(position, any)
         // notify item added by position
         notifyItemInserted(position)

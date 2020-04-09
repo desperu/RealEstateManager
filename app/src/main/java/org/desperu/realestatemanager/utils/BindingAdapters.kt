@@ -105,7 +105,6 @@ fun setNumber(editText: EditText, number: Int) {
 @InverseBindingAdapter(attribute = "android:text")
 fun getNumber(textView: TextView): Int {
     val str = textView.text.toString()
-//    if (str.contains(",")) return 123
     return if (str.isBlank()) 0 else str.toInt()
 }
 

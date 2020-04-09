@@ -18,7 +18,7 @@ interface AddressDao {
      * @return the corresponding address.
      */
     @Query("SELECT * FROM Address WHERE estateId = :estateId")
-    suspend fun getAddress(estateId: Long): Address
+    suspend fun getAddress(estateId: Long): Address?
 
     /**
      * Inserts the given address in database.

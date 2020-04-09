@@ -18,11 +18,17 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.di.module.dbModule
 import org.desperu.realestatemanager.di.module.repositoryModule
+import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
-import org.desperu.realestatemanager.utils.ESTATE_ID
+import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.KoinContextHandler
 import org.koin.core.context.startKoin
+
+// FOR INTENT
+const val NEW_ESTATE: String = "estateResult"
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,11 +79,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * Initializes the application, by adding strict mode and starting koin.
      */
     private fun initKoin() {
-        startKoin {
-            androidLogger()
-            androidContext(this@MainActivity)
-            modules(listOf(dbModule, repositoryModule))
-        }
+        if (KoinContextHandler.getOrNull() == null)
+            startKoin {
+                androidLogger()
+                androidContext(this@MainActivity)
+                modules(listOf(dbModule, repositoryModule))
+            }
     }
 
 //    /**
@@ -206,13 +213,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onActivityResult(requestCode, resultCode, data)
         // Handle SignIn Activity response on activity result.
 //        this.handleResponseAfterSignIn(requestCode, resultCode, data)
+        // Handle Manage Estate Activity response on activity result.
+        this.handleResponseManageEstate(requestCode, resultCode, data)
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java)
             R.id.activity_main_menu_drawer_estate_map -> this.showSettingsActivity()
-            R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(0)
+            R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(Estate())
 //            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
 //            R.id.activity_main_menu_bottom_list -> configureAndShowFragment(LIST_FRAGMENT)
 //            R.id.activity_main_menu_bottom_workmates -> configureAndShowFragment(WORKMATES_FRAGMENT)
@@ -250,7 +259,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.activity_main_menu_add -> {
-                showManageEstateActivity(0)
+                showManageEstateActivity(Estate())
                 return true
             }
             R.id.activity_main_menu_update -> {
@@ -325,10 +334,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     /**
      * Start manage estate activity.
-     * @param estateId Estate id, 0 for create estate.
+     * @param estate Estate to manage.
      */
-    private fun showManageEstateActivity(estateId: Long) {
-        startActivity(Intent(this, ManageEstateActivity::class.java).putExtra(ESTATE_ID, estateId))
+    private fun showManageEstateActivity(estate: Estate) {
+        startActivityForResult(Intent(this, ManageEstateActivity::class.java).putExtra(MANAGE_ESTATE, estate), RC_ESTATE)
     }
 
     /**
@@ -366,5 +375,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    // -----------------
+    // UTILS
+    // -----------------
+
+    private fun handleResponseManageEstate(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK && requestCode == RC_ESTATE) { // TODO to perform and comment
+            val estateListFragment = (fragment as EstateListFragment)
+            val position = estateListFragment.getViewModel().addOrUpdateEstate(data?.getParcelableExtra(NEW_ESTATE))
+            position?.let { estateListFragment.scrollToNewItem(it) }
+        }
     }
 }

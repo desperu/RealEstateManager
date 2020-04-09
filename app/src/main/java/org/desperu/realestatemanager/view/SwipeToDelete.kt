@@ -84,7 +84,7 @@ private fun removeItem(activity: AppCompatActivity, adapter: RecyclerViewAdapter
 }
 
 private fun restoreItem(adapter: RecyclerViewAdapter, deletedItem: Any, position: Int) {
-    adapter.restoreItem(deletedItem, position)
+    adapter.addItem(position, deletedItem)
     restored = true
 }
 

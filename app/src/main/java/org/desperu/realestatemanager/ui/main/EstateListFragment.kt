@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_estate_list.*
+import kotlinx.android.synthetic.main.fragment_estate_list.view.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
@@ -64,6 +65,18 @@ class EstateListFragment: BaseBindingFragment() {
             enableSwipe(requireActivity() as MainActivity, it, viewModel?.getEstateList as ArrayList<Any>)
                     .attachToRecyclerView(fragment_estate_list_recycler_view)
         }
+    }
+
+    // --------------
+    // UI
+    // --------------
+
+    /**
+     * Scroll to the new item position of recycler view.
+     * @param position the position to scroll in the recycler view.
+     */
+    fun scrollToNewItem(position: Int) {
+        view?.rootView?.fragment_estate_list_recycler_view?.layoutManager?.scrollToPosition(position)
     }
 
     // --- GETTERS ---

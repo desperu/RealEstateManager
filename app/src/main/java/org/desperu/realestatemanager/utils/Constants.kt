@@ -2,7 +2,7 @@ package org.desperu.realestatemanager.utils
 
 // FOR INTENT
 
-const val ESTATE_ID: String = "estateId"
+const val RC_ESTATE = 10
 
 // FOR EXCHANGE
 

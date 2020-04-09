@@ -1,8 +1,10 @@
 package org.desperu.realestatemanager.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Class witch provides a model for address.
@@ -14,6 +16,7 @@ import androidx.room.PrimaryKey
  * @param city City of the address.
  * @param country Country of the address.
  */
+@Parcelize
 @Entity(foreignKeys = [ForeignKey(entity = Estate::class,
         parentColumns = ["id"],
         childColumns = ["estateId"])])
@@ -24,4 +27,4 @@ data class Address(@PrimaryKey(autoGenerate = false)
                    var flatBuilding: String = "",
                    var postalCode: Int = 0,
                    var city: String = "",
-                   var country: String = "")
+                   var country: String = ""): Parcelable

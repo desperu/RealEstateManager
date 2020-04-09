@@ -40,17 +40,11 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // -------------
 
     /**
-     * Set estate data with images and address. // TODO use parcelable for communication to reduce database access
+     * Set estate data with images and address.
      */
-    fun setEstate(estateId: Long) {
-        if (estateId != 0.toLong()) {
-            viewModelScope.launch(Dispatchers.Main) {
-                estate.value = estateRepository.getEstate(estateId)
-                estate.value?.imageList = imageRepository.getEstateImages(estateId) as ArrayList<Image>
-                estate.value?.address = addressRepository.getAddress(estateId)
-            }
-        } else
-            estate.value = Estate()
+    fun setEstate(estate: Estate?) {
+        if (estate != null) this.estate.value = estate
+        else this.estate.value = Estate()
     }
 
     // -------------

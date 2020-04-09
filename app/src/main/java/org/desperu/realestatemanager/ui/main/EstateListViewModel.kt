@@ -53,6 +53,33 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     fun reloadEstateList() = loadEstateList()
 
     // -------------
+    // ADD ESTATE
+    // -------------
+
+    /**
+     * Add new, or updated estate.
+     * @param estate the new or updated estate.
+     * @return the position affected in the recycler view.
+     */
+    fun addOrUpdateEstate(estate: Estate?): Int? {
+        var position: Int? = null
+        if (estate != null) {
+            val oldEstate = estateList.find { it.id == estate.id }
+            if (oldEstate == null) { // Add new element in first position
+                position = 0
+                estateList.add(position, estate)
+                estateListAdapter.addItem(position, EstateViewModel(estate))
+            } else { // Update existing element at his position
+                position = estateList.indexOf(oldEstate)
+                estateList.remove(oldEstate)
+                estateList.add(position, estate)
+                estateListAdapter.updateItem(position, estate)
+            }
+        }
+        return position
+    }
+
+    // -------------
     // UPDATE UI
     // -------------
 

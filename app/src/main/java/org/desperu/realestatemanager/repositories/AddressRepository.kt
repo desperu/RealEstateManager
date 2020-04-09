@@ -60,7 +60,7 @@ class AddressRepositoryImpl(private val addressDao: AddressDao): AddressReposito
      */
     // --- GET ---
     override suspend fun getAddress(estateId: Long): Address = withContext(Dispatchers.IO) {
-        addressDao.getAddress(estateId)
+        addressDao.getAddress(estateId) ?: Address()
     }
 
     /**

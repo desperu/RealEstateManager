@@ -1,23 +1,30 @@
 package org.desperu.realestatemanager.ui.manageEstate
 
+import android.content.Intent
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_manage_estate.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.di.ViewModelFactory
-import org.desperu.realestatemanager.utils.ESTATE_ID
+import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.ui.main.MainActivity
+import org.desperu.realestatemanager.ui.main.NEW_ESTATE
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
 import org.desperu.realestatemanager.view.MyPageTransformer
 import org.desperu.realestatemanager.view.ViewPagerAdapter
 
+// FOR INTENT
+const val MANAGE_ESTATE: String = "manageEstate"
+
 class ManageEstateActivity: BaseActivity() {
 
     private var viewModel: ManageEstateViewModel? = null
+    private lateinit var viewPager: ViewPager
 
     // --------------
     // BASE METHODS
@@ -37,9 +44,9 @@ class ManageEstateActivity: BaseActivity() {
     // -----------------
 
     /**
-     * Get Estate Id from intent.
+     * Get Estate from intent.
      */
-    private fun getEstateId(): Long = intent.getLongExtra(ESTATE_ID, 0)
+    private fun getEstate() = intent.getParcelableExtra<Estate>(MANAGE_ESTATE)
 
     /**
      * Set view model instance.
@@ -47,7 +54,7 @@ class ManageEstateActivity: BaseActivity() {
     private fun setViewModel() {
         if (viewModel == null) {
             viewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
-            viewModel?.setEstate(getEstateId())
+            viewModel?.setEstate(getEstate())
         }
     }
 
@@ -55,11 +62,12 @@ class ManageEstateActivity: BaseActivity() {
      * Configure Tab layout and View pager.
      */
     private fun configureViewPagerAndTabs() {
-        activity_manage_estate_view_pager.adapter = ViewPagerAdapter(this, supportFragmentManager,
+        viewPager = activity_manage_estate_view_pager
+        viewPager.adapter = ViewPagerAdapter(this, supportFragmentManager,
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-        activity_manage_estate_view_pager.setPageTransformer(true, MyPageTransformer(activity_manage_estate_view_pager))
+        viewPager.setPageTransformer(true, MyPageTransformer(viewPager))
         val tabLayout: TabLayout = activity_manage_estate_pager_tabs
-        tabLayout.setupWithViewPager(activity_manage_estate_view_pager)
+        tabLayout.setupWithViewPager(viewPager)
         tabLayout.tabMode = TabLayout.MODE_FIXED
     }
 
@@ -73,16 +81,17 @@ class ManageEstateActivity: BaseActivity() {
     fun onClickAddEstate(v: View) {
         viewModel?.createOrUpdateEstate()
         showToast(getString(R.string.activity_manage_estate_create_estate_message))
-        this.finishAfterTransition() // TODO to check and perform
+        setResult(RESULT_OK, Intent(this, MainActivity::class.java)
+                .putExtra(NEW_ESTATE, viewModel?.estate?.value))
+        finish()
     }
 
     /**
      * On click add image.
      */
     fun onClickAddImage(v: View) {
-        val currentItem = activity_manage_estate_view_pager.currentItem
-        val page: Fragment? = supportFragmentManager.findFragmentByTag(
-                "android:switcher:" + R.id.activity_manage_estate_view_pager.toString() + ":" + currentItem)
+        val currentItem = viewPager.currentItem
+        val page = viewPager.adapter?.instantiateItem(viewPager, currentItem)
         if (currentItem == ESTATE_IMAGE && page != null)
             (page as ManageEstateFragment).onClickAddImage()
     }
