@@ -17,7 +17,8 @@ import org.desperu.realestatemanager.view.updateList
 
 class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val imageRepository: ImageRepository,
-                          private val addressRepository: AddressRepository): ViewModel() {
+                          private val addressRepository: AddressRepository,
+                          private val router: EstateRouter): ViewModel() {
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
@@ -37,7 +38,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * Load estate list with images and address for each, from database.
      */
     private fun loadEstateList() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.Main) {// TODO dispatch main or IO??
             estateList = estateRepository.getAll() as ArrayList<Estate>
             estateList.forEach { estate ->
                 estate.imageList = imageRepository.getEstateImages(estate.id) as ArrayList<Image>
@@ -68,7 +69,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             if (oldEstate == null) { // Add new element in first position
                 position = 0
                 estateList.add(position, estate)
-                estateListAdapter.addItem(position, EstateViewModel(estate))
+                estateListAdapter.addItem(position, EstateViewModel(estate, router))
             } else { // Update existing element at his position
                 position = estateList.indexOf(oldEstate)
                 estateList.remove(oldEstate)
@@ -84,18 +85,19 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // -------------
 
     /**
-     * Push data to recycler view when retrieve, and stop swipe refreshing animation.
+     * Push data to recycler view when retrieve estate list.
      */
     private fun onRetrieveEstateList() {
         val estateViewModelList = ArrayList<Any>()
-        estateList.forEach { estate -> estateViewModelList.add(EstateViewModel(estate)) }
+        estateList.forEach { estate -> estateViewModelList.add(EstateViewModel(estate, router)) }
         estateListAdapter.updateList(estateViewModelList)
         updateList(estateViewModelList)
         updateUi()
     }
 
     /**
-     * Update Ui when received database request response.
+     * Update Ui when received database request response, stop refreshing animation
+     * and show text empty if list is empty.
      */
     private fun updateUi() {
         mutableRefreshing.value = false
@@ -114,11 +116,9 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     // --- MANAGE ---
 
-    fun deleteFullEstate(estateId: Long) {
-        viewModelScope.launch(Dispatchers.Main) {
-            addressRepository.deleteAddress(estateId)
-            imageRepository.deleteEstateImages(estateId)
-            estateRepository.deleteEstate(estateId)
-        }
+    fun deleteFullEstate(estateId: Long)  = viewModelScope.launch(Dispatchers.Main) {
+        addressRepository.deleteAddress(estateId)
+        imageRepository.deleteEstateImages(estateId)
+        estateRepository.deleteEstate(estateId)
     }
 }

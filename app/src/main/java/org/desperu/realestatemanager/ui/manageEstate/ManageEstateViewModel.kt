@@ -55,7 +55,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Update Recycler Image List.
      */
     fun updateRecyclerImageList() {
-        val imageViewModelList = ArrayList<Any>()
+        val imageViewModelList = ArrayList<Any>() // TODO is it good??
         estate.value?.imageList?.forEach { image -> imageViewModelList.add(ImageViewModel(image)) }
         imageListAdapter.updateList(imageViewModelList)
     }
@@ -132,13 +132,11 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Create new estate with image and address.
      * @param estate the estate to create in database.
      */
-    private fun createEstate(estate: Estate) {
-        viewModelScope.launch(Dispatchers.Main) {
-            val estateId = estateRepository.createEstate(estate)
-            setEstateIdInOtherTables(estateId)
-            imageRepository.createImage(*estate.imageList.toTypedArray())
-            addressRepository.createAddress(estate.address)
-        }
+    private fun createEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
+        val estateId = estateRepository.createEstate(estate)
+        setEstateIdInOtherTables(estateId)
+        imageRepository.createImage(*estate.imageList.toTypedArray())
+        addressRepository.createAddress(estate.address)
     }
 
     /**
@@ -148,8 +146,8 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     private fun updateEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
         estateRepository.updateEstate(estate)
         setEstateIdInOtherTables(estate.id)
-        imageRepository.createImage(*estate.imageList.toTypedArray())
-        addressRepository.createAddress(estate.address)
+        imageRepository.updateImage(*estate.imageList.toTypedArray())
+        addressRepository.updateAddress(estate.address)
     }
 
     /**
@@ -169,4 +167,10 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // --- GETTERS ---
 
     val getImageListAdapter = imageListAdapter
+
+    // --- SETTERS ---
+
+    fun setSaleDate(saleDate: String) { estate.value?.saleDate = saleDate }
+
+    fun setSoldDate(soldDate: String) { estate.value?.soldDate = soldDate }
 }

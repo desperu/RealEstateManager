@@ -2,6 +2,7 @@ package org.desperu.realestatemanager.ui.main
 
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -27,9 +28,14 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.KoinContextHandler
 import org.koin.core.context.startKoin
 
-// FOR INTENT
-const val NEW_ESTATE: String = "estateResult"
+/**
+ * The name of the argument for passing the new or updated estate to this Activity.
+ */
+const val NEW_ESTATE: String = "newEstate"
 
+/**
+ * Activity to show estate list and estate details.
+ */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     // FOR DATA
@@ -47,7 +53,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         configureToolBar()
         configureDrawerLayout()
         configureNavigationView()
-        configureAndShowFragment(EstateListFragment::class.java)
+        configureAndShowFragment(EstateListFragment::class.java, null)
     }
 
     // -----------------
@@ -76,7 +82,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
 
     /**
-     * Initializes the application, by adding strict mode and starting koin.
+     * Initializes and starting koin if not already started.
      */
     private fun initKoin() {
         if (KoinContextHandler.getOrNull() == null)
@@ -165,12 +171,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        }
 //    }
 //
-    private fun configureAndShowFragment(fragmentClass: Class<*>) {
+    private fun configureAndShowFragment(fragmentClass: Class<*>, estate: Estate?) {
         if (fragment?.javaClass != fragmentClass) {
             fragment = supportFragmentManager.findFragmentById(R.id.activity_main_frame_layout)
 
             when (fragmentClass) {
                 EstateListFragment::class.java -> fragment = EstateListFragment()
+                EstateDetailFragment::class.java -> {
+                    fragment = EstateDetailFragment()
+                    val bundle = Bundle()
+                    bundle.putParcelable(ESTATE_DETAIL, estate)
+                    fragment?.arguments = bundle
+                }
             }
 
             supportFragmentManager.beginTransaction()
@@ -219,7 +231,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
-            R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java)
+            R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java, null)
             R.id.activity_main_menu_drawer_estate_map -> this.showSettingsActivity()
             R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(Estate())
 //            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
@@ -235,6 +247,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onBackPressed() {
         if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
             activity_main_drawer_layout.closeDrawer(GravityCompat.START)
+        else if (fragment?.javaClass == EstateDetailFragment::class.java)
+            configureAndShowFragment(EstateListFragment::class.java, null) // TODO to perfect
         else if (toolbar_search_view != null && toolbar_search_view.isShown) {
             this.hideSearchViewIfVisible()
         } else super.onBackPressed()
@@ -277,6 +291,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // --------------------
     // ACTION
     // --------------------
+
+    /**
+     * Show EstateDetailFragment for the given estate.
+     * @param estate the estate to show details.
+     */
+    fun showEstateDetailFragment(estate: Estate) = configureAndShowFragment(EstateDetailFragment::class.java, estate)
 
 //    fun onClickedMarker(id: String) { showRestaurantDetailActivity(id) }
 //

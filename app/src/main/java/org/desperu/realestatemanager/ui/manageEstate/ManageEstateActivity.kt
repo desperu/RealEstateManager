@@ -1,8 +1,10 @@
 package org.desperu.realestatemanager.ui.manageEstate
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -18,13 +20,37 @@ import org.desperu.realestatemanager.utils.ESTATE_IMAGE
 import org.desperu.realestatemanager.view.MyPageTransformer
 import org.desperu.realestatemanager.view.ViewPagerAdapter
 
-// FOR INTENT
+/**
+ * The name of the argument for passing estate to this Activity.
+ */
 const val MANAGE_ESTATE: String = "manageEstate"
 
+/**
+ * Activity to manage estate with images and address.
+ */
 class ManageEstateActivity: BaseActivity() {
 
     private var viewModel: ManageEstateViewModel? = null
     private lateinit var viewPager: ViewPager
+
+    /**
+     * Companion object, used to redirect to this Activity.
+     */
+    companion object{
+        /**
+         * Redirects from an Activity to this Activity.
+         * @param activity the activity use to perform redirection.
+         * @param estate the estate to manage in this activity.
+         */
+        fun routeFromActivity(activity: AppCompatActivity, estate: Estate){
+            val extras = Bundle()
+            extras.putParcelable(MANAGE_ESTATE, estate)
+// TODO why use bundle??
+            val intent = Intent(activity, ManageEstateActivity::class.java)
+            intent.putExtras(extras)
+            activity.startActivity(intent)
+        }
+    }
 
     // --------------
     // BASE METHODS
@@ -102,7 +128,7 @@ class ManageEstateActivity: BaseActivity() {
      * Get view model instance.
      */
     fun getViewModel(): ManageEstateViewModel {
-        if (viewModel == null) setViewModel()
+        viewModel ?: setViewModel()
         return viewModel as ManageEstateViewModel
     }
 

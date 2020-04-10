@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.ui.main
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,12 @@ class EstateViewModel(private val givenEstate: Estate): ViewModel() {
     // FOR DATA
     private val estate = MutableLiveData<Estate>()
     private val primaryImage = MutableLiveData<Image>()
+    private lateinit var router: EstateRouter
+
+    // SECOND CONSTRUCTOR
+    constructor(givenEstate: Estate, router: EstateRouter): this(givenEstate) {
+        this.router = router
+    }
 
     init {
         setEstate()
@@ -25,13 +32,21 @@ class EstateViewModel(private val givenEstate: Estate): ViewModel() {
      */
     private fun setEstate() {
         estate.value = givenEstate
-        if (!givenEstate.imageList.isNullOrEmpty()) {
-            for (image in givenEstate.imageList)
-                if (image.isPrimary) primaryImage.value = image
-            if (primaryImage.value == null)
-                primaryImage.value = givenEstate.imageList[0]
-        } else
+        if (!givenEstate.imageList.isNullOrEmpty())
+            primaryImage.value = givenEstate.imageList.find { it.isPrimary } ?: givenEstate.imageList[0]
+        else
             primaryImage.value = Image()
+    }
+
+    // -------------
+    // LISTENER
+    // -------------
+
+    /**
+     * Item on click listener.
+     */
+    val itemListener = View.OnClickListener { _ ->
+        estate.value?.let { router.openEstateDetail(it) }
     }
 
     // --- GETTERS ---

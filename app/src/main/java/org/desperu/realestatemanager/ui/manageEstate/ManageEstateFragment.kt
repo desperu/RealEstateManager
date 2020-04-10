@@ -32,7 +32,9 @@ import org.desperu.realestatemanager.utils.Utils.todayDate
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 
-
+/**
+ * Fragments to manage estate : data, images, address, interest places and sale data.
+ */
 class ManageEstateFragment(): BaseBindingFragment() {
 
     // FOR DATA
@@ -102,7 +104,8 @@ class ManageEstateFragment(): BaseBindingFragment() {
             ESTATE_DATA -> configureSpinner(fragment_estate_data_spinner_type, R.array.estate_type_list)
             ESTATE_ADDRESS -> configureSpinner(fragment_estate_address_spinner_interest_places, R.array.estate_interest_places_list)
             ESTATE_SALE -> { configureSpinner(fragment_estate_sale_spinner_state, R.array.estate_state_list)
-                    configureDatePicker()}
+                             configureDatePicker()
+                           }
         }
     }
 
@@ -138,18 +141,20 @@ class ManageEstateFragment(): BaseBindingFragment() {
      * Configure date picker.
      */
     private fun configureDatePicker() {
-        fragment_estate_sale_date_picker_sale_date.text = todayDate()
-        fragment_estate_sale_date_picker_sale_date.setOnClickListener { configureDatePickerDialog(datePickerSale) }
+        val pickerSaleDate = fragment_estate_sale_date_picker_sale_date
+        pickerSaleDate.text = todayDate()
+        pickerSaleDate.setOnClickListener { configureDatePickerDialog(datePickerSale) }
         datePickerSale = OnDateSetListener { _, year, month, dayOfMonth ->
             saleDate = intDateToString(dayOfMonth, month, year)
-            fragment_estate_sale_date_picker_sale_date.text = saleDate
-            viewModel.estate.value?.saleDate = saleDate
+            pickerSaleDate.text = saleDate
+            viewModel.setSaleDate(saleDate)
         }
-        fragment_estate_sale_date_picker_sold_out_date.setOnClickListener { configureDatePickerDialog(datePickerSold) }
+        val pickerSoldDate = fragment_estate_sale_date_picker_sold_out_date
+        pickerSoldDate.setOnClickListener { configureDatePickerDialog(datePickerSold) }
         datePickerSold = OnDateSetListener { _, year, month, dayOfMonth ->
             soldDate = intDateToString(dayOfMonth, month, year)
-            fragment_estate_sale_date_picker_sold_out_date.text = soldDate
-            viewModel.estate.value?.soldDate = soldDate
+            pickerSoldDate.text = soldDate
+            viewModel.setSoldDate(soldDate)
         }
     }
 

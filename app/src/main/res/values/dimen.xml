@@ -23,11 +23,13 @@
     <dimen name="fragment_estate_list_text_empty_size">18sp</dimen>
 
     <!-- Item Estate -->
+    <dimen name="item_estate_card_view_margin_and_elevation">10dp</dimen>
+    <dimen name="item_estate_card_view_corner_radius">25dp</dimen>
     <dimen name="item_estate_image_width_height">100dp</dimen>
     <dimen name="item_estate_linear_padding">10dp</dimen>
     <dimen name="item_estate_text_type_size">16sp</dimen>
     <dimen name="item_estate_text_location_margin_top_and_bottom">5dp</dimen>
-    <dimen name="item_estate_text_location_size">14sp</dimen>
+    <dimen name="item_estate_text_location_size">16sp</dimen>
     <dimen name="item_estate_text_price_size">20sp</dimen>
 
     <!-- Manage Estate Activity -->

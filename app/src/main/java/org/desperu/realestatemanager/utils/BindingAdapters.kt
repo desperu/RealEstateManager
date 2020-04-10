@@ -42,7 +42,7 @@ fun setImage(imageView: ImageView, image: Image) {
 }
 
 /**
- * Getter and setter for spinners.
+ * Setter for spinners.
  */
 @BindingAdapter("setItem")
 fun setItem(spinner: Spinner, string: String?) {
@@ -52,22 +52,31 @@ fun setItem(spinner: Spinner, string: String?) {
     }
 }
 
+/**
+ * Set listener for spinners.
+ */
 @BindingAdapter("onItemSelected")
 fun Spinner.setOnItemSelected(listener: AdapterView.OnItemSelectedListener) {
     onItemSelectedListener = listener
 }
 
 /**
- * Custom Listener and setter for price in manage estate.
+ * Save Listener for price in manage estate, needed for custom setter.
  */
 lateinit var listenerSave: TextWatcher
 
+/**
+ * Set listener for edit text price.
+ */
 @BindingAdapter("onTextChanged")
 fun EditText.setOnTextChanged(listener: TextWatcher) {
     listenerSave = listener
     addTextChangedListener(listener)
 }
 
+/**
+ * Custom setter for price in manage estate.
+ */
 @BindingAdapter("priceText")
 fun EditText.setPriceText(str: String?) {
     // Remove listener to prevent infinite loop
@@ -87,7 +96,7 @@ fun EditText.setPriceText(str: String?) {
 }
 
 /**
- * Custom setter for text view price with pattern.
+ * Custom setter for text view price with pattern, in estate item.
  */
 @BindingAdapter("setPrice")
 fun TextView.setPrice(price: Long) {
@@ -95,20 +104,26 @@ fun TextView.setPrice(price: Long) {
 }
 
 /**
- * Custom methods to get and set Number (Int), in Edit Text.
+ * Custom setter for number (Int), in Edit Text.
  */
 @BindingAdapter("android:text")
 fun setNumber(editText: EditText, number: Int) {
     editText.setText(if (number == 0) "" else number.toString())
 }
 
+/**
+ * Custom getter for number (Int), in Edit Text.
+ */
 @InverseBindingAdapter(attribute = "android:text")
 fun getNumber(textView: TextView): Int {
     val str = textView.text.toString()
     return if (str.isBlank()) 0 else str.toInt()
 }
 
+/**
+ * Set listener for view on click.
+ */
 @BindingAdapter("onClick")
-fun Button.onClick(listener: View.OnClickListener) {
+fun View.onClick(listener: View.OnClickListener) {
     setOnClickListener(listener)
 }
