@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-    private var list = ArrayList<Any>()
+    private lateinit var list: MutableList<Any>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(
@@ -23,14 +23,15 @@ class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Ad
 
     override fun getItemViewType(position: Int) = layoutId
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = if(::list.isInitialized) list.size else 0
 
-    fun updateList(list: ArrayList<Any>) {
+    fun updateList(list: MutableList<Any>) {
         this.list = list
         notifyDataSetChanged()
     }
 
     fun updateItem(position: Int, any: Any) {
+        list.removeAt(position)
         list.add(position, any)
         notifyItemChanged(position)
     }
@@ -41,10 +42,17 @@ class RecyclerViewAdapter(@LayoutRes private val layoutId: Int): RecyclerView.Ad
         notifyItemRangeChanged(position, list.size)
     }
 
-    fun addItem( position: Int, any: Any) {
+    fun addItem(position: Int, any: Any) {
         list.add(position, any)
         // notify item added by position
         notifyItemInserted(position)
+    }
+
+    fun moveItem(fromPosition: Int, toPosition: Int) {
+        val movedItem = list[fromPosition]
+        list.removeAt(fromPosition)
+        list.add(toPosition, movedItem)
+        notifyItemMoved(fromPosition, toPosition)
     }
 
     class ViewHolder(private val binding: ViewDataBinding): RecyclerView.ViewHolder(binding.root) {

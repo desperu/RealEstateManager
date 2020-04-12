@@ -60,7 +60,8 @@
                         android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
                         android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
                         android:textStyle="bold"
-                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"
+                        android:text="@={viewModel.estate.saleDate}"/>
 
                     <View
                         android:layout_width="wrap_content"
@@ -101,7 +102,8 @@
                         android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
                         android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
                         android:textStyle="bold"
-                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
+                        android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"
+                        android:text="@={viewModel.estate.soldDate}"/>
 
                     <View
                         android:layout_width="wrap_content"

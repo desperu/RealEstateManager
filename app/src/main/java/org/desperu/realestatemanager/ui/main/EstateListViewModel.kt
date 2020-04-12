@@ -8,13 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.model.Image
 import org.desperu.realestatemanager.repositories.AddressRepository
 import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
 import org.desperu.realestatemanager.view.updateList
 
+/**
+ * View Model witch provide data for estate list.
+ */
 class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val imageRepository: ImageRepository,
                           private val addressRepository: AddressRepository,
@@ -22,7 +24,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
-    private var estateList = ArrayList<Estate>()
+    private var estateList = mutableListOf<Estate>()
     private val mutableRefreshing = MutableLiveData<Boolean>()
     private val mutableVisibility = MutableLiveData<Int>()
 
@@ -38,10 +40,10 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * Load estate list with images and address for each, from database.
      */
     private fun loadEstateList() {
-        viewModelScope.launch(Dispatchers.Main) {// TODO dispatch main or IO??
-            estateList = estateRepository.getAll() as ArrayList<Estate>
+        viewModelScope.launch(Dispatchers.Main) {
+            estateList = estateRepository.getAll().toMutableList()
             estateList.forEach { estate ->
-                estate.imageList = imageRepository.getEstateImages(estate.id) as ArrayList<Image>
+                estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
                 estate.address = addressRepository.getAddress(estate.id)
             }
             onRetrieveEstateList()
@@ -69,13 +71,14 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             if (oldEstate == null) { // Add new element in first position
                 position = 0
                 estateList.add(position, estate)
-                estateListAdapter.addItem(position, EstateViewModel(estate, router))
+                estateListAdapter.addItem(position, EstateViewModel.withRouter(estate, router))
             } else { // Update existing element at his position
                 position = estateList.indexOf(oldEstate)
                 estateList.remove(oldEstate)
                 estateList.add(position, estate)
                 estateListAdapter.updateItem(position, estate)
             }
+            updateUi()
         }
         return position
     }
@@ -88,10 +91,9 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * Push data to recycler view when retrieve estate list.
      */
     private fun onRetrieveEstateList() {
-        val estateViewModelList = ArrayList<Any>()
-        estateList.forEach { estate -> estateViewModelList.add(EstateViewModel(estate, router)) }
-        estateListAdapter.updateList(estateViewModelList)
-        updateList(estateViewModelList)
+        val estateViewModelList = estateList.map { estate -> EstateViewModel.withRouter(estate, router) }
+        estateListAdapter.updateList(estateViewModelList.toMutableList())
+        updateList(estateViewModelList.toMutableList())
         updateUi()
     }
 

@@ -15,7 +15,7 @@ import org.desperu.realestatemanager.ui.main.EstateViewModel
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 
-lateinit var list: ArrayList<Any>
+lateinit var list: MutableList<Any>
 var restored = false
 
 fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, givenList: ArrayList<Any>): ItemTouchHelper {
@@ -74,7 +74,7 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
     return ItemTouchHelper(simpleItemTouchCallback)
 }
 
-fun updateList(newList: ArrayList<Any>) { list = newList }
+fun updateList(newList: MutableList<Any>) { list = newList }
 
 private fun removeItem(activity: AppCompatActivity, adapter: RecyclerViewAdapter, position: Int) {
     val itemId = getItemId(list[position], (list[position] as ViewModel)::class.java)

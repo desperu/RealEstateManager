@@ -20,6 +20,9 @@ import org.desperu.realestatemanager.ui.ImageViewModel
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
 
+/**
+ * View Model to manage full estate (estate, images and address) in database.
+ */
 class ManageEstateViewModel(private val estateRepository: EstateRepository,
                             private val imageRepository: ImageRepository,
                             private val addressRepository: AddressRepository): ViewModel() {
@@ -27,7 +30,6 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // FOR DATA
     private val imageListAdapter = RecyclerViewAdapter(R.layout.item_image)
     val estate = MutableLiveData<Estate>()
-
     var price = ObservableField<String>()
 
     // For Spinners
@@ -55,9 +57,8 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Update Recycler Image List.
      */
     fun updateRecyclerImageList() {
-        val imageViewModelList = ArrayList<Any>() // TODO is it good??
-        estate.value?.imageList?.forEach { image -> imageViewModelList.add(ImageViewModel(image)) }
-        imageListAdapter.updateList(imageViewModelList)
+        val imageViewModelList = estate.value?.imageList?.map { image -> ImageViewModel(image) } ?: emptyList()
+        imageListAdapter.updateList(imageViewModelList.toMutableList())
     }
 
     /**
@@ -77,14 +78,22 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Spinner listener, for type, interest places and state spinners.
      */
     val spinnerListener = object: AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            setSpinnerValue(parent, 0)
+        }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            when (parent?.tag) {
-                "spinnerType" -> type = parent.getItemAtPosition(position).toString()
-                "spinnerInterestPlaces" -> interestPlaces = parent.getItemAtPosition(position).toString()
-                "spinnerState" -> state = parent.getItemAtPosition(position).toString()
-            }
+            setSpinnerValue(parent, position)
+        }
+    }
+
+    // TODO can be perfect, use Observable in layout
+    private fun setSpinnerValue(parent: AdapterView<*>?, position: Int) {
+        val value = parent?.getItemAtPosition(position).toString()
+        when (parent?.tag) {
+            "spinnerType" -> type = value
+            "spinnerInterestPlaces" -> interestPlaces = value
+            "spinnerState" -> state = value
         }
     }
 
@@ -167,10 +176,4 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // --- GETTERS ---
 
     val getImageListAdapter = imageListAdapter
-
-    // --- SETTERS ---
-
-    fun setSaleDate(saleDate: String) { estate.value?.saleDate = saleDate }
-
-    fun setSoldDate(soldDate: String) { estate.value?.soldDate = soldDate }
 }

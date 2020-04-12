@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Environment
 import android.provider.MediaStore
@@ -35,10 +36,10 @@ import java.util.*
 /**
  * Fragments to manage estate : data, images, address, interest places and sale data.
  */
-class ManageEstateFragment(): BaseBindingFragment() {
+class ManageEstateFragment: BaseBindingFragment() {
 
     // FOR DATA
-    @JvmField @State var fragmentKey: Int = -1 // TODO save value but can't with Icepick, do it manually with bundle??
+    @JvmField @State var fragmentKey: Int = -1
     private lateinit var binding: ViewDataBinding
     private lateinit var viewModel: ManageEstateViewModel
     // DATE PICKER
@@ -47,9 +48,20 @@ class ManageEstateFragment(): BaseBindingFragment() {
     private var saleDate = String()
     private var soldDate = String()
 
-    // SECOND CONSTRUCTOR
-    constructor(fragmentKey: Int): this() {
-        this.fragmentKey = fragmentKey
+    /**
+     * Companion object, used to create new instance of this fragment.
+     */
+    companion object {
+        /**
+         * Create a new instance of this fragment and set fragmentKey.
+         * @param fragmentKey the fragment key to configure
+         * @return the new instance of ManageEstateFragment.
+         */
+        fun newInstance(fragmentKey: Int): ManageEstateFragment {
+            val manageEstateFragment = ManageEstateFragment()
+            manageEstateFragment.fragmentKey = fragmentKey
+            return manageEstateFragment
+        }
     }
 
     // --------------
@@ -72,6 +84,8 @@ class ManageEstateFragment(): BaseBindingFragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            onClickAddImage()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -147,14 +161,12 @@ class ManageEstateFragment(): BaseBindingFragment() {
         datePickerSale = OnDateSetListener { _, year, month, dayOfMonth ->
             saleDate = intDateToString(dayOfMonth, month, year)
             pickerSaleDate.text = saleDate
-            viewModel.setSaleDate(saleDate)
         }
         val pickerSoldDate = fragment_estate_sale_date_picker_sold_out_date
         pickerSoldDate.setOnClickListener { configureDatePickerDialog(datePickerSold) }
         datePickerSold = OnDateSetListener { _, year, month, dayOfMonth ->
             soldDate = intDateToString(dayOfMonth, month, year)
             pickerSoldDate.text = soldDate
-            viewModel.setSoldDate(soldDate)
         }
     }
 
@@ -220,7 +232,7 @@ class ManageEstateFragment(): BaseBindingFragment() {
     private fun chooseImageFromPhone() {
         if (!EasyPermissions.hasPermissions(activity!!, READ_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(this, getString(R.string.fragment_estate_image_popup_title_permission_files_access),
-                    PERMS_STORAGE, READ_EXTERNAL_STORAGE)
+                    RC_PERMS_STORAGE, READ_EXTERNAL_STORAGE)
             return
         }
         // Launch an "Selection Image" Activity
@@ -233,7 +245,7 @@ class ManageEstateFragment(): BaseBindingFragment() {
     private fun takePhotoWithCamera() {
         if (!EasyPermissions.hasPermissions(activity!!, WRITE_EXTERNAL_STORAGE, CAMERA)) {
             EasyPermissions.requestPermissions(this, getString(R.string.fragment_estate_image_popup_title_permission_write_storage_and_camera),
-                    PERMS_PHOTO, WRITE_EXTERNAL_STORAGE, CAMERA)
+                    RC_PERMS_PHOTO, WRITE_EXTERNAL_STORAGE, CAMERA)
             return
         }
         // Launch an "Take Photo" Activity

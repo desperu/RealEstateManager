@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
 
+/**
+ * View Model witch provide data for estate item and estate detail.
+ */
 class EstateViewModel(private val givenEstate: Estate): ViewModel() {
 
     // FOR DATA
@@ -14,9 +17,21 @@ class EstateViewModel(private val givenEstate: Estate): ViewModel() {
     private val primaryImage = MutableLiveData<Image>()
     private lateinit var router: EstateRouter
 
-    // SECOND CONSTRUCTOR
-    constructor(givenEstate: Estate, router: EstateRouter): this(givenEstate) {
-        this.router = router
+    /**
+     * Companion object, used to create an EstateViewModel instance and set estate router interface.
+     */
+    companion object {
+        /**
+         * Create an EstateViewModel instance and set estate router interface.
+         * @param givenEstate the given estate for this EstateViewModel.
+         * @param router the estate router instance to set.
+         * @return the EstateViewModel created with router.
+         */
+        fun withRouter(givenEstate: Estate, router: EstateRouter): EstateViewModel {
+            val estateViewModel = EstateViewModel(givenEstate)
+            estateViewModel.router = router
+            return estateViewModel
+        }
     }
 
     init {

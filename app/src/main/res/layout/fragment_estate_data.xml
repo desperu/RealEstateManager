@@ -210,7 +210,7 @@
                 android:gravity="top"
                 android:background="@drawable/edit_text_border"
                 android:elevation="@dimen/default_elevation"
-                android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
+                android:inputType="textMultiLine"
                 android:hint="@string/fragment_estate_data_text_description_hint"
                 android:minLines="5"
                 android:importantForAutofill="no"

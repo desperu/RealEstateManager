@@ -17,16 +17,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
-import org.desperu.realestatemanager.di.module.dbModule
-import org.desperu.realestatemanager.di.module.repositoryModule
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.utils.RC_ESTATE
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.KoinContextHandler
-import org.koin.core.context.startKoin
 
 /**
  * The name of the argument for passing the new or updated estate to this Activity.
@@ -49,7 +43,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun configureDesign() {
         Stetho.initializeWithDefaults(this) // TODO For test only, to remove
-        initKoin()
         configureToolBar()
         configureDrawerLayout()
         configureNavigationView()
@@ -80,83 +73,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         activity_main_nav_view.setNavigationItemSelectedListener(this)
     }
 
-
-    /**
-     * Initializes and starting koin if not already started.
-     */
-    private fun initKoin() {
-        if (KoinContextHandler.getOrNull() == null)
-            startKoin {
-                androidLogger()
-                androidContext(this@MainActivity)
-                modules(listOf(dbModule, repositoryModule))
-            }
-    }
-
-//    /**
-//     * Configure and show corresponding fragment.
-//     * @param fragmentKey Key for fragment.
-//     */
-//    private fun configureAndShowFragment(fragmentKey: Int) {
-//        var titleActivity = getString(R.string.title_activity_main)
-//        val bundle = Bundle()
-//        fragment = supportFragmentManager
-//                .findFragmentById(R.id.activity_main_frame_layout)
-//        if (currentFragment !== fragmentKey) {
-//            when (fragmentKey) {
-//                MAP_FRAGMENT -> {
-//                    fragment = MapsFragment.newInstance()
-//                    bundle.putStringArrayList(PLACE_ID_LIST_MAPS, placeIdList)
-//                    if (this.bounds != null) bundle.putParcelable(CAMERA_POSITION, cameraPosition)
-//                    if (this.queryTerm != null && !this.queryTerm.isEmpty()) bundle.putString(QUERY_TERM_MAPS, queryTerm)
-//                    bundle.putBoolean(MapsFragment.IS_QUERY_FOR_RESTAURANT_MAPS, isQueryForRestaurant)
-//                    fragment.setArguments(bundle)
-//                }
-//                LIST_FRAGMENT -> {
-//                    fragment = RestaurantListFragment.newInstance()
-//                    bundle.putStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST, placeIdList)
-//                    bundle.putParcelable(BOUNDS, bounds)
-//                    if (this.queryTerm != null && !this.queryTerm.isEmpty()) bundle.putString(QUERY_TERM_LIST, queryTerm)
-//                    bundle.putBoolean(IS_QUERY_FOR_RESTAURANT_LIST, isQueryForRestaurant)
-//                    bundle.putParcelable(NEARBY_BOUNDS, nearbyBounds)
-//                    bundle.putParcelable(USER_LOCATION, userLocation)
-//                    fragment.setArguments(bundle)
-//                }
-//                WORKMATES_FRAGMENT -> {
-//                    fragment = WorkmatesFragment.newInstance()
-//                    if (this.queryTerm != null && !this.queryTerm.isEmpty()) bundle.putString(QUERY_TERM_WORKMATES, queryTerm)
-//                    fragment.setArguments(bundle)
-//                    titleActivity = getString(R.string.title_fragment_workmates)
-//                }
-//                CHAT_FRAGMENT -> {
-//                    fragment = ChatFragment.newInstance()
-//                    this.hideSearchViewIfVisible()
-//                    titleActivity = getString(R.string.title_fragment_chat)
-//                }
-//            }
-//            supportFragmentManager.beginTransaction()
-//                    .replace(R.id.activity_main_frame_layout, fragment)
-//                    .commit()
-//            this.setTitleActivity(titleActivity)
-//            if (toolbar.findViewById(R.id.activity_main_menu_search) != null) toolbar.findViewById(R.id.activity_main_menu_search).setVisibility(
-//                    if (fragmentKey != CHAT_FRAGMENT) View.VISIBLE else View.GONE)
-//        }
-//        currentFragment = fragmentKey
-//    }
-
-//    /**
-//     * Configure data binding for Navigation View Header with user info.
-//     */
-//    private fun configureDataBindingForHeader() {
-//        // Enable Data binding for user info
-//        if (activityMainNavHeaderBinding == null) {
-//            val headerView: View = navigationView!!.getHeaderView(0)
-//            activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView)
-//        }
-//        userAuthViewModel = UserAuthViewModel()
-//        activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel)
-//    }
-
     // --------------
     // FRAGMENT
     // --------------
@@ -178,17 +94,24 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             when (fragmentClass) {
                 EstateListFragment::class.java -> fragment = EstateListFragment()
                 EstateDetailFragment::class.java -> {
-                    fragment = EstateDetailFragment()
-                    val bundle = Bundle()
-                    bundle.putParcelable(ESTATE_DETAIL, estate)
-                    fragment?.arguments = bundle
+                    fragment = createEstateDetailFragment(estate)
                 }
+                MapsFragment::class.java -> fragment = MapsFragment()
             }
 
             supportFragmentManager.beginTransaction()
                     .replace(activity_main_frame_layout.id, fragment!!)
+                    .addToBackStack(null)
                     .commit()
         }
+    }
+
+    private fun createEstateDetailFragment(estate: Estate?): EstateDetailFragment {
+        val estateDetailFragment = EstateDetailFragment()
+        val bundle = Bundle()
+        bundle.putParcelable(ESTATE_DETAIL, estate)
+        estateDetailFragment.arguments = bundle
+        return estateDetailFragment
     }
 
 //    private fun configureAndShowFragment(fragmentClass: Class<*>, @IdRes frameLayout: Int) {
@@ -223,8 +146,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        // Handle SignIn Activity response on activity result.
-//        this.handleResponseAfterSignIn(requestCode, resultCode, data)
         // Handle Manage Estate Activity response on activity result.
         this.handleResponseManageEstate(requestCode, resultCode, data)
     }
@@ -232,8 +153,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java, null)
-            R.id.activity_main_menu_drawer_estate_map -> this.showSettingsActivity()
-            R.id.activity_main_menu_drawer_estate_new -> this.showManageEstateActivity(Estate())
+            R.id.activity_main_menu_drawer_estate_map -> configureAndShowFragment(MapsFragment::class.java, null)
+            R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity(Estate())
 //            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
 //            R.id.activity_main_menu_bottom_list -> configureAndShowFragment(LIST_FRAGMENT)
 //            R.id.activity_main_menu_bottom_workmates -> configureAndShowFragment(WORKMATES_FRAGMENT)
@@ -247,8 +168,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onBackPressed() {
         if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
             activity_main_drawer_layout.closeDrawer(GravityCompat.START)
-        else if (fragment?.javaClass == EstateDetailFragment::class.java)
-            configureAndShowFragment(EstateListFragment::class.java, null) // TODO to perfect
+//        else if (fragment?.javaClass == EstateDetailFragment::class.java)
+//            configureAndShowFragment(EstateListFragment::class.java, null) // TODO to perfect
         else if (toolbar_search_view != null && toolbar_search_view.isShown) {
             this.hideSearchViewIfVisible()
         } else super.onBackPressed()
@@ -298,22 +219,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     fun showEstateDetailFragment(estate: Estate) = configureAndShowFragment(EstateDetailFragment::class.java, estate)
 
-//    fun onClickedMarker(id: String) { showRestaurantDetailActivity(id) }
-//
-//    fun onNewQuerySearch(isQueryForRestaurant: Boolean) { isQueryForRestaurant = isQueryForRestaurant }
-//
-//    fun saveNearbyBounds(nearbyBounds: RectangularBounds) { nearbyBounds = nearbyBounds }
-//
-//    fun onNewUserLocation(userLocation: Location) { userLocation = userLocation }
-//
-//    fun onNewPlacesIdList(placeIdList: ArrayList<String?>) { placeIdList = placeIdList }
-//
-//    fun onNewBounds(bounds: RectangularBounds) { bounds = bounds }
-//
-//    fun onNewCameraPosition(cameraPosition: CameraPosition) { cameraPosition = cameraPosition }
-//
-//    fun onItemClick(restaurantId: String) { showRestaurantDetailActivity(restaurantId) }
-//
 //    /**
 //     * Manage click on Your Lunch button.
 //     */

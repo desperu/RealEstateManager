@@ -1,5 +1,7 @@
 package org.desperu.realestatemanager.utils
 
+import android.Manifest
+
 // FOR INTENT
 
 const val RC_ESTATE = 10
@@ -20,10 +22,16 @@ const val ESTATE_SALE = 3
 
 // FOR PERMISSIONS
 
-const val PERMS_STORAGE = 100
+// Images
+const val RC_PERMS_STORAGE = 100
 const val RC_CHOOSE_PHOTO = 200
-const val PERMS_PHOTO = 300
+const val RC_PERMS_PHOTO = 300
 const val RC_TAKE_PHOTO = 400
+
+// Location
+const val PERM_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
+const val PERM_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
+const val RC_PERM_LOCATION = 500
 
 // FOR SAVE IMAGE
 

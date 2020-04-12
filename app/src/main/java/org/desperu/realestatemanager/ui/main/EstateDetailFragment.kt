@@ -2,6 +2,7 @@ package org.desperu.realestatemanager.ui.main
 
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateDetailBinding
@@ -20,6 +21,7 @@ class EstateDetailFragment: BaseBindingFragment() {
     // FOR DATA
     private lateinit var binding: FragmentEstateDetailBinding
     private lateinit var viewModel: EstateViewModel
+    private var mapFragment: Fragment? = null
 
     // --------------
     // BASE METHODS
@@ -27,7 +29,9 @@ class EstateDetailFragment: BaseBindingFragment() {
 
     override fun getBindingView(): View = configureViewModel()
 
-    override fun configureDesign() {}
+    override fun configureDesign() {
+        configureMapFragment()
+    }
 
     override fun updateDesign() {}
 
@@ -50,5 +54,18 @@ class EstateDetailFragment: BaseBindingFragment() {
         binding.viewModel = viewModel
 //        configureImageRecycler()
         return binding.root
+    }
+
+    /**
+     * Configure and show map fragment.
+     */
+    private fun configureMapFragment() {
+        if (mapFragment == null) {
+            mapFragment = childFragmentManager.findFragmentById(R.id.map)
+            mapFragment = MapsFragment()
+            childFragmentManager.beginTransaction()
+                    .add(R.id.map, mapFragment!!)
+                    .commit()
+        }
     }
 }

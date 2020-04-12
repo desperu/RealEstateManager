@@ -1,7 +1,6 @@
 package org.desperu.realestatemanager.ui.manageEstate
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,19 +35,14 @@ class ManageEstateActivity: BaseActivity() {
     /**
      * Companion object, used to redirect to this Activity.
      */
-    companion object{
+    companion object {
         /**
          * Redirects from an Activity to this Activity.
          * @param activity the activity use to perform redirection.
          * @param estate the estate to manage in this activity.
          */
-        fun routeFromActivity(activity: AppCompatActivity, estate: Estate){
-            val extras = Bundle()
-            extras.putParcelable(MANAGE_ESTATE, estate)
-// TODO why use bundle??
-            val intent = Intent(activity, ManageEstateActivity::class.java)
-            intent.putExtras(extras)
-            activity.startActivity(intent)
+        fun routeFromActivity(activity: AppCompatActivity, estate: Estate) {
+            activity.startActivity(Intent(activity, ManageEstateActivity::class.java).putExtra(MANAGE_ESTATE, estate))
         }
     }
 

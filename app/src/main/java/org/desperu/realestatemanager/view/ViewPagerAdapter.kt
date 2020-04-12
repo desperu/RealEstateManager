@@ -16,7 +16,7 @@ class ViewPagerAdapter(mContext: Context,
 
     override fun getCount(): Int = numberOfPage
 
-    override fun getItem(position: Int): Fragment = ManageEstateFragment(position)
+    override fun getItem(position: Int): Fragment = ManageEstateFragment.newInstance(position)
 
     override fun getPageTitle(position: Int): CharSequence? = tabTitles[position]
 }

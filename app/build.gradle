@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply from: 'security.gradle'
 
 android {
     compileSdkVersion 29
@@ -13,11 +14,16 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        javaCompileOptions {
+        javaCompileOptions { // Export room database schema
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        buildConfigField "String", "GOOGLE_MAPS_API_KEY", google_maps_api_key
+        resValue "string", "google_maps_api_key", google_maps_api_key
+    }
+    kotlinOptions { // TODO remove if unused
+        jvmTarget = "1.8"
     }
     buildTypes {
         release {
@@ -69,6 +75,9 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
+
+    // Google Maps
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     //EASY PERMISSIONS
     implementation "pub.devrel:easypermissions:$easypermission_version"

@@ -35,15 +35,8 @@ data class Estate(@PrimaryKey(autoGenerate = true)
                   var saleDate: String = "",
                   var soldDate: String = "",
                   var realEstateAgent: String = "",
-                  @Ignore // TODO bad practice ???? needed for communication with parcelable. Must set id in var, val create bug no setter found
-                  var imageList: ArrayList<Image> = ArrayList(),
+                  @Ignore
+                  var imageList: MutableList<Image> = mutableListOf(),
                   @Ignore
                   var address: Address = Address()
-): Parcelable {
-
-//    // Image list of the estate.
-//    @Ignore var imageList = ArrayList<Image>()
-//
-//    // Address of the estate.
-//    @Ignore var address = Address()
-}
+): Parcelable
