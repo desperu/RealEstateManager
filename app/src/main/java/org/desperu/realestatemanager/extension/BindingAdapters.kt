@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.utils
+package org.desperu.realestatemanager.extension
 
 import android.net.Uri
 import android.text.TextWatcher
@@ -28,27 +28,43 @@ fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: MutableLiv
  */
 @BindingAdapter("mutableVisibility")
 fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
-    val parentActivity:AppCompatActivity? = view.context as AppCompatActivity?
-    if(parentActivity != null && visibility != null)
+    val parentActivity: AppCompatActivity? = view.context as AppCompatActivity?
+    if (parentActivity != null && visibility != null)
         visibility.observe(parentActivity, Observer { value -> view.visibility = value })
+}
+
+/**
+ * Set on click listener for view.
+ */
+@BindingAdapter("onClick")
+fun View.onClick(listener: View.OnClickListener) {
+    setOnClickListener(listener)
+}
+
+/**
+ * Set on long click listener for view.
+ */
+@BindingAdapter("onLongClick")
+fun View.onLongClick(listener: View.OnLongClickListener) {
+    setOnLongClickListener(listener)
 }
 
 /**
  * Setter for image in image view.
  */
 @BindingAdapter("image")
-fun setImage(imageView: ImageView, image: Image) {
-    imageView.setImageURI(Uri.parse(image.imageUri))
+fun ImageView.setImage(image: Image) {
+    setImageURI(Uri.parse(image.imageUri))
 }
 
 /**
  * Setter for spinners.
  */
 @BindingAdapter("setItem")
-fun setItem(spinner: Spinner, string: String?) {
-    for(position in 0 until spinner.adapter.count) {
-        if (spinner.getItemAtPosition(position).toString() == string)
-            spinner.setSelection(position)
+fun Spinner.setItem(string: String?) {
+    for(position in 0 until adapter.count) {
+        if (getItemAtPosition(position).toString() == string)
+            setSelection(position)
     }
 }
 
@@ -63,7 +79,7 @@ fun Spinner.setOnItemSelected(listener: AdapterView.OnItemSelectedListener) {
 /**
  * Save Listener for price in manage estate, needed for custom setter.
  */
-lateinit var listenerSave: TextWatcher
+private lateinit var listenerSave: TextWatcher
 
 /**
  * Set listener for edit text price.
@@ -96,34 +112,26 @@ fun EditText.setPriceText(str: String?) {
 }
 
 /**
- * Custom setter for text view price with pattern, in estate item.
- */
-@BindingAdapter("setPrice")
-fun TextView.setPrice(price: Long) {
-    text = convertPriceToPatternPrice(price.toString(), true)
-}
-
-/**
  * Custom setter for number (Int), in Edit Text.
  */
 @BindingAdapter("android:text")
-fun setNumber(editText: EditText, number: Int) {
-    editText.setText(if (number == 0) "" else number.toString())
+fun EditText.setNumber(number: Int) {
+    setText(if (number == 0) "" else number.toString())
 }
 
 /**
  * Custom getter for number (Int), in Edit Text.
  */
 @InverseBindingAdapter(attribute = "android:text")
-fun getNumber(textView: TextView): Int {
-    val str = textView.text.toString()
+fun EditText.getNumber(): Int {
+    val str = text.toString()
     return if (str.isBlank()) 0 else str.toInt()
 }
 
 /**
- * Set listener for view on click.
+ * Custom setter for text view price with pattern, in estate item.
  */
-@BindingAdapter("onClick")
-fun View.onClick(listener: View.OnClickListener) {
-    setOnClickListener(listener)
+@BindingAdapter("setPrice")
+fun TextView.setPrice(price: Long) {
+    text = convertPriceToPatternPrice(price.toString(), true)
 }

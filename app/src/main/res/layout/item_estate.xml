@@ -16,7 +16,8 @@
         app:cardPreventCornerOverlap="true"
         app:cardBackgroundColor="@android:color/white"
         app:cardElevation="@dimen/item_estate_card_view_margin_and_elevation"
-        app:onClick="@{viewModel.itemListener}">
+        app:onClick="@{viewModel.itemClick}"
+        app:onLongClick="@{viewModel.itemLongClick}">
 
         <RelativeLayout
             android:layout_width="wrap_content"

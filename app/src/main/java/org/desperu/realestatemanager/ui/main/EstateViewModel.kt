@@ -20,7 +20,7 @@ class EstateViewModel(private val givenEstate: Estate): ViewModel() {
     /**
      * Companion object, used to create an EstateViewModel instance and set estate router interface.
      */
-    companion object {
+    companion object { // TODO use constructor??
         /**
          * Create an EstateViewModel instance and set estate router interface.
          * @param givenEstate the given estate for this EstateViewModel.
@@ -54,14 +54,22 @@ class EstateViewModel(private val givenEstate: Estate): ViewModel() {
     }
 
     // -------------
-    // LISTENER
+    // LISTENERS
     // -------------
 
     /**
      * Item on click listener.
      */
-    val itemListener = View.OnClickListener { _ ->
-        estate.value?.let { router.openEstateDetail(it) }
+    val itemClick = View.OnClickListener {
+        estate.value?.let { estate ->  router.openEstateDetail(estate) }
+    }
+
+    /**
+     * Item on long click listener.
+     */
+    val itemLongClick = View.OnLongClickListener {
+        estate.value?.let { estate ->  router.openManageEstate(estate) }
+        true
     }
 
     // --- GETTERS ---

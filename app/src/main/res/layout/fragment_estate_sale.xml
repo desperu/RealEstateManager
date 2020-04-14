@@ -54,14 +54,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/fragment_estate_sale_text_sale_date"
-                        android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
                         android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
                         android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
                         android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"
-                        android:text="@={viewModel.estate.saleDate}"/>
+                        android:text="@={viewModel.estate.saleDate}"
+                        android:tag="saleDate" />
 
                     <View
                         android:layout_width="wrap_content"
@@ -97,13 +97,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/fragment_estate_sale_text_sold_out_date"
-                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal"
                         android:layout_marginStart="@dimen/fragments_manage_estate_text_category_margin"
                         android:layout_marginEnd="@dimen/fragments_manage_estate_text_category_margin"
                         android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"
-                        android:text="@={viewModel.estate.soldDate}"/>
+                        android:text="@={viewModel.estate.soldDate}"
+                        android:tag="soldDate" />
 
                     <View
                         android:layout_width="wrap_content"
@@ -136,6 +137,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:gravity="center_horizontal"
+                        android:layout_alignStart="@+id/fragment_estate_sale_spinner_state"
+                        android:layout_alignEnd="@+id/fragment_estate_sale_spinner_state"
                         android:text="@string/fragment_estate_sale_text_state"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>

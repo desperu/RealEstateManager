@@ -2,8 +2,7 @@ package org.desperu.realestatemanager.ui.manageEstate
 
 import android.Manifest.permission.*
 import android.app.Activity.RESULT_OK
-import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -12,6 +11,7 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ArrayRes
 import androidx.appcompat.app.AlertDialog
@@ -25,10 +25,11 @@ import kotlinx.android.synthetic.main.fragment_estate_sale.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateImageBinding
+import org.desperu.realestatemanager.extension.createDatePickerDialog
+import org.desperu.realestatemanager.extension.toBitmap
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritable
 import org.desperu.realestatemanager.utils.StorageUtils.setImageInStorage
-import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.todayDate
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
@@ -42,11 +43,6 @@ class ManageEstateFragment: BaseBindingFragment() {
     @JvmField @State var fragmentKey: Int = -1
     private lateinit var binding: ViewDataBinding
     private lateinit var viewModel: ManageEstateViewModel
-    // DATE PICKER
-    private lateinit var datePickerSale: OnDateSetListener
-    private lateinit var datePickerSold: OnDateSetListener
-    private var saleDate = String()
-    private var soldDate = String()
 
     /**
      * Companion object, used to create new instance of this fragment.
@@ -106,7 +102,6 @@ class ManageEstateFragment: BaseBindingFragment() {
         viewModel = (requireActivity() as ManageEstateActivity).getViewModel()
 
         binding.setVariable(org.desperu.realestatemanager.BR.viewModel, viewModel)
-        configureImageRecycler()
         return binding.root
     }
 
@@ -116,9 +111,11 @@ class ManageEstateFragment: BaseBindingFragment() {
     private fun configureCorrespondingLayout() {
         when (fragmentKey) {
             ESTATE_DATA -> configureSpinner(fragment_estate_data_spinner_type, R.array.estate_type_list)
+            ESTATE_IMAGE -> configureImageRecycler()
             ESTATE_ADDRESS -> configureSpinner(fragment_estate_address_spinner_interest_places, R.array.estate_interest_places_list)
             ESTATE_SALE -> { configureSpinner(fragment_estate_sale_spinner_state, R.array.estate_state_list)
-                             configureDatePicker()
+                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sale_date, viewModel.estate.value?.saleDate)
+                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sold_out_date, viewModel.estate.value?.soldDate)
                            }
         }
     }
@@ -137,53 +134,23 @@ class ManageEstateFragment: BaseBindingFragment() {
     }
 
     /**
-     * Configure Linear Layout Manager for Image Recycler, and update data list.
+     * Configure Linear Layout Manager for Image Recycler, and update image list.
      */
     private fun configureImageRecycler() {
-        if (fragmentKey == ESTATE_IMAGE) {
-            (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView.layoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            viewModel.updateRecyclerImageList()
-        }
-    }
-
-    // --------------
-    // DATE PICKERS
-    // --------------
-
-    /**
-     * Configure date picker.
-     */
-    private fun configureDatePicker() {
-        val pickerSaleDate = fragment_estate_sale_date_picker_sale_date
-        pickerSaleDate.text = todayDate()
-        pickerSaleDate.setOnClickListener { configureDatePickerDialog(datePickerSale) }
-        datePickerSale = OnDateSetListener { _, year, month, dayOfMonth ->
-            saleDate = intDateToString(dayOfMonth, month, year)
-            pickerSaleDate.text = saleDate
-        }
-        val pickerSoldDate = fragment_estate_sale_date_picker_sold_out_date
-        pickerSoldDate.setOnClickListener { configureDatePickerDialog(datePickerSold) }
-        datePickerSold = OnDateSetListener { _, year, month, dayOfMonth ->
-            soldDate = intDateToString(dayOfMonth, month, year)
-            pickerSoldDate.text = soldDate
-        }
+        (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        viewModel.updateRecyclerImageList()
     }
 
     /**
-     * Configure Date picker dialog.
-     * @param dateSetListener Date picker dialog listener.
+     * Set picker text view on click listener to show date picker dialog.
+     * @param context the context from this function is called.
+     * @param pickerView the associated picker text view.
+     * @param date the given string date, to set DatePickerDialog.
      */
-    private fun configureDatePickerDialog(dateSetListener: OnDateSetListener) {
-        val cal: Calendar = Calendar.getInstance()
-        if (dateSetListener === datePickerSale && saleDate.isNotEmpty()) cal.time = Utils.stringToDate(saleDate)
-        if (dateSetListener === datePickerSold && soldDate.isNotEmpty()) cal.time = Utils.stringToDate(soldDate)
-        val year: Int = cal.get(Calendar.YEAR)
-        val monthOfYear: Int = cal.get(Calendar.MONTH)
-        val dayOfMonth: Int = cal.get(Calendar.DAY_OF_MONTH)
-        val datePickerDialog = DatePickerDialog(context!!, R.style.DatePickerDialogTheme,
-                dateSetListener, year, monthOfYear, dayOfMonth)
-        datePickerDialog.show()
+    private fun setPickerTextOnClickListener(context: Context, pickerView: TextView, date: String?) {
+        if (pickerView.tag == "saleDate") pickerView.text = todayDate()
+        pickerView.setOnClickListener { createDatePickerDialog(context, pickerView, date) }
     }
 
     // -----------------
@@ -198,11 +165,6 @@ class ManageEstateFragment: BaseBindingFragment() {
     // -----------------
     // UI
     // -----------------
-
-    /**
-     * Add image to image list.
-     */
-    private fun addImageToImageList(imageUri: String) = viewModel.addImageToImageList(imageUri)
 
     /**
      * Create alert dialog to select photo action.
@@ -221,6 +183,12 @@ class ManageEstateFragment: BaseBindingFragment() {
                 }
         dialog.show()
     }
+
+    /**
+     * Show Toast with corresponding message.
+     * @param message Message to show.
+     */
+    private fun showToast(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
     // --------------------
     // IMAGE MANAGEMENT
@@ -253,6 +221,23 @@ class ManageEstateFragment: BaseBindingFragment() {
     }
 
     // -----------------
+    // DATA
+    // -----------------
+
+    /**
+     * Save image in storage and add to image list.
+     * @param bitmap the image bitmap to save and add to image list.
+     */
+    private fun saveImageAndAddToImageList(bitmap: Bitmap) {
+        if (isExternalStorageWritable()) { // Check external storage access.
+            val imageUri = setImageInStorage(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!,
+                    context!!, Date().time.toString() + ".jpg", FOLDER_NAME, bitmap)
+            viewModel.addImageToImageList(imageUri)
+        } else
+            showToast(getString(R.string.fragment_estate_image_toast_error_write_external_storage))
+    }
+
+    // -----------------
     // UTILS
     // -----------------
 
@@ -274,19 +259,15 @@ class ManageEstateFragment: BaseBindingFragment() {
      * @param data Intent request result data.
      */
     private fun handleResponse(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK) { //SUCCESS
-            if (isExternalStorageWritable()) {
-                lateinit var bitmap: Bitmap
-                when (requestCode) {
-                    RC_CHOOSE_PHOTO -> bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, data?.data)
-                    RC_TAKE_PHOTO -> bitmap = data?.extras?.get("data") as Bitmap
-                }
-                addImageToImageList(setImageInStorage(activity?.getExternalFilesDir(
-                        Environment.DIRECTORY_PICTURES)!!, context!!,
-                        Date().time.toString() + ".jpg", FOLDER_NAME, bitmap))
-            } else
-                Toast.makeText(context, getString(R.string.fragment_estate_image_toast_error_write_external_storage), Toast.LENGTH_SHORT).show()
-        } else
-            Toast.makeText(context, getString(R.string.fragment_estate_image_toast_title_no_image_chosen), Toast.LENGTH_SHORT).show()
+        if (resultCode == RESULT_OK) { // SUCCESS
+            var bitmap: Bitmap? = null
+            when (requestCode) {
+                RC_CHOOSE_PHOTO -> bitmap = data?.data?.toBitmap(activity?.contentResolver!!)
+                RC_TAKE_PHOTO -> bitmap = data?.extras?.get("data") as Bitmap?
+            }
+            if (bitmap != null) saveImageAndAddToImageList(bitmap)
+            else showToast(getString(R.string.fragment_estate_image_toast_error_getting_bitmap))
+        } else // ERROR
+            showToast(getString(R.string.fragment_estate_image_toast_title_no_image_chosen))
     }
 }
