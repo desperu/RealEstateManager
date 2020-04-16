@@ -68,8 +68,6 @@
                         android:layout_height="1dp"
                         android:layout_below="@+id/fragment_estate_sale_date_picker_sale_date"
                         android:layout_alignStart="@+id/fragment_estate_sale_date_picker_sale_date"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center_horizontal"
                         android:layout_alignEnd="@+id/fragment_estate_sale_date_picker_sale_date"
                         android:layout_marginBottom="@dimen/default_margin"
                         android:background="@color/colorLightDark" />

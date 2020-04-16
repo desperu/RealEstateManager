@@ -76,7 +76,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
                 position = estateList.indexOf(oldEstate)
                 estateList.remove(oldEstate)
                 estateList.add(position, estate)
-                estateListAdapter.updateItem(position, estate)
+                estateListAdapter.updateItem(position, EstateViewModel.withRouter(estate, router))
             }
             updateUi()
         }

@@ -10,7 +10,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 /**
- * Created by Philippe on 21/02/2018.
+ * Utils object witch provide utils functions for this application.
  */
 object Utils {
 
@@ -44,12 +44,13 @@ object Utils {
      * Convert simple string price (12000000) to pattern string price (12,000,000) or ($ 12,000,000).
      * @param s Simple string price to convert.
      * @param moneyUnity With or without money unity ($).
+     * @return Pattern string price.
      */
     fun convertPriceToPatternPrice(s: String, moneyUnity: Boolean): String {
-        if (isEditing && !moneyUnity) return s
-        isEditing = true
-
+        if (isEditing) return s
         if (s.isBlank() || s == "0") return ""
+
+        isEditing = true
 
         val s1: Double = s.replace(Regex.fromLiteral(","), "").toDouble()
 
@@ -64,6 +65,7 @@ object Utils {
     /**
      * Convert string pattern price to simple string price.
      * @param str String pattern price to convert.
+     * @return Converted string price.
      */
     fun convertPatternPriceToString(str: String): String = str.replace(",","", false)
 

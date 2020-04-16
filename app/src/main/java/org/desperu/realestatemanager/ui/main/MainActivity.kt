@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.facebook.stetho.Stetho
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,12 +29,13 @@ import org.desperu.realestatemanager.utils.RC_ESTATE
 const val NEW_ESTATE: String = "newEstate"
 
 /**
- * Activity to show estate list and estate details.
+ * Activity to show estate list, estate details, and maps fragment.
  */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     // FOR DATA
-    private var fragment: Fragment? = Fragment()
+    private val fm = supportFragmentManager
+    private var fragment: Fragment? = null
 
     // --------------
     // BASE METHODS
@@ -77,57 +79,48 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // FRAGMENT
     // --------------
 
-//    private fun configureAndShowMainFragment() {
-//        mainFragment = supportFragmentManager.findFragmentById(R.id.frame_layout_main) as MainFragment?
-//        if (mainFragment == null && findViewById<View?>(R.id.frame_layout_main) != null) {
-//            mainFragment = MainFragment()
-//            supportFragmentManager.beginTransaction()
-//                    .add(R.id.frame_layout_main, mainFragment)
-//                    .commit()
-//        }
-//    }
-//
-    private fun configureAndShowFragment(fragmentClass: Class<*>, estate: Estate?) {
-        if (fragment?.javaClass != fragmentClass) {
-            fragment = supportFragmentManager.findFragmentById(R.id.activity_main_frame_layout)
+    /**
+     * Configure and show fragments, with back stack management to restore instance.
+     * @param fragmentClass the fragment class to show.
+     * @param estate the estate to show in estate detail or maps.
+     */
+    private fun <T: Fragment> configureAndShowFragment(fragmentClass: Class<T>, estate: Estate?) {
+        if (fragment?.javaClass != fragmentClass || estate != null) {
 
-            when (fragmentClass) {
-                EstateListFragment::class.java -> fragment = EstateListFragment()
-                EstateDetailFragment::class.java -> {
-                    fragment = createEstateDetailFragment(estate)
-                }
-                MapsFragment::class.java -> fragment = MapsFragment()
-            }
+            // Restore instance from back stack if there's one,
+            // else create a new instance for asked fragment.
+            fragment = fm.findFragmentByTag(fragmentClass.simpleName) ?: fragmentClass.newInstance()
 
-            supportFragmentManager.beginTransaction()
-                    .replace(activity_main_frame_layout.id, fragment!!)
-                    .addToBackStack(null)
+            // Populate estate to fragment with bundle if there's one.
+            if (estate != null) populateEstateToFragment(fragment!!, estate)
+
+            // Clear all back stack when recall Estate List Fragment,
+            // because it's the root fragment of this activity.
+            if (fragmentClass == EstateListFragment::class.java)
+                while (fm.backStackEntryCount > 0) fm.popBackStackImmediate()
+            // TODO manage frame layout for tablet and landscape
+            // If second frame layout is visible, put other fragments in it.
+//            else frameLayout = activity_main_frame_layout2 ?: activity_main_frame_layout
+
+            // Show fragment in corresponding container, add to back stack and set transition.
+            fm.beginTransaction()
+                    .replace(activity_main_frame_layout.id, fragment!!, fragment?.javaClass?.simpleName)
+                    .addToBackStack(fragment?.javaClass?.simpleName)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
         }
     }
 
-    private fun createEstateDetailFragment(estate: Estate?): EstateDetailFragment {
-        val estateDetailFragment = EstateDetailFragment()
+    /**
+     * Populate estate to fragment with bundle.
+     * @param fragment the fragment instance to send estate.
+     * @param estate the estate to populate.
+     */
+    private fun populateEstateToFragment(fragment: Fragment, estate: Estate) {
         val bundle = Bundle()
         bundle.putParcelable(ESTATE_DETAIL, estate)
-        estateDetailFragment.arguments = bundle
-        return estateDetailFragment
+        fragment.arguments = bundle
     }
-
-//    private fun configureAndShowFragment(fragmentClass: Class<*>, @IdRes frameLayout: Int) {
-//        when (fragmentClass) {
-////            EstateListFragment()::class.java -> fragment as EstateListFragment
-//            EstateListFragment::class.java -> fragment = estateListFragment as EstateListFragment
-//        }
-//
-//        fragment = supportFragmentManager.findFragmentById(frameLayout) as EstateListFragment?
-//        if (fragment == null && frameLayout != null) {
-//            fragment = EstateListFragment().newInstance()
-//            supportFragmentManager.beginTransaction()
-//                    .add(frameLayout, fragment as EstateListFragment)
-//                    .commit()
-//        }
-//    }
 
     // -----------------
     // METHODS OVERRIDE
@@ -154,25 +147,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (menuItem.itemId) {
             R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java, null)
             R.id.activity_main_menu_drawer_estate_map -> configureAndShowFragment(MapsFragment::class.java, null)
-            R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity(Estate())
-//            R.id.activity_main_menu_bottom_map -> configureAndShowFragment(MAP_FRAGMENT)
-//            R.id.activity_main_menu_bottom_list -> configureAndShowFragment(LIST_FRAGMENT)
-//            R.id.activity_main_menu_bottom_workmates -> configureAndShowFragment(WORKMATES_FRAGMENT)
-//            R.id.activity_main_menu_bottom_chat -> configureAndShowFragment(CHAT_FRAGMENT)
+            R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity(null)
             else -> {}
         }
         activity_main_drawer_layout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    override fun onBackPressed() {
-        if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
-            activity_main_drawer_layout.closeDrawer(GravityCompat.START)
-//        else if (fragment?.javaClass == EstateDetailFragment::class.java)
-//            configureAndShowFragment(EstateListFragment::class.java, null) // TODO to perfect
-        else if (toolbar_search_view != null && toolbar_search_view.isShown) {
-            this.hideSearchViewIfVisible()
-        } else super.onBackPressed()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -193,20 +172,30 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.activity_main_menu_add -> {
-                showManageEstateActivity(Estate())
-                return true
-            }
-            R.id.activity_main_menu_update -> {
-                return true
-            }
-            R.id.activity_main_menu_search -> {
-                toolbar_search_view.visibility = View.VISIBLE
-                toolbar_search_view.onActionViewExpanded()
-                return true
-            }
+            R.id.activity_main_menu_add -> showManageEstateActivity(null)
+            R.id.activity_main_menu_update -> {}
+            R.id.activity_main_menu_search ->
+                toolbar_search_view.apply { visibility = View.VISIBLE; onActionViewExpanded() }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        // If drawer is open, close it.
+        if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
+            activity_main_drawer_layout.closeDrawer(GravityCompat.START)
+        // If search view is shown, hide it.
+        else if (toolbar_search_view != null && toolbar_search_view.isShown)
+            hideSearchViewIfVisible()
+        // If current fragment is EstateListFragment, remove it and call super to finish activity.
+        else if (fragment?.javaClass == EstateListFragment::class.java) {
+            fm.popBackStackImmediate()
+            super.onBackPressed()
+        // Else show previous fragment in back stack, and set fragment field with restored fragment.
+        } else {
+            super.onBackPressed()
+            fragment = fm.findFragmentById(R.id.activity_main_frame_layout)
+        }
     }
 
     // --------------------
@@ -217,7 +206,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * Show EstateDetailFragment for the given estate.
      * @param estate the estate to show details.
      */
-    fun showEstateDetailFragment(estate: Estate) = configureAndShowFragment(EstateDetailFragment::class.java, estate)
+    internal fun showEstateDetailFragment(estate: Estate) = configureAndShowFragment(EstateDetailFragment::class.java, estate)
 
 //    /**
 //     * Manage click on Your Lunch button.
@@ -258,10 +247,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // -----------------
 
     /**
-     * Start manage estate activity.
-     * @param estate Estate to manage.
+     * Start manage estate activity to manage an existing estate or create a new.
+     * @param estate Estate to manage, null for create new.
      */
-    private fun showManageEstateActivity(estate: Estate) {
+    private fun showManageEstateActivity(estate: Estate?) {
         startActivityForResult(Intent(this, ManageEstateActivity::class.java).putExtra(MANAGE_ESTATE, estate), RC_ESTATE)
     }
 
@@ -277,17 +266,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // -----------------
 
     /**
-     * Set title activity name.
-     * @param titleActivity Fragment title.
+     * Set title activity name for fragment.
+     * @param titleFragment the fragment title.
      */
-    private fun setTitleActivity(titleActivity: String) {
-        this.title = titleActivity
-    }
+    private fun setTitleActivity(titleFragment: String) { title = titleFragment }
 
     /**
      * Hide search view if visible, and clear query.
      */
-    private fun hideSearchViewIfVisible() {
+    private fun hideSearchViewIfVisible() { // TODO to perfect, if already check in parent function, submit = true why??
         if (toolbar_search_view != null && toolbar_search_view.isShown) {
             toolbar_search_view.visibility = View.GONE
             toolbar_search_view.setQuery(null, true)
@@ -295,21 +282,30 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     /**
-     * Show Toast with corresponding message.
-     * @param message Message to show.
+     * Show Toast for given message.
+     * @param message the given message to show.
      */
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
+    private fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     // -----------------
     // UTILS
     // -----------------
 
+    /**
+     * Handle response when retrieve manage estate result, if estate list is shown,
+     * add or update item in list and scroll to it.
+     * @param requestCode Code of request.
+     * @param resultCode Result code of request.
+     * @param data Intent request result data.
+     */
     private fun handleResponseManageEstate(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK && requestCode == RC_ESTATE) { // TODO to perform and comment
-            val estateListFragment = (fragment as EstateListFragment)
-            val position = estateListFragment.getViewModel().addOrUpdateEstate(data?.getParcelableExtra(NEW_ESTATE))
+        // If result code and request code matches with manage estate result, populate new estate to the list.
+        if (resultCode == RESULT_OK && requestCode == RC_ESTATE) {
+            // Try to get EstateListFragment instance from back stack, if not found value was null.
+            val estateListFragment = (fm.findFragmentByTag(EstateListFragment::class.java.simpleName) as EstateListFragment?)
+            // If an instance was found, add or update estate in list of view model and recycler view.
+            val position = estateListFragment?.getViewModel()?.addOrUpdateEstate(data?.getParcelableExtra(NEW_ESTATE))
+            // If an estate was added or updated, position is not null, scroll the recycler to the estate position.
             position?.let { estateListFragment.scrollToNewItem(it) }
         }
     }

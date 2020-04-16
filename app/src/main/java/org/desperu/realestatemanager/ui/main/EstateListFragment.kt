@@ -75,11 +75,11 @@ class EstateListFragment: BaseBindingFragment() {
      * Scroll to the new item position of recycler view.
      * @param position the position to scroll in the recycler view.
      */
-    fun scrollToNewItem(position: Int) {
+    internal fun scrollToNewItem(position: Int) {
         view?.rootView?.fragment_estate_list_recycler_view?.layoutManager?.scrollToPosition(position)
     }
 
     // --- GETTERS ---
 
-    fun getViewModel(): EstateListViewModel = viewModel as EstateListViewModel
+    internal fun getViewModel(): EstateListViewModel = viewModel as EstateListViewModel
 }

@@ -16,6 +16,7 @@ import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.main.NEW_ESTATE
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
+import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.desperu.realestatemanager.view.MyPageTransformer
 import org.desperu.realestatemanager.view.ViewPagerAdapter
 
@@ -42,7 +43,7 @@ class ManageEstateActivity: BaseActivity() {
          * @param estate the estate to manage in this activity.
          */
         fun routeFromActivity(activity: AppCompatActivity, estate: Estate) {
-            activity.startActivity(Intent(activity, ManageEstateActivity::class.java).putExtra(MANAGE_ESTATE, estate))
+            activity.startActivityForResult(Intent(activity, ManageEstateActivity::class.java).putExtra(MANAGE_ESTATE, estate), RC_ESTATE)
         }
     }
 
@@ -55,7 +56,6 @@ class ManageEstateActivity: BaseActivity() {
     override fun configureDesign() {
         configureToolBar()
         configureUpButton()
-        setViewModel()
         configureViewPagerAndTabs()
     }
 
@@ -67,16 +67,6 @@ class ManageEstateActivity: BaseActivity() {
      * Get Estate from intent.
      */
     private fun getEstate() = intent.getParcelableExtra<Estate>(MANAGE_ESTATE)
-
-    /**
-     * Set view model instance.
-     */
-    private fun setViewModel() {
-        if (viewModel == null) {
-            viewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
-            viewModel?.setEstate(getEstate())
-        }
-    }
 
     /**
      * Configure Tab layout and View pager.
@@ -98,7 +88,7 @@ class ManageEstateActivity: BaseActivity() {
     /**
      * On click add estate button.
      */
-    fun onClickAddEstate(v: View) {
+    fun onClickAddEstate(v: View) { // TODO close soft keyboard
         viewModel?.createOrUpdateEstate()
         showToast(getString(R.string.activity_manage_estate_create_estate_message))
         setResult(RESULT_OK, Intent(this, MainActivity::class.java)
@@ -119,10 +109,14 @@ class ManageEstateActivity: BaseActivity() {
     // --- GETTERS ---
 
     /**
-     * Get view model instance.
+     * Get view model instance, set if null.
+     * @return the ManageEstateViewModel instance.
      */
-    fun getViewModel(): ManageEstateViewModel {
-        viewModel ?: setViewModel()
+    internal fun getViewModel(): ManageEstateViewModel {
+        viewModel ?: run {
+            viewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
+            viewModel?.setEstate(getEstate())
+        }
         return viewModel as ManageEstateViewModel
     }
 

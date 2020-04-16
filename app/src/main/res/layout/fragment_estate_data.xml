@@ -45,6 +45,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:gravity="center_horizontal"
+                        android:layout_alignStart="@+id/fragment_estate_data_spinner_type"
+                        android:layout_alignEnd="@+id/fragment_estate_data_spinner_type"
                         android:text="@string/fragment_estate_data_text_type"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size" />
@@ -58,7 +61,8 @@
                         android:layout_below="@+id/fragment_estate_data_text_type"
                         android:tag="spinnerType"
                         app:setItem="@{viewModel.estate.type}"
-                        app:onItemSelected="@{viewModel.spinnerListener}" />
+                        app:onItemSelected="@{viewModel.spinnerListener}"
+                        tools:listitem="@android:layout/activity_list_item"/>
 
                 </RelativeLayout>
 
@@ -73,6 +77,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:layout_alignStart="@+id/fragment_estate_data_text_price_unity"
+                        android:layout_alignEnd="@+id/fragment_estate_data_edit_text_price"
+                        android:gravity="center_horizontal"
                         android:text="@string/fragment_estate_data_text_price"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
@@ -129,6 +136,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                        android:layout_alignStart="@+id/fragment_estate_data_edit_text_surface_area"
+                        android:layout_alignEnd="@+id/fragment_estate_data_text_surface_unity"
                         android:text="@string/fragment_estate_data_text_surface_area"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
@@ -148,6 +157,7 @@
                         android:text="@={viewModel.estate.surfaceArea}"/>
 
                     <TextView
+                        android:id="@+id/fragment_estate_data_text_surface_unity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/fragments_manage_estate_text_unity_margin_bottom"

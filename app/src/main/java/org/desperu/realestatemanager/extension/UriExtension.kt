@@ -9,9 +9,10 @@ import android.util.Log
 
 
 /**
- * Convert uri to bitmap.
+ * Convert uri to bitmap, with the properly function,
+ * depending of SDK version, return null if an error happened.
  * @param contentResolver the content resolver to provide storage access.
- * @return the created bitmap, null if an happened.
+ * @return the created bitmap, null if an error happened.
  */
 @Suppress("DEPRECATION")
 fun Uri.toBitmap(contentResolver: ContentResolver): Bitmap? = try {
