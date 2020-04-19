@@ -16,9 +16,9 @@ import java.util.*
  * @param pickerView the associated picker text view.
  * @param date the given string date, to set DatePickerDialog.
  */
-fun createDatePickerDialog(context: Context, pickerView: TextView, date: String?) {
+internal fun createDatePickerDialog(context: Context, pickerView: TextView, date: String?) {
     val cal: Calendar = Calendar.getInstance()
-    if (!date.isNullOrEmpty()) cal.time = stringToDate(date)
+    if (!date.isNullOrEmpty()) stringToDate(date)?.let { cal.time = it }
     val year: Int = cal.get(Calendar.YEAR)
     val monthOfYear: Int = cal.get(Calendar.MONTH)
     val dayOfMonth: Int = cal.get(Calendar.DAY_OF_MONTH)

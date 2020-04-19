@@ -10,6 +10,7 @@
     <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate !</string>
     <!-- Maps Fragment -->
     <string name="fragment_maps_popup_title_permission_location">This application need location permission.</string>
+    <string name="fragment_estate_detail_text_no_google_play_services_available">Congratulation!! You don\'t have google play services, it\'s spies services that\'s register all your activities and data. You don\'t have google map, so there\'s no map available in this application. In future version, w\'ll add OpenStreetMap, witch provide a full secure service!!</string>
 
     <!-- Manage Estate Activity -->
     <string name="activity_manage_estate_create_estate_message">Estate created!</string>

@@ -2,6 +2,8 @@ package org.desperu.realestatemanager.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
@@ -9,10 +11,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
+
 /**
  * Utils object witch provide utils functions for this application.
  */
-object Utils {
+internal object Utils {
 
     // -----------------
     // CONVERT MONEY
@@ -24,14 +27,14 @@ object Utils {
      * @param dollars Dollar value to convert.
      * @return Converted value in euro.
      */
-    fun convertDollarToEuro(dollars: Int): Int = (dollars * exchangeRate).roundToInt()
+    internal fun convertDollarToEuro(dollars: Int): Int = (dollars * exchangeRate).roundToInt()
 
     /**
      * Convert euro to dollar.
      * @param euro Euro value to convert.
      * @return Converted dollar value.
      */
-    fun convertEuroToDollar(euro: Int): Int = (euro / exchangeRate).roundToInt()
+    internal fun convertEuroToDollar(euro: Int): Int = (euro / exchangeRate).roundToInt()
 
     // -----------------
     // CONVERT PRICE
@@ -46,7 +49,7 @@ object Utils {
      * @param moneyUnity With or without money unity ($).
      * @return Pattern string price.
      */
-    fun convertPriceToPatternPrice(s: String, moneyUnity: Boolean): String {
+    internal fun convertPriceToPatternPrice(s: String, moneyUnity: Boolean): String {
         if (isEditing) return s
         if (s.isBlank() || s == "0") return ""
 
@@ -67,7 +70,7 @@ object Utils {
      * @param str String pattern price to convert.
      * @return Converted string price.
      */
-    fun convertPatternPriceToString(str: String): String = str.replace(",","", false)
+    internal fun convertPatternPriceToString(str: String): String = str.replace(",","", false)
 
     // -----------------
     // CONVERT DATE
@@ -78,7 +81,7 @@ object Utils {
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @return Today date, string format.
      */
-    fun todayDate(): String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+    internal fun todayDate(): String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
 
     /**
      * Concatenate date from int to string.
@@ -87,7 +90,7 @@ object Utils {
      * @param year Selected year.
      * @return String date.
      */
-    fun intDateToString(day: Int, month: Int, year: Int): String {
+    internal fun intDateToString(day: Int, month: Int, year: Int): String {
         var month1 = month
         month1 += 1
         val stringDay: String = if (day < 10) "0$day" else day.toString()
@@ -101,18 +104,18 @@ object Utils {
      * @param givenDate Given date object.
      * @return String date with good format.
      */
-    fun dateToString(givenDate: Date): String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(givenDate)
+    internal fun dateToString(givenDate: Date): String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(givenDate)
 
     /**
-     * Convert string date format from "dd/MM/yyyy" to Date.
+     * Convert string date format from "dd/MM/yyyy" to Date, return null if an error happened.
      * @param givenDate The given date.
-     * @return Date object.
+     * @return Date object, null if an error happened.
      */
-    fun stringToDate(givenDate: String): Date {
+    internal fun stringToDate(givenDate: String): Date? {
         val givenDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        var date = Date()
+        var date: Date? = null
         try {
-            date = givenDateFormat.parse(givenDate)!!
+            date = givenDateFormat.parse(givenDate)
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -127,11 +130,27 @@ object Utils {
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @param context Context from this function is called.
-     * @return If internet connected.
+     * @return true if internet is connected.
      */
-    fun isInternetAvailable(context: Context): Boolean {
+    @Suppress("DEPRECATION")
+    internal fun isInternetAvailable(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val netInfo = cm.activeNetworkInfo
         return netInfo != null && netInfo.isConnected
+    }
+
+    // -----------------
+    // GOOGLE PLAY SERVICE
+    // -----------------
+
+    /**
+     * Check that google play services are available.
+     * @param context the context from this function is called.
+     * @return true if the google play services are available.
+     */
+    internal fun isGooglePlayServicesAvailable(context: Context): Boolean {
+        val googleApiAvailability = GoogleApiAvailability.getInstance()
+        val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
+        return resultCode == ConnectionResult.SUCCESS
     }
 }
