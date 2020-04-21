@@ -29,7 +29,7 @@ import org.desperu.realestatemanager.extension.createDatePickerDialog
 import org.desperu.realestatemanager.extension.toBitmap
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritable
-import org.desperu.realestatemanager.utils.StorageUtils.setImageInStorage
+import org.desperu.realestatemanager.utils.StorageUtils.setBitmapInStorage
 import org.desperu.realestatemanager.utils.Utils.todayDate
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
@@ -143,13 +143,13 @@ class ManageEstateFragment: BaseBindingFragment() {
     }
 
     /**
-     * Set picker text view on click listener to show date picker dialog.
+     * Set picker text view on click listener to show date picker dialog, and set sale date at today.
      * @param context the context from this function is called.
      * @param pickerView the associated picker text view.
      * @param date the given string date, to set DatePickerDialog.
      */
     private fun setPickerTextOnClickListener(context: Context, pickerView: TextView, date: String?) {
-        if (pickerView.tag == "saleDate") pickerView.text = todayDate()
+        if (pickerView.tag == "saleDate") viewModel.estate.value?.saleDate = todayDate() // TODO not work
         pickerView.setOnClickListener { createDatePickerDialog(context, pickerView, date) }
     }
 
@@ -230,8 +230,11 @@ class ManageEstateFragment: BaseBindingFragment() {
      */
     private fun saveImageAndAddToImageList(bitmap: Bitmap) {
         if (isExternalStorageWritable()) { // Check external storage access.
-            val imageUri = setImageInStorage(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!,
-                    context!!, Date().time.toString() + ".jpg", FOLDER_NAME, bitmap)
+            val imageUri = setBitmapInStorage(
+                    activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!,
+                    context!!,
+                    Date().time.toString() + ".jpg",
+                    FOLDER_NAME, bitmap)
             viewModel.addImageToImageList(imageUri)
         } else
             showToast(getString(R.string.fragment_estate_image_toast_error_write_external_storage))

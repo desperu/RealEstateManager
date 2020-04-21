@@ -10,35 +10,38 @@ import org.desperu.realestatemanager.BuildConfig
 import org.desperu.realestatemanager.R
 import java.io.*
 
-object StorageUtils { // TODO to clean unused functions
+/**
+ * Class witch provide read and write access for storage.
+ */
+object StorageUtils { // TODO to clean unused functions, and use coroutines for read or write actions, comment functions and perfect functions names
 
     private fun createOrGetFile(destination: File, fileName: String, folderName: String): File {
         val folder = File(destination, folderName)
         return File(folder, fileName)
     }
 
-    fun getTextFromStorage(rootDestination: File, context: Context, fileName: String, folderName: String): String? {
+    internal fun getTextFromStorage(rootDestination: File, context: Context, fileName: String, folderName: String): String? {
         val file: File = createOrGetFile(rootDestination, fileName, folderName)
         return readOnFile(context, file)
     }
 
-    fun setTextInStorage(rootDestination: File, context: Context, fileName: String, folderName: String, text: String) {
+    internal fun setTextInStorage(rootDestination: File, context: Context, fileName: String, folderName: String, text: String) {
         val file: File = createOrGetFile(rootDestination, fileName, folderName)
         writeOnFile(context, text, file)
     }
 
-    fun setImageInStorage(rootDestination: File, context: Context, fileName: String, folderName: String, bitmap: Bitmap): String {
+    internal fun setBitmapInStorage(rootDestination: File, context: Context, fileName: String, folderName: String, bitmap: Bitmap): String {
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val file: File = createOrGetFile(rootDestination, fileName, folderName)
-        return writeOnFile(context, bytes, file)
+        return writeImageOnFile(context, bytes, file)
     }
 
-    fun getFileFromStorage(rootDestination: File, context: Context?, fileName: String, folderName: String): File? {
+    internal fun getFileFromStorage(rootDestination: File, context: Context?, fileName: String, folderName: String): File? {
         return createOrGetFile(rootDestination, fileName, folderName)
     }
 
-    fun deleteFileInStorage(rootDestination: File, context: Context, fileName: String, folderName: String): Boolean {
+    internal fun deleteFileInStorage(rootDestination: File, context: Context, fileName: String, folderName: String): Boolean {
         val file: File = createOrGetFile(rootDestination, fileName, folderName)
         return file.delete()
     }
@@ -47,12 +50,12 @@ object StorageUtils { // TODO to clean unused functions
     // EXTERNAL STORAGE
     // ----------------------------------
 
-    fun isExternalStorageWritable(): Boolean {
+    internal fun isExternalStorageWritable(): Boolean {
         val state: String = Environment.getExternalStorageState()
         return Environment.MEDIA_MOUNTED == state
     }
 
-    fun isExternalStorageReadable(): Boolean {
+    internal fun isExternalStorageReadable(): Boolean {
         val state: String = Environment.getExternalStorageState()
         return Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state
     }
@@ -102,10 +105,10 @@ object StorageUtils { // TODO to clean unused functions
         }
     }
 
-    private fun writeOnFile(context: Context, byte: ByteArrayOutputStream, file: File): String {
+    private fun writeImageOnFile(context: Context, byte: ByteArrayOutputStream, file: File): String {
         var stringUri = String()
         try {
-            file.parentFile!!.mkdirs()
+            file.parentFile?.mkdirs()
             val fos = FileOutputStream(file)
             try {
                 fos.write(byte.toByteArray())

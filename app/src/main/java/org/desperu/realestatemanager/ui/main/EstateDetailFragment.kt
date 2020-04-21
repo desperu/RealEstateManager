@@ -9,7 +9,7 @@ import org.desperu.realestatemanager.databinding.FragmentEstateDetailBinding
 import org.desperu.realestatemanager.model.Estate
 
 /**
- * The name of the argument for passing estate to this Fragment.
+ * The argument name to received estate to this Fragment.
  */
 const val ESTATE_DETAIL: String = "estateDetail"
 
@@ -20,7 +20,7 @@ class EstateDetailFragment: BaseBindingFragment() {
 
     // FOR DATA
     private lateinit var binding: FragmentEstateDetailBinding
-    private lateinit var viewModel: EstateViewModel
+    private var viewModel: EstateViewModel? = null
     private var mapFragment: Fragment? = null
 
     // --------------
@@ -30,7 +30,7 @@ class EstateDetailFragment: BaseBindingFragment() {
     override fun getBindingView(): View = configureViewModel()
 
     override fun configureDesign() {
-        configureMapFragment()
+        configureAndShowMapFragment()
     }
 
     override fun updateDesign() {}
@@ -49,7 +49,7 @@ class EstateDetailFragment: BaseBindingFragment() {
      */
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_estate_detail, container, false)
-        viewModel = getEstate()?.let { EstateViewModel(it) }!!
+        viewModel = getEstate()?.let { EstateViewModel(it) }
 
         binding.viewModel = viewModel
 //        configureImageRecycler()
@@ -57,14 +57,14 @@ class EstateDetailFragment: BaseBindingFragment() {
     }
 
     /**
-     * Configure and show map fragment.
+     * Configure and show map fragment if google play services are available.
      */
-    private fun configureMapFragment() {
+    private fun configureAndShowMapFragment() {
+        mapFragment = childFragmentManager.findFragmentById(R.id.container_map)
         if (mapFragment == null) {
-            mapFragment = childFragmentManager.findFragmentById(R.id.map)
             mapFragment = MapsFragment()
             childFragmentManager.beginTransaction()
-                    .add(R.id.map, mapFragment!!)
+                    .add(R.id.container_map, mapFragment!!)
                     .commit()
         }
     }

@@ -23,7 +23,7 @@
             android:text="@{viewModel.getEstate.address.city}"/>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/map"
+            android:id="@+id/container_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/fragment_estate_detail_text_city" />

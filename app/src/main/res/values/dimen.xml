@@ -32,6 +32,14 @@
     <dimen name="item_estate_text_location_size">16sp</dimen>
     <dimen name="item_estate_text_price_size">20sp</dimen>
 
+    <!-- Maps Fragment -->
+    <dimen name="fragment_maps_floating_button_location_margin">15dp</dimen>
+    <dimen name="fragment_maps_floating_button_location_margin_kitkat">3dp</dimen>
+    <dimen name="fragment_maps_zoom_button_margin_bottom">65dp</dimen>
+    <dimen name="fragment_maps_zoom_button_margin_end">12dp</dimen>
+    <dimen name="fragment_maps_toolbar_margin_bottom">20dp</dimen>
+    <dimen name="fragment_maps_toolbar_margin_end">18dp</dimen>
+
     <!-- Manage Estate Activity -->
     <dimen name="activity_manage_estate_floating_button_margin">20dp</dimen>
     <dimen name="activity_manage_estate_floating_max_image_size">48dp</dimen>
