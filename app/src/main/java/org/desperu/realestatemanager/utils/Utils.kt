@@ -123,6 +123,21 @@ internal object Utils {
     }
 
     // -----------------
+    // CONVERT STRING
+    // -----------------
+
+    /**
+     * Get the folder and file name from a content uri.
+     * @param stringUri the string content uri.
+     * @return the map list containing the folder name and the file name.
+     */
+    internal fun getFolderAndFileNameFromContentUri(stringUri: String): Map<String, String> {
+        val tempList = stringUri.split("/")
+        val listSize = tempList.size
+        return mapOf(Pair("folderName", tempList[listSize - 2]), Pair("fileName", tempList[listSize - 1]))
+    }
+
+    // -----------------
     // WEB CONNECTION
     // -----------------
 

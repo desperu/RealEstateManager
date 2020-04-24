@@ -6,9 +6,11 @@ import android.Manifest
 
 const val RC_ESTATE = 10
 
+
 // FOR EXCHANGE
 
 const val exchangeRate = 0.812
+
 
 // FOR VIEW PAGER
 
@@ -20,6 +22,7 @@ const val ESTATE_IMAGE = 1
 const val ESTATE_ADDRESS = 2
 const val ESTATE_SALE = 3
 
+
 // FOR GOOGLE MAPS, TO REPLACE BUTTON
 
 // Map Toolbar Tag
@@ -27,6 +30,7 @@ const val GOOGLE_MAP_TOOLBAR = "GoogleMapToolbar"
 
 // Zoom button Tag
 const val GOOGLE_MAP_ZOOM_OUT_BUTTON = "GoogleMapZoomOutButton"
+
 
 // FOR PERMISSIONS
 
@@ -40,6 +44,7 @@ const val RC_TAKE_PHOTO = 400
 const val PERM_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
 const val PERM_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
 const val RC_PERM_LOCATION = 500
+
 
 // FOR SAVE IMAGE
 

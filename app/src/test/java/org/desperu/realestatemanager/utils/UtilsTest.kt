@@ -14,6 +14,7 @@ import org.desperu.realestatemanager.utils.Utils.convertEuroToDollar
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 import org.desperu.realestatemanager.utils.Utils.dateToString
+import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContentUri
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import org.desperu.realestatemanager.utils.Utils.isInternetAvailable
@@ -174,6 +175,16 @@ class UtilsTest {
         val output = isGooglePlayServicesAvailable(mockContext)
 
         assertTrue(output)
+    }
+
+    @Test
+    fun given_imageUri_When_getFolderAndFileNameFromContentUri_Then_checkResult() {
+        val contentUri = "content://org.desperu.realestatemanager.fileprovider/EstateImages/Android/data/org.desperu.realestatemanager/files/Pictures/EstateImages/1587561197794.jpg"
+        val expected = mapOf(Pair("folderName", FOLDER_NAME), Pair("fileName", "1587561197794.jpg"))
+
+        val output = getFolderAndFileNameFromContentUri(contentUri)
+
+        assertEquals(expected, output)
     }
 
 //    @Test // TODO remove if unused
