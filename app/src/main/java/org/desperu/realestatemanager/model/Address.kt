@@ -15,6 +15,8 @@ import kotlinx.android.parcel.Parcelize
  * @param postalCode Postal code of the address.
  * @param city City of the address.
  * @param country Country of the address.
+ * @param latitude the latitude of the address.
+ * @param longitude the longitude of the address.
  */
 @Parcelize
 @Entity(foreignKeys = [ForeignKey(entity = Estate::class,
@@ -27,4 +29,6 @@ data class Address(@PrimaryKey(autoGenerate = false)
                    var flatBuilding: String = "",
                    var postalCode: Int = 0,
                    var city: String = "",
-                   var country: String = ""): Parcelable
+                   var country: String = "",
+                   var latitude: Double = 0.0,
+                   var longitude: Double = 0.0): Parcelable

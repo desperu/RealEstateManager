@@ -15,6 +15,8 @@ class AddressTest {
     private val postalCode = 11204
     private val city = "New York"
     private val country = "United States"
+    private val latitude = 25.148569
+    private val longitude = 102.659874
 
     @Test
     fun given_emptyAddress_When_createAddress_Then_checkDefaultValues() {
@@ -27,11 +29,13 @@ class AddressTest {
         assertEquals(address.postalCode, 0)
         assertEquals(address.city, "")
         assertEquals(address.country, "")
+        assertEquals(address.latitude, 0.0, 0.0)
+        assertEquals(address.longitude, 0.0, 0.0)
     }
 
     @Test
     fun given_address_When_createAddress_Then_checkValues() {
-        val address = Address(estateId, streetNumber, streetName, flatBuilding, postalCode, city, country)
+        val address = Address(estateId, streetNumber, streetName, flatBuilding, postalCode, city, country, latitude, longitude)
 
         assertEquals(address.estateId, estateId)
         assertEquals(address.streetNumber, streetNumber)
@@ -40,6 +44,8 @@ class AddressTest {
         assertEquals(address.postalCode, postalCode)
         assertEquals(address.city, city)
         assertEquals(address.country, country)
+        assertEquals(address.latitude, latitude, 0.0)
+        assertEquals(address.longitude, longitude, 0.0)
     }
 
     @Test
@@ -53,6 +59,8 @@ class AddressTest {
         address.postalCode = postalCode
         address.city = city
         address.country = country
+        address.latitude = latitude
+        address.longitude = longitude
 
         assertEquals(address.estateId, estateId)
         assertEquals(address.streetNumber, streetNumber)
@@ -61,5 +69,7 @@ class AddressTest {
         assertEquals(address.postalCode, postalCode)
         assertEquals(address.city, city)
         assertEquals(address.country, country)
+        assertEquals(address.latitude, latitude, 0.0)
+        assertEquals(address.longitude, longitude, 0.0)
     }
 }

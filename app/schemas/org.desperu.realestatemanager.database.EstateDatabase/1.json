@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5a60de8ad1a293c83864ade33442569d",
+    "identityHash": "163ca4d13fee02e913455f30bc903338",
     "entities": [
       {
         "tableName": "Estate",
@@ -157,7 +157,7 @@
       },
       {
         "tableName": "Address",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`estateId` INTEGER NOT NULL, `streetNumber` INTEGER NOT NULL, `streetName` TEXT NOT NULL, `flatBuilding` TEXT NOT NULL, `postalCode` INTEGER NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, PRIMARY KEY(`estateId`), FOREIGN KEY(`estateId`) REFERENCES `Estate`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`estateId` INTEGER NOT NULL, `streetNumber` INTEGER NOT NULL, `streetName` TEXT NOT NULL, `flatBuilding` TEXT NOT NULL, `postalCode` INTEGER NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, PRIMARY KEY(`estateId`), FOREIGN KEY(`estateId`) REFERENCES `Estate`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "estateId",
@@ -200,6 +200,18 @@
             "columnName": "country",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -227,7 +239,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5a60de8ad1a293c83864ade33442569d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '163ca4d13fee02e913455f30bc903338')"
     ]
   }
 }

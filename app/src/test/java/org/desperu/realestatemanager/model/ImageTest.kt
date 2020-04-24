@@ -8,11 +8,12 @@ import org.junit.Test
  */
 class ImageTest {
 
-    private val id = 0L
-    private val estateId = 0L
+    private val id = 1L
+    private val estateId = 1L
     private val imageUri = "an uri"
     private val isPrimary = true
     private val description = "bathroom"
+    private val rotation = 90F
 
     @Test
     fun given_emptyImage_When_createImage_Then_checkDefaultValues() {
@@ -23,17 +24,19 @@ class ImageTest {
         assertEquals(image.imageUri, "")
         assertEquals(image.isPrimary, false)
         assertEquals(image.description, "")
+        assertEquals(image.rotation, 0F)
     }
 
     @Test
     fun given_image_When_createImage_Then_checkValues() {
-        val image = Image(id, estateId, imageUri, isPrimary, description)
+        val image = Image(id, estateId, imageUri, isPrimary, description, rotation)
 
         assertEquals(image.id, id)
         assertEquals(image.estateId, estateId)
         assertEquals(image.imageUri, imageUri)
         assertEquals(image.isPrimary, isPrimary)
         assertEquals(image.description, description)
+        assertEquals(image.rotation, rotation)
     }
 
     @Test
@@ -44,10 +47,12 @@ class ImageTest {
         image.imageUri = imageUri
         image.isPrimary = isPrimary
         image.description = description
+        image.rotation = rotation
 
         assertEquals(image.estateId, estateId)
         assertEquals(image.imageUri, imageUri)
         assertEquals(image.isPrimary, isPrimary)
         assertEquals(image.description, description)
+        assertEquals(image.rotation, rotation)
     }
 }
