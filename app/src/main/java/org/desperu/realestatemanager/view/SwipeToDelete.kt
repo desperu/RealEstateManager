@@ -33,7 +33,7 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
-            val deletedModel = list[position]
+            val deletedModel = if (position <= list.size) list[position] else 0
             removeItem(activity, adapter, position)
             // showing snack bar with Undo option
             val snackBar = activity.currentFocus?.let { Snackbar.make(it, " removed from Recyclerview!", Snackbar.LENGTH_LONG) }
@@ -52,7 +52,7 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
                 val width = height / 3
                 if (dX > 0) {
                     p.color = Color.parseColor("#388E3C")
-                    val background = RectF(itemView.left.toFloat(), itemView.top.toFloat(), itemView.left.toFloat() + dX, itemView.bottom.toFloat())
+                    val background = RectF(itemView.left.toFloat(), itemView.top.toFloat(), dX, itemView.bottom.toFloat())
                     c.drawRect(background, p)
                     icon = BitmapFactory.decodeResource(activity.resources, R.drawable.ic_baseline_update_white_24)
                     val iconDest = RectF(itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left.toFloat() + 2 * width, itemView.bottom.toFloat() - width)
@@ -65,6 +65,21 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
                     val iconDest = RectF(itemView.right.toFloat() - 2 * width, itemView.top.toFloat() + width, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width)
                     c.drawBitmap(icon, null, iconDest, p)
                 }
+//                if (dX > 0) {
+//                    p.color = Color.parseColor("#388E3C")
+//                    val background = RectF(itemView.left.toFloat(), itemView.top.toFloat(), dX, itemView.bottom.toFloat())
+//                    c.drawRect(background, p)
+//                    icon = BitmapFactory.decodeResource(getResources(), R.drawable.delete)
+//                    val icon_dest = RectF(itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left.toFloat() + 2 * width, itemView.bottom.toFloat() - width)
+//                    c.drawBitmap(icon, null, icon_dest, p)
+//                } else {
+//                    p.color = Color.parseColor("#D32F2F")
+//                    val background = RectF(itemView.right.toFloat() + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
+//                    c.drawRect(background, p)
+//                    icon = BitmapFactory.decodeResource(getResources(), R.drawable.delete)
+//                    val icon_dest = RectF(itemView.right.toFloat() - 2 * width, itemView.top.toFloat() + width, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width)
+//                    c.drawBitmap(icon, null, icon_dest, p)
+//                }
             }
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }

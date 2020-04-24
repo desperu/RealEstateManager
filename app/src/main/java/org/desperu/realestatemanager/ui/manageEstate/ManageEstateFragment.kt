@@ -18,19 +18,25 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import icepick.State
 import kotlinx.android.synthetic.main.fragment_estate_address.*
 import kotlinx.android.synthetic.main.fragment_estate_data.*
 import kotlinx.android.synthetic.main.fragment_estate_sale.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateImageBinding
 import org.desperu.realestatemanager.extension.createDatePickerDialog
 import org.desperu.realestatemanager.extension.toBitmap
 import org.desperu.realestatemanager.utils.*
+import org.desperu.realestatemanager.utils.StorageUtils.deleteFileInStorage
 import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritable
 import org.desperu.realestatemanager.utils.StorageUtils.setBitmapInStorage
-import org.desperu.realestatemanager.utils.Utils.todayDate
+import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContentUri
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 
@@ -41,8 +47,9 @@ class ManageEstateFragment: BaseBindingFragment() {
 
     // FOR DATA
     @JvmField @State var fragmentKey: Int = -1
-    private lateinit var binding: ViewDataBinding
+    private lateinit var binding: ViewDataBinding // TODO use List<ViewDataBinding> to use only one instance
     private lateinit var viewModel: ManageEstateViewModel
+    private lateinit var recyclerView: RecyclerView
 
     /**
      * Companion object, used to create new instance of this fragment.
@@ -80,14 +87,14 @@ class ManageEstateFragment: BaseBindingFragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            onClickAddImage()
+        // Calling the appropriate method after permissions result
+        handlePermissionsResult(requestCode, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // Calling the appropriate method after activity result
-        handleResponse(requestCode, resultCode, data)
+        handleActivityResult(requestCode, resultCode, data)
     }
 
     // -----------------
@@ -134,11 +141,20 @@ class ManageEstateFragment: BaseBindingFragment() {
     }
 
     /**
-     * Configure Linear Layout Manager for Image Recycler, and update image list.
+     * Configure Linear Layout Manager for Image Recycler,
+     * add on scroll listener to hide floating buttons to prevent ui mistake (hide item button),
+     * and update image list.
      */
     private fun configureImageRecycler() {
-        (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView.layoutManager =
+        recyclerView = (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView
+        recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recyclerView.addOnScrollListener( object: OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                (recyclerView.context as ManageEstateActivity).floatingVisibility(isLastVisible && recyclerView.adapter?.itemCount!! > 1)
+            }
+        })
         viewModel.updateRecyclerImageList()
     }
 
@@ -149,7 +165,6 @@ class ManageEstateFragment: BaseBindingFragment() {
      * @param date the given string date, to set DatePickerDialog.
      */
     private fun setPickerTextOnClickListener(context: Context, pickerView: TextView, date: String?) {
-        if (pickerView.tag == "saleDate") viewModel.estate.value?.saleDate = todayDate() // TODO not work
         pickerView.setOnClickListener { createDatePickerDialog(context, pickerView, date) }
     }
 
@@ -190,6 +205,26 @@ class ManageEstateFragment: BaseBindingFragment() {
      */
     private fun showToast(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
+    /**
+     * Scroll to the new item position in recycler view.
+     * @param position the position to scroll in the recycler view.
+     */
+    internal fun scrollToNewItem(position: Int) {
+        val scroll = { recyclerView.layoutManager?.scrollToPosition(position) }
+        if (position == 0) recyclerView.layoutManager?.postOnAnimation { scroll() } // When move item
+        else scroll() // When add item
+    }
+
+    /**
+     * Return if the last completely visible item is the last recycler item.
+     */
+    private val isLastVisible: Boolean
+        get() {
+            val pos = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+            val numItems: Int = recyclerView.adapter?.itemCount!!
+            return pos >= numItems - 1
+        }
+
     // --------------------
     // IMAGE MANAGEMENT
     // --------------------
@@ -221,21 +256,41 @@ class ManageEstateFragment: BaseBindingFragment() {
     }
 
     // -----------------
-    // DATA
+    // STORAGE MANAGEMENT
     // -----------------
 
     /**
-     * Save image in storage and add to image list.
-     * @param bitmap the image bitmap to save and add to image list.
+     * Save image in storage as JPEG format.
+     * @param bitmap the image bitmap to save in storage.
      */
-    private fun saveImageAndAddToImageList(bitmap: Bitmap) {
-        if (isExternalStorageWritable()) { // Check external storage access.
-            val imageUri = setBitmapInStorage(
-                    activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!,
-                    context!!,
-                    Date().time.toString() + ".jpg",
-                    FOLDER_NAME, bitmap)
-            viewModel.addImageToImageList(imageUri)
+    private fun saveImageInStorage(bitmap: Bitmap) = storageAction {
+        activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let {
+            setBitmapInStorage(context!!, it, FOLDER_NAME, Date().time.toString() + ".jpg", bitmap)
+        }
+    }
+
+    /**
+     * Delete image in storage.
+     * @param imageUri the image uri to delete.
+     */
+    internal fun deleteImageInStorage(imageUri: String) = storageAction {
+        val fileData = getFolderAndFileNameFromContentUri(imageUri)
+        val messageError = "Can't retrieved folder name and file name from content uri"
+        activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let {
+            deleteFileInStorage(it, fileData["folderName"] ?: error(messageError), fileData["fileName"] ?: error(messageError))
+        }
+    }
+
+    /**
+     * Check external storage write access and execute storage action wrap into coroutine.
+     * @param action the storage action to execute.
+     */
+    private fun storageAction(action: suspend () -> Any?) {
+        if (isExternalStorageWritable()) { // Check external storage write access.
+            CoroutineScope(Dispatchers.Main).launch {
+                val result = action()
+                handleStorageResult(result)
+            }
         } else
             showToast(getString(R.string.fragment_estate_image_toast_error_write_external_storage))
     }
@@ -256,21 +311,49 @@ class ManageEstateFragment: BaseBindingFragment() {
     }
 
     /**
-     * Handle activity response (after user has chosen or not a picture).
+     * Handle permissions result, after user allow permission or not.
+     * If permission granted start the selected user action.
+     * @param requestCode Code of request.
+     * @param grantResults the permission result.
+     */
+    private fun handlePermissionsResult(requestCode: Int, grantResults: IntArray) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == RC_PERMS_STORAGE) chooseImageFromPhone()
+            else if (requestCode == RC_PERMS_PHOTO) takePhotoWithCamera()
+        } else
+            showToast(getString(R.string.fragment_estate_image_toast_permission_refused))
+    }
+
+    /**
+     * Handle activity result (after user has chosen or not a picture).
      * @param requestCode Code of request.
      * @param resultCode Result code of request.
      * @param data Intent request result data.
      */
-    private fun handleResponse(requestCode: Int, resultCode: Int, data: Intent?) {
+    private fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) { // SUCCESS
             var bitmap: Bitmap? = null
             when (requestCode) {
                 RC_CHOOSE_PHOTO -> bitmap = data?.data?.toBitmap(activity?.contentResolver!!)
                 RC_TAKE_PHOTO -> bitmap = data?.extras?.get("data") as Bitmap?
             }
-            if (bitmap != null) saveImageAndAddToImageList(bitmap)
+            if (bitmap != null) saveImageInStorage(bitmap)
             else showToast(getString(R.string.fragment_estate_image_toast_error_getting_bitmap))
         } else // ERROR
             showToast(getString(R.string.fragment_estate_image_toast_title_no_image_chosen))
+    }
+
+    /**
+     * Handle storage action result.
+     * @param result the result returned by the storage action.
+     */
+    private fun handleStorageResult(result: Any?) {
+        if (result is Boolean && result) // Delete image result
+             showToast(getString(R.string.fragment_estate_image_toast_deleted_photo))
+        else if (result is String? && result != null) { // Save image result, contain the content uri of the created file
+            showToast(getString(R.string.fragment_estate_image_toast_saved_photo))
+            viewModel.addImageToImageList(result)
+        } else
+            showToast(getString(R.string.fragment_estate_image_toast_error_happened))
     }
 }

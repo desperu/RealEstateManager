@@ -5,15 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.item_image.view.*
 import org.desperu.realestatemanager.model.Image
+import org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel
 
 class ImageViewModel(private val givenImage: Image): ViewModel() {
 
     // FOR DATA
     val image = MutableLiveData<Image>()
-    private val mutableVisibility = MutableLiveData<Int>()
+    private val primaryVisibility = MutableLiveData<Int>()
+    private lateinit var manageEstateViewModel: ManageEstateViewModel
+
+    // SECOND CONSTRUCTOR // TODO use companion object?? view model communication, is it good?
+    constructor(givenImage: Image, manageEstateViewModel: ManageEstateViewModel): this(givenImage) {
+        this.manageEstateViewModel = manageEstateViewModel
+    }
 
     init {
         setGivenImage()
+        setPrimaryVisibility()
     }
 
     // -------------
@@ -23,30 +31,52 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
     /**
      * Set view model with given image.
      */
-    private fun setGivenImage() {
-        image.value = givenImage
-        mutableVisibility.value = setMutableVisibility()
-    }
+    private fun setGivenImage() { image.value = givenImage }
 
     /**
      * Set mutable visibility for primary marker.
      */
-    private fun setMutableVisibility(): Int = if (image.value?.isPrimary!!) View.VISIBLE else View.GONE
+    internal fun setPrimaryVisibility() {
+        primaryVisibility.value = if (image.value?.isPrimary!!) View.VISIBLE else View.GONE
+    }
 
     // -------------
     // LISTENER
     // -------------
 
     /**
-     * Button on click listener.
+     * Button on click listener, execute corresponding action, depends of view tag.
      */
-    val buttonListener = View.OnClickListener { v ->
-        when (v?.tag) {
-            "turnRight" -> v.rootView.item_image_photo.rotation = v.rootView.item_image_photo.rotation + 90F // Turn image, save new image delete old...
-            "primary" -> { image.value?.isPrimary = image.value?.isPrimary?.not()!!; mutableVisibility.value = setMutableVisibility() }
-            "delete" -> "to delete"
-            "turnLeft" -> v.rootView.item_image_photo.rotation = v.rootView.item_image_photo.rotation - 90F // Turn image, save new image delete old...
+    private val buttonListener = View.OnClickListener { v ->
+        when (v.tag) {
+            // Turn image to right or left.
+            "turnRight", "turnLeft" -> turnImage(v)
+
+            // Set or remove as primary.
+            "primary" -> {
+                image.value?.isPrimary = image.value?.isPrimary?.not()!!
+                setPrimaryVisibility()
+                manageEstateViewModel.managePrimaryImage(this)
+            }
+
+            // Delete this image.
+            "delete" -> image.value?.let { manageEstateViewModel.removeImage(it) }
         }
+    }
+
+    // -------------
+    // UTILS
+    // -------------
+
+    /**
+     * Turn image to right or left, and save rotation in image object.
+     * @param clickedButton the clicked button to determinate orientation rotation, right or left.
+     */
+    private fun turnImage(clickedButton: View) {
+        val imageView = (clickedButton.parent.parent as View).item_image_photo
+        val rotation = imageView.rotation + if (clickedButton.tag == "turnRight") 90F else -90F
+        imageView.rotation = rotation
+        image.value?.rotation = rotation
     }
 
     // --- GETTERS ---

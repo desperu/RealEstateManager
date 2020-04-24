@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -90,7 +91,7 @@ class ManageEstateActivity: BaseActivity() {
      */
     fun onClickAddEstate(v: View) { // TODO close soft keyboard
         viewModel?.createOrUpdateEstate()
-        showToast(getString(R.string.activity_manage_estate_create_estate_message))
+        showToast(getString(R.string.activity_manage_estate_save_estate_message))
         setResult(RESULT_OK, Intent(this, MainActivity::class.java)
                 .putExtra(NEW_ESTATE, viewModel?.estate?.value))
         finish()
@@ -101,7 +102,7 @@ class ManageEstateActivity: BaseActivity() {
      */
     fun onClickAddImage(v: View) {
         val currentItem = viewPager.currentItem
-        val page = viewPager.adapter?.instantiateItem(viewPager, currentItem)
+        val page = getCurrentViewPagerFragment()
         if (currentItem == ESTATE_IMAGE && page != null)
             (page as ManageEstateFragment).onClickAddImage()
     }
@@ -120,6 +121,13 @@ class ManageEstateActivity: BaseActivity() {
         return viewModel as ManageEstateViewModel
     }
 
+    /**
+     * Get the current view pager fragment instance.
+     * @return the current fragment instance.
+     */
+    internal fun getCurrentViewPagerFragment(): Fragment? =
+            viewPager.adapter?.instantiateItem(viewPager, viewPager.currentItem) as Fragment
+
     // -----------------
     // UI
     // -----------------
@@ -129,4 +137,18 @@ class ManageEstateActivity: BaseActivity() {
      * @param message the message text to show.
      */
     private fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+    /**
+     * Switch visibility for floating buttons with animation.
+     * @param toHide if must hide floating button.
+     */
+    internal fun floatingVisibility(toHide: Boolean) {
+        if (toHide) {
+            activity_manage_estate_floating_add_estate.hide()
+            activity_manage_estate_floating_add_image.hide()
+        } else {
+            activity_manage_estate_floating_add_estate.show()
+            activity_manage_estate_floating_add_image.show()
+        }
+    }
 }

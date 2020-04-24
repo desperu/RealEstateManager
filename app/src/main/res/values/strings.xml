@@ -13,7 +13,7 @@
     <string name="fragment_estate_detail_text_no_google_play_services_available">Congratulation!! You don\'t have google play services, it\'s spies services that\'s register all your activities and data. You don\'t have google map, so there\'s no map available in this application. In future version, w\'ll add OpenStreetMap, witch provide a full secure service!!</string>
 
     <!-- Manage Estate Activity -->
-    <string name="activity_manage_estate_create_estate_message">Estate created!</string>
+    <string name="activity_manage_estate_save_estate_message">Estate saved!</string>
     <!-- Estate Data Fragment -->
     <string name="fragment_estate_data_text_category_estate_data">Estate Data</string>
     <string name="fragment_estate_data_text_type">Estate Type</string>
@@ -29,9 +29,14 @@
     <string name="fragment_estate_image_text_image_add">Add Image</string>
     <string name="fragment_estate_image_popup_title_permission_files_access">This application need storage permission.</string>
     <string name="fragment_estate_image_popup_title_permission_write_storage_and_camera">This application need write storage, and camera permissions.</string>
+    <string name="fragment_estate_image_toast_permission_refused">Permission refused !!</string>
     <string name="fragment_estate_image_toast_error_getting_bitmap">An error happened while recovering the photo !</string>
     <string name="fragment_estate_image_toast_title_no_image_chosen">No image chosen&#8230;</string>
     <string name="fragment_estate_image_toast_error_write_external_storage">Error : can\'t write on internal storage (user storage)!</string>
+    <string name="fragment_estate_image_toast_saved_text">Text saved !</string>
+    <string name="fragment_estate_image_toast_saved_photo">Photo saved !</string>
+    <string name="fragment_estate_image_toast_deleted_photo">Photo deleted !</string>
+    <string name="fragment_estate_image_toast_error_happened">An error happened !</string>
     <!-- Item Manage Image -->
     <string name="item_image_button_primary">Primary</string>
     <string name="item_image_button_delete">Delete</string>
@@ -55,11 +60,6 @@
     <string name="fragment_estate_sale_text_sold_out_date">Sold Out Date</string>
     <string name="fragment_estate_sale_text_state">State</string>
     <string name="fragment_estate_sale_text_real_estate_agent">Real Estate Agent</string>
-
-    <!-- UTILS -->
-    <!-- Storage Utils -->
-    <string name="storage_utils_saved">Photo saved !</string>
-    <string name="storage_utils_error_happened">An error happened !</string>
 
     <!-- MENU -->
     <!-- Nav Drawer -->
