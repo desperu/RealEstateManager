@@ -70,7 +70,7 @@
     <dimen name="item_image_relative_margin_start_and_end">60dp</dimen>
     <dimen name="item_image_relative_margin_top_and_bottom">20dp</dimen>
     <dimen name="item_image_card_view_elevation">20dp</dimen>
-    <dimen name="item_image_card_view_corner_radius">45dp</dimen>
+    <dimen name="item_image_card_view_corner_radius">25dp</dimen>
     <dimen name="item_image_text_description_height">50dp</dimen>
     <dimen name="item_image_text_description_size">16sp</dimen>
     <dimen name="item_image_button_turn_width">50dp</dimen>

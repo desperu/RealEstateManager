@@ -61,7 +61,7 @@
                         android:layout_below="@+id/fragment_estate_data_text_type"
                         android:tag="spinnerType"
                         app:setItem="@{viewModel.estate.type}"
-                        app:onItemSelected="@{viewModel.spinnerListener}"
+                        app:onItemSelected="@{viewModel.getSpinnerListener}"
                         tools:listitem="@android:layout/activity_list_item"/>
 
                 </RelativeLayout>
@@ -110,7 +110,7 @@
                         android:importantForAutofill="no"
                         android:textColor="@android:color/holo_green_dark"
                         android:theme="@style/EditTextPriceTheme"
-                        app:onTextChanged="@{viewModel.editTextListener}"
+                        app:onTextChanged="@{viewModel.getEditTextListener}"
                         app:priceText="@{viewModel.price}" />
 
                 </RelativeLayout>

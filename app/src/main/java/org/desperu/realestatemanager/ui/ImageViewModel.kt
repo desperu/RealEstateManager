@@ -51,5 +51,7 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
 
     // --- GETTERS ---
 
-    val getMutableVisibility = mutableVisibility
+    val getMutableVisibility = primaryVisibility
+
+    val getButtonListener = buttonListener
 }

@@ -176,4 +176,8 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // --- GETTERS ---
 
     val getImageListAdapter = imageListAdapter
+
+    val getSpinnerListener = spinnerListener
+
+    val getEditTextListener = editTextListener
 }

@@ -10,7 +10,7 @@ import androidx.databinding.InverseBindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import org.desperu.realestatemanager.model.Image
+import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 
 /**
@@ -24,7 +24,7 @@ fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: MutableLiv
 }
 
 /**
- * Observe value for view visibility.
+ * Observe value for view visibility.// TODO useless, use android:visibility
  */
 @BindingAdapter("mutableVisibility")
 fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
@@ -52,9 +52,13 @@ fun View.onLongClick(listener: View.OnLongClickListener) {
 /**
  * Setter for image in image view.
  */
-@BindingAdapter("image")
-fun ImageView.setImage(image: Image) {
-    setImageURI(Uri.parse(image.imageUri))
+@Suppress("DEPRECATION")
+@BindingAdapter("imageUri")
+fun ImageView.setImageUri(imageUri: String?) { // TODO use glide if error persist
+    if (!imageUri.isNullOrBlank())
+        setImageURI(Uri.parse(imageUri))
+    else
+        setImageDrawable(resources.getDrawable(R.drawable.no_image))
 }
 
 /**

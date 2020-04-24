@@ -32,7 +32,8 @@
                 android:layout_alignBottom="@id/item_image_text_description"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                app:image="@{viewModel.image}"/>
+                android:rotation="@{viewModel.image.rotation}"
+                app:imageUri="@{viewModel.image.imageUri}"/>
 
             <TextView
                 android:id="@+id/item_image_primary_marker"
@@ -69,8 +70,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="0dp"
-                android:padding="0dp"
                 android:gravity="center_horizontal"
                 app:backgroundTint="@android:color/white">
 
@@ -83,7 +82,7 @@
                     app:backgroundTint="@android:color/white"
                     app:icon="@drawable/ic_baseline_rotate_left_black_24"
                     app:iconGravity="start"
-                    app:onClick="@{viewModel.buttonListener}"/>
+                    app:onClick="@{viewModel.getButtonListener}"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/item_image_button_primary"
@@ -96,7 +95,7 @@
                     android:theme="@style/Theme.MaterialComponents"
                     android:tag="primary"
                     app:backgroundTint="@android:color/white"
-                    app:onClick="@{viewModel.buttonListener}" />
+                    app:onClick="@{viewModel.getButtonListener}" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/item_image_button_delete"
@@ -107,7 +106,7 @@
                     android:theme="@style/Theme.MaterialComponents"
                     android:tag="delete"
                     app:backgroundTint="@android:color/white"
-                    app:onClick="@{viewModel.buttonListener}"/>
+                    app:onClick="@{viewModel.getButtonListener}"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/item_image_button_turn_right"
@@ -118,7 +117,7 @@
                     app:backgroundTint="@android:color/white"
                     app:icon="@drawable/ic_baseline_rotate_right_black_24"
                     app:iconGravity="end"
-                    app:onClick="@{viewModel.buttonListener}"/>
+                    app:onClick="@{viewModel.getButtonListener}"/>
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 

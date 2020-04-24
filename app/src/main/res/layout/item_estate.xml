@@ -29,7 +29,8 @@
                 android:layout_height="@dimen/item_estate_image_width_height"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                app:image="@{viewModel.getPrimaryImage}"/>
+                android:rotation="@{viewModel.getPrimaryImage.rotation}"
+                app:imageUri="@{viewModel.getPrimaryImage.imageUri}"/>
 
             <LinearLayout
                 android:id="@+id/item_estate_linear"

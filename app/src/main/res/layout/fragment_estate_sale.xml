@@ -151,7 +151,7 @@
                         android:layout_below="@+id/fragment_estate_sale_text_state"
                         android:tag="spinnerState"
                         app:setItem="@{viewModel.estate.state}"
-                        app:onItemSelected="@{viewModel.spinnerListener}"/>
+                        app:onItemSelected="@{viewModel.getSpinnerListener}"/>
 
                 </RelativeLayout>
 

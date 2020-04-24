@@ -14,6 +14,7 @@ import kotlinx.android.parcel.Parcelize
  * @param imageUri Uri of the image.
  * @param isPrimary True if this image is the primary image of the estate.
  * @param description Description of the image.
+ * @param rotation the image rotation.
  */
 @Parcelize
 @Entity(foreignKeys = [ForeignKey(entity = Estate::class,
@@ -25,4 +26,5 @@ data class Image(@PrimaryKey(autoGenerate = true)
                  var estateId: Long = 0,
                  var imageUri: String = "",
                  var isPrimary: Boolean = false,
-                 var description: String = ""): Parcelable
+                 var description: String = "",
+                 var rotation: Float = 0F): Parcelable

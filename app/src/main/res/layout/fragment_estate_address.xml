@@ -241,7 +241,7 @@
                     android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
                     android:tag="spinnerInterestPlaces"
                     app:setItem="@{viewModel.estate.interestPlaces}"
-                    app:onItemSelected="@{viewModel.spinnerListener}"/>
+                    app:onItemSelected="@{viewModel.getSpinnerListener}"/>
 
                 <ImageView
                     android:id="@+id/fragment_estate_address_image_interest_places_delete"
