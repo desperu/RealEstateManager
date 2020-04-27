@@ -19,6 +19,10 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.ui.main.estateDetail.ESTATE_DETAIL
+import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailFragment
+import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
+import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.utils.RC_ESTATE

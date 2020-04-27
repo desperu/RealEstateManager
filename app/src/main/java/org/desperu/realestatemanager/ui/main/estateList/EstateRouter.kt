@@ -1,7 +1,8 @@
-package org.desperu.realestatemanager.ui.main
+package org.desperu.realestatemanager.ui.main.estateList
 
 import androidx.appcompat.app.AppCompatActivity
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 
 /**

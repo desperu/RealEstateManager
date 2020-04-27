@@ -1,9 +1,11 @@
 package org.desperu.realestatemanager.utils
 
 import android.content.Context
+import android.location.Geocoder
 import android.net.ConnectivityManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import org.desperu.realestatemanager.model.Address
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
@@ -135,6 +137,24 @@ internal object Utils {
         val tempList = stringUri.split("/")
         val listSize = tempList.size
         return mapOf(Pair("folderName", tempList[listSize - 2]), Pair("fileName", tempList[listSize - 1]))
+    }
+
+
+    // -----------------
+    // CONVERT ADDRESS
+    // -----------------
+
+    /**
+     * Get latitude and longitude from address.
+     * @param context the context from this function is called.
+     * @param address the address to convert.
+     * @return the latitude and longitude in a list, an empty list otherwise.
+     */
+    internal fun getLatLngFromAddress(context: Context, address: Address): List<Double> {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val result = geocoder.getFromLocationName("${address.streetNumber}, ${address.streetName} ${address.postalCode} ${address.city} ${address.country}", 1)
+        return if (!result.isNullOrEmpty()) listOf(result[0].latitude, result[0].longitude)
+               else emptyList()
     }
 
     // -----------------

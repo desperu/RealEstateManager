@@ -8,9 +8,9 @@ import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.service.ResourceServiceImpl
-import org.desperu.realestatemanager.ui.main.EstateListViewModel
-import org.desperu.realestatemanager.ui.main.EstateRouter
-import org.desperu.realestatemanager.ui.main.EstateRouterImpl
+import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
+import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
+import org.desperu.realestatemanager.ui.main.estateList.EstateRouterImpl
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateCommunication
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateCommunicationImpl
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel

@@ -17,7 +17,6 @@ import org.desperu.realestatemanager.repositories.AddressRepository
 import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.ResourceService
-import org.desperu.realestatemanager.ui.ImageViewModel
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.utils.Utils.todayDate
 import org.desperu.realestatemanager.view.RecyclerViewAdapter

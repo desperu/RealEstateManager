@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main
+package org.desperu.realestatemanager.ui.main.estateList
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +12,7 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
+import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.view.enableSwipe
 
 class EstateListFragment: BaseBindingFragment() {

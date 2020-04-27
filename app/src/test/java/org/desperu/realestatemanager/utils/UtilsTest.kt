@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.utils
 
 import android.content.Context
+import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.google.android.gms.common.ConnectionResult
@@ -9,12 +10,14 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import junit.framework.TestCase.*
+import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.utils.Utils.convertDollarToEuro
 import org.desperu.realestatemanager.utils.Utils.convertEuroToDollar
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 import org.desperu.realestatemanager.utils.Utils.dateToString
 import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContentUri
+import org.desperu.realestatemanager.utils.Utils.getLatLngFromAddress
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import org.desperu.realestatemanager.utils.Utils.isInternetAvailable
@@ -36,7 +39,7 @@ class UtilsTest {
 
     @Test
     fun given_dollar_When_convertDollarToEuro_Then_checkEuroValue() {
-        val dollar = 1
+        val dollar = 10
         val expected: Int = (dollar * exchangeRate).roundToInt()
         val output = convertDollarToEuro(dollar)
 
@@ -151,7 +154,30 @@ class UtilsTest {
     }
 
     @Test
-    @Suppress("DEPRECATION")
+    fun given_imageUri_When_getFolderAndFileNameFromContentUri_Then_checkResult() {
+        val contentUri = "content://org.desperu.realestatemanager.fileprovider/EstateImages/Android/data/org.desperu.realestatemanager/files/Pictures/EstateImages/1587561197794.jpg"
+        val expected = mapOf(Pair("folderName", FOLDER_NAME), Pair("fileName", "1587561197794.jpg"))
+
+        val output = getFolderAndFileNameFromContentUri(contentUri)
+
+        assertEquals(expected, output)
+    }
+
+    @Test
+    fun given_address_When_getFromLocationName_Then_checkEmptyList() {
+        val address = Address(streetNumber = 323, streetName = "Mountainview Dr. Brooklyn", postalCode = 11204, city = "New York", country = "United States")
+        val expected = emptyList<Double>()
+
+        val mockGeocoder = mockk<Geocoder>()
+        every { mockGeocoder.getFromLocationName(any(), 1) } returns mutableListOf(android.location.Address(Locale.getDefault()))
+
+        val output = getLatLngFromAddress(mockContext, address)
+
+        assertEquals(expected, output)
+    }
+
+    @Test
+    @Suppress("deprecation")
     fun given_availableNetwork_When_isInternetAvailableSdk19_20_Then_checkResult() {
         val mockConnectivityManager = mockk<ConnectivityManager>()
         every { mockContext.getSystemService(Context.CONNECTIVITY_SERVICE) } returns mockConnectivityManager
@@ -175,16 +201,6 @@ class UtilsTest {
         val output = isGooglePlayServicesAvailable(mockContext)
 
         assertTrue(output)
-    }
-
-    @Test
-    fun given_imageUri_When_getFolderAndFileNameFromContentUri_Then_checkResult() {
-        val contentUri = "content://org.desperu.realestatemanager.fileprovider/EstateImages/Android/data/org.desperu.realestatemanager/files/Pictures/EstateImages/1587561197794.jpg"
-        val expected = mapOf(Pair("folderName", FOLDER_NAME), Pair("fileName", "1587561197794.jpg"))
-
-        val output = getFolderAndFileNameFromContentUri(contentUri)
-
-        assertEquals(expected, output)
     }
 
 //    @Test // TODO remove if unused

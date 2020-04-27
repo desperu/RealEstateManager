@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main
+package org.desperu.realestatemanager.ui.main.estateMap
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -25,6 +25,8 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentMapsBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
+import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
+import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import pub.devrel.easypermissions.EasyPermissions

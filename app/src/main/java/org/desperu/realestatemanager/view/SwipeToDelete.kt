@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.ui.ImageViewModel
-import org.desperu.realestatemanager.ui.main.EstateListFragment
-import org.desperu.realestatemanager.ui.main.EstateViewModel
+import org.desperu.realestatemanager.ui.manageEstate.ImageViewModel
+import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
+import org.desperu.realestatemanager.ui.main.estateList.EstateViewModel
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 

@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main
+package org.desperu.realestatemanager.ui.main.estateDetail
 
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -7,6 +7,8 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateDetailBinding
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.ui.main.estateList.EstateViewModel
+import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
 
 /**
  * The argument name to received estate to this Fragment.

@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui
+package org.desperu.realestatemanager.ui.manageEstate
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
