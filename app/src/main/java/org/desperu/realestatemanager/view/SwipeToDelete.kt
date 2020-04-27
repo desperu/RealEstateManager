@@ -4,6 +4,7 @@ import android.graphics.*
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,7 @@ import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 lateinit var list: MutableList<Any>
 var restored = false
 
-fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, givenList: ArrayList<Any>): ItemTouchHelper {
+internal fun enableSwipe(fragment: Fragment, adapter: RecyclerViewAdapter, givenList: MutableList<Any>): ItemTouchHelper {
 
     list = givenList
 
@@ -34,9 +35,9 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
             val deletedModel = if (position <= list.size) list[position] else 0
-            removeItem(activity, adapter, position)
+            removeItem(fragment, adapter, position)
             // showing snack bar with Undo option
-            val snackBar = activity.currentFocus?.let { Snackbar.make(it, " removed from Recyclerview!", Snackbar.LENGTH_LONG) }
+            val snackBar = fragment.activity?.currentFocus?.let { Snackbar.make(it, " removed from Recyclerview!", Snackbar.LENGTH_LONG) }
             snackBar?.setAction("UNDO") { // undo is selected, restore the deleted item
                 restoreItem(adapter, deletedModel, position)
             }
@@ -54,14 +55,14 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
                     p.color = Color.parseColor("#388E3C")
                     val background = RectF(itemView.left.toFloat(), itemView.top.toFloat(), dX, itemView.bottom.toFloat())
                     c.drawRect(background, p)
-                    icon = BitmapFactory.decodeResource(activity.resources, R.drawable.ic_baseline_update_white_24)
+                    icon = BitmapFactory.decodeResource(fragment.activity?.resources, R.drawable.ic_baseline_update_white_24)
                     val iconDest = RectF(itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left.toFloat() + 2 * width, itemView.bottom.toFloat() - width)
                     c.drawBitmap(icon, null, iconDest, p)
                 } else {
                     p.color = Color.parseColor("#D32F2F")
                     val background = RectF(itemView.right.toFloat() + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
                     c.drawRect(background, p)
-                    icon = BitmapFactory.decodeResource(activity.resources, R.drawable.ic_baseline_delete_forever_black_24)
+                    icon = BitmapFactory.decodeResource(fragment.context?.resources, R.drawable.ic_baseline_delete_forever_black_24)
                     val iconDest = RectF(itemView.right.toFloat() - 2 * width, itemView.top.toFloat() + width, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width)
                     c.drawBitmap(icon, null, iconDest, p)
                 }
@@ -89,17 +90,19 @@ fun enableSwipe(activity: AppCompatActivity, adapter: RecyclerViewAdapter, given
     return ItemTouchHelper(simpleItemTouchCallback)
 }
 
-fun updateList(newList: MutableList<Any>) { list = newList }
+internal fun updateList(newList: MutableList<Any>) { list = newList }
 
-private fun removeItem(activity: AppCompatActivity, adapter: RecyclerViewAdapter, position: Int) {
+private fun removeItem(fragment: Fragment, adapter: RecyclerViewAdapter, position: Int) {
     val itemId = getItemId(list[position], (list[position] as ViewModel)::class.java)
-    adapter.removeItem(position)
+    list.removeAt(position)
+    adapter.notifyItemRemoved(position)
     restored = false
-    Handler().postDelayed( { if (!restored) removeDataSource(activity, itemId) }, 5000)
+    Handler().postDelayed( { if (!restored) removeDataSource(fragment.activity as AppCompatActivity, itemId) }, 5000)
 }
 
 private fun restoreItem(adapter: RecyclerViewAdapter, deletedItem: Any, position: Int) {
-    adapter.addItem(position, deletedItem)
+    list[position] = deletedItem
+    adapter.notifyItemInserted(position)
     restored = true
 }
 

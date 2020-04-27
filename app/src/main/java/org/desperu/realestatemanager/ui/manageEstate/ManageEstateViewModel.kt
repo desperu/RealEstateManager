@@ -33,8 +33,10 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
 
     // FOR DATA
     private val imageListAdapter = RecyclerViewAdapter(R.layout.item_image)
+    private lateinit var imageVMList: MutableList<ImageViewModel>
     val estate = MutableLiveData<Estate>()
     var price = ObservableField<String>()
+    private var oldImageList = listOf<Image>()
 
     // -------------
     // SET ESTATE
@@ -42,10 +44,13 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
 
     /**
      * Set estate data with images and address.
-     * @param estate the given estate to manage.
+     * @param givenEstate the given estate to manage.
      */
-    fun setEstate(estate: Estate?) {
-        if (estate != null) this.estate.value = estate
+    fun setEstate(givenEstate: Estate?) {
+        if (givenEstate != null) {
+            estate.value = givenEstate
+            estate.value?.imageList?.let { oldImageList = it } // Save db image list
+        }
         else this.estate.value = Estate()
         setSpecificValues()
     }
@@ -73,21 +78,25 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
 
     /**
      * Update Recycler Adapter Image View Model List.
+     * Set Image View Model List only if not already do.
      */
+    @Suppress("unchecked_cast")
     fun updateRecyclerImageList() {
-        val imageViewModelList = estate.value?.imageList?.map { image -> ImageViewModel(image, this) } ?: emptyList()
-        imageListAdapter.updateList(imageViewModelList.toMutableList())
+        if (!::imageVMList.isInitialized)
+            imageVMList = oldImageList.map { image -> ImageViewModel(image, this) }.toMutableList()
+        imageListAdapter.updateList(imageVMList as MutableList<Any>)
+        imageListAdapter.notifyDataSetChanged()
     }
 
     /**
-     * Add new image to estate image list and recycler list.
-     * @param imageUri Image uri.
+     * Add new image to image view model list.
+     * @param imageUri the image uri to set.
      */
     fun addImageToImageList(imageUri: String) {
         val image = Image(imageUri = imageUri)
-        estate.value?.imageList?.add(image) // TODO needed ?? only at end when save in dB??
-        val position: Int = estate.value?.imageList?.size?.minus(1) ?: 0 // TODO do the trick with adapter list?
-        imageListAdapter.addItem(position, ImageViewModel(image, this))
+        imageVMList.add(ImageViewModel(image, this))
+        val position = imageVMList.size.minus(1)
+        imageListAdapter.notifyItemInserted(position)
         communication.scrollToNewItem(position)
     }
 
@@ -134,28 +143,22 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // -------------
 
     /**
-     * Create or update estate in database, depending if exist.
+     * Create or update estate in database, depend if already exist.
      */
     fun createOrUpdateEstate() {
-
         bindDataInEstate()
 
-        if (estate.value?.id == 0L)
-            estate.value?.let { createEstate(it) }
-        else
-            estate.value?.let { updateEstate(it) } // TODO pb when add new image
+        if (estate.value?.id == 0L) estate.value?.let { createEstate(it) }
+        else estate.value?.let { updateEstate(it) }
     }
 
     /**
-     * Bind data in estate object.
+     * Bind data in estate object, set price from ui to estate object.
+     * Set updated image list in estate object to properly update ui after estate management.
      */
     private fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
-
-        // Spinners values
-//        estate.value?.type = type
-//        estate.value?.interestPlaces = interestPlaces
-//        estate.value?.state = state
+        estate.value?.imageList = imageVMList.map { it.image.value!! } as MutableList<Image>
     }
 
     /**
@@ -165,7 +168,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     private fun createEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
         val estateId = estateRepository.createEstate(estate)
         setEstateIdInOtherTables(estateId)
-        imageRepository.createImage(*estate.imageList.toTypedArray())
+        imageVMList.map { it.image.value!! }.let { imageRepository.createImage(*it.toTypedArray()) }
         addressRepository.createAddress(estate.address)
     }
 
@@ -176,7 +179,9 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     private fun updateEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
         estateRepository.updateEstate(estate)
         setEstateIdInOtherTables(estate.id)
-        imageRepository.updateImage(*estate.imageList.toTypedArray())
+        val imageListPair = imageVMList.partition { oldImageList.contains(it.image.value) }
+        imageRepository.updateImage(*imageListPair.first.map { it.image.value!! }.toTypedArray())
+        imageRepository.createImage(*imageListPair.second.map { it.image.value!! }.toTypedArray())
         addressRepository.updateAddress(estate.address)
     }
 
@@ -186,7 +191,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     private fun setEstateIdInOtherTables(estateId: Long) {
         // Other tables
-        estate.value?.imageList?.forEach { image -> image.estateId = estateId }
+        imageVMList.forEach { it.image.value?.estateId = estateId }
         estate.value?.address?.estateId = estateId
     }
 
@@ -196,38 +201,41 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
 
     /**
      * Manage primary image in image list, only one can be primary in the list,
-     * so if another is primary, set it not primary.
+     * so if another is primary, set it to not primary.
      * If the given image is set to primary, update the recycler adapter list
      * to move the given image at first position and scroll recycler to it.
      * @param imageVM the image view model witch user change image primary state.
      */
-    @Suppress("UNCHECKED_CAST")
     internal fun managePrimaryImage(imageVM: ImageViewModel) {
+        // Manage primary image in list
         if (imageVM.image.value?.isPrimary!!) {
-            val imageVMList = imageListAdapter.getList() as List<ImageViewModel>
             imageVMList.forEach {
                 if (it != imageVM && it.image.value?.isPrimary!!) {
                     it.image.value?.isPrimary = false
                     it.setPrimaryVisibility()
                 }
             }
+            // Update list and ui
             val position = imageVMList.indexOf(imageVM)
+            imageVMList.removeAt(position)
+            imageVMList.add(0, imageVM)
             communication.scrollToNewItem(0)
-            imageListAdapter.moveItem(position, 0)
-            imageVMList.map { it.image.value as Image }.let { estate.value?.imageList = it.toMutableList() } // TODO only when save in database?
+            imageListAdapter.notifyItemMoved(position, 0)
         }
     }
 
     /**
-     * Remove the given image in estate image list, recycler adapter list, storage and database.
-     * @param image the given image to remove.
+     * Remove the given image in image view model list, storage and database.
+     * @param imageVM the view model of the image to remove.
      */
-    internal fun removeImage(image: Image) {
-        val position = estate.value?.imageList?.indexOf(image) // TODO use adapter list?
-        estate.value?.imageList?.remove(image) // estate image list // TODO only at the end when save to dB??
-        position?.let { imageListAdapter.removeItem(it) } // adapter list
-        communication.deleteImageInStorage(image.imageUri)
-        deleteImage(image.id) // database
+    internal fun removeImage(imageVM: ImageViewModel) {
+        val position = imageVMList.indexOf(imageVM)
+        imageVMList.removeAt(position)
+        imageListAdapter.notifyItemRemoved(position)
+        imageVM.image.value?.let {
+            deleteImage(it.id) // database
+            communication.deleteImageInStorage(it.imageUri) // external storage
+        }
     }
 
     internal fun deleteImage(imageId: Long) = viewModelScope.launch(Dispatchers.Main) { imageRepository.deleteImage(imageId) }

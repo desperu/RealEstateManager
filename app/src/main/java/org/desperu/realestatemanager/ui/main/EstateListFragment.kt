@@ -62,7 +62,7 @@ class EstateListFragment: BaseBindingFragment() {
     private fun configureSwipeToDeleteForRecycler() {
         @Suppress("UNCHECKED_CAST")
         viewModel?.getEstateListAdapter?.let {
-            enableSwipe(requireActivity() as MainActivity, it, viewModel?.getEstateList as ArrayList<Any>)
+            enableSwipe(this, it, viewModel?.getEstateVMList as MutableList<Any>)
                     .attachToRecyclerView(fragment_estate_list_recycler_view)
         }
     }

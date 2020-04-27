@@ -18,20 +18,12 @@ class EstateViewModel(private val givenEstate: Estate): ViewModel() {
     private lateinit var router: EstateRouter
 
     /**
-     * Companion object, used to create an EstateViewModel instance and set estate router interface.
+     * Second constructor to set router and allow user redirection.
+     * @param givenEstate the given estate object to set this view model.
+     * @param router the router interface.
      */
-    companion object { // TODO use constructor??
-        /**
-         * Create an EstateViewModel instance and set estate router interface.
-         * @param givenEstate the given estate for this EstateViewModel.
-         * @param router the estate router instance to set.
-         * @return the EstateViewModel created with router.
-         */
-        fun withRouter(givenEstate: Estate, router: EstateRouter): EstateViewModel {
-            val estateViewModel = EstateViewModel(givenEstate)
-            estateViewModel.router = router
-            return estateViewModel
-        }
+    constructor(givenEstate: Estate, router: EstateRouter): this(givenEstate) {
+        this.router = router
     }
 
     init {

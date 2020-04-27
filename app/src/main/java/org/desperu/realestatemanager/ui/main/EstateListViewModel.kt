@@ -24,7 +24,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
-    private var estateList = mutableListOf<Estate>()
+    private lateinit var estateVMList: MutableList<EstateViewModel>
     private val mutableRefreshing = MutableLiveData<Boolean>()
     private val mutableVisibility = MutableLiveData<Int>()
 
@@ -41,12 +41,12 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      */
     private fun loadEstateList() {
         viewModelScope.launch(Dispatchers.Main) {
-            estateList = estateRepository.getAll().toMutableList()
+            val estateList = estateRepository.getAll().toMutableList()
             estateList.forEach { estate ->
                 estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
                 estate.address = addressRepository.getAddress(estate.id)
             }
-            onRetrieveEstateList()
+            onRetrieveEstateList(estateList)
         }
     }
 
@@ -67,16 +67,15 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     fun addOrUpdateEstate(estate: Estate?): Int? {
         var position: Int? = null
         if (estate != null) {
-            val oldEstate = estateList.find { it.id == estate.id }
-            if (oldEstate == null) { // Add new element in first position
+            val oldEstateVM = estateVMList.find { it.getEstate.value?.id == estate.id }
+            if (oldEstateVM == null) { // Add new element in first position
                 position = 0
-                estateList.add(position, estate)
-                estateListAdapter.addItem(position, EstateViewModel.withRouter(estate, router))
+                estateVMList.add(position, EstateViewModel(estate, router))
+                estateListAdapter.notifyItemInserted(position)
             } else { // Update existing element at his position
-                position = estateList.indexOf(oldEstate)
-                estateList.remove(oldEstate)
-                estateList.add(position, estate)
-                estateListAdapter.updateItem(position, EstateViewModel.withRouter(estate, router))
+                position = estateVMList.indexOf(oldEstateVM)
+                estateVMList[position] = EstateViewModel(estate, router)
+                estateListAdapter.notifyItemChanged(position)
             }
             updateUi()
         }
@@ -89,11 +88,14 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     /**
      * Push data to recycler view when retrieve estate list.
+     * @param estateList the list of estates retrieved from database.
      */
-    private fun onRetrieveEstateList() {
-        val estateViewModelList = estateList.map { estate -> EstateViewModel.withRouter(estate, router) }
-        estateListAdapter.updateList(estateViewModelList.toMutableList())
-        updateList(estateViewModelList.toMutableList())
+    @Suppress("unchecked_cast")
+    private fun onRetrieveEstateList(estateList: List<Estate>) {
+        estateVMList = (estateList.map { estate -> EstateViewModel(estate, router) }).toMutableList()
+        estateListAdapter.updateList(estateVMList as MutableList<Any>)
+        estateListAdapter.notifyDataSetChanged()
+        updateList(estateVMList as MutableList<Any>)
         updateUi()
     }
 
@@ -103,14 +105,14 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      */
     private fun updateUi() {
         mutableRefreshing.value = false
-        mutableVisibility.value = if (estateList.isEmpty()) View.VISIBLE else View.GONE
+        mutableVisibility.value = if (estateVMList.isEmpty()) View.VISIBLE else View.GONE
     }
 
     // --- GETTERS ---
 
     val getEstateListAdapter = estateListAdapter
 
-    val getEstateList = estateList // TODO remove field?
+    val getEstateVMList = if (::estateVMList.isInitialized) estateVMList else mutableListOf()
 
     val getMutableRefreshing = mutableRefreshing
 

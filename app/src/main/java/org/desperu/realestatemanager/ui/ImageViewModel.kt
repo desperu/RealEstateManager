@@ -14,7 +14,11 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
     private val primaryVisibility = MutableLiveData<Int>()
     private lateinit var manageEstateViewModel: ManageEstateViewModel
 
-    // SECOND CONSTRUCTOR // TODO use companion object?? view model communication, is it good?
+    /**
+     * Second constructor to set manage estate view model and allow actions in image list.
+     * @param givenImage the given image object to set this view model.
+     * @param manageEstateViewModel the instance of parent view model.
+     */
     constructor(givenImage: Image, manageEstateViewModel: ManageEstateViewModel): this(givenImage) {
         this.manageEstateViewModel = manageEstateViewModel
     }
@@ -60,7 +64,7 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
             }
 
             // Delete this image.
-            "delete" -> image.value?.let { manageEstateViewModel.removeImage(it) }
+            "delete" -> manageEstateViewModel.removeImage(this)
         }
     }
 
