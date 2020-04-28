@@ -16,6 +16,7 @@ import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.main.NEW_ESTATE
+import org.desperu.realestatemanager.ui.manageEstate.ManageEstateFragment.Communication
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
 import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.desperu.realestatemanager.view.MyPageTransformer
@@ -29,7 +30,7 @@ const val MANAGE_ESTATE: String = "manageEstate"
 /**
  * Activity to manage estate with images and address.
  */
-class ManageEstateActivity: BaseActivity() {
+class ManageEstateActivity: BaseActivity(), Communication {
 
     private var viewModel: ManageEstateViewModel? = null
     private lateinit var viewPager: ViewPager
@@ -113,7 +114,7 @@ class ManageEstateActivity: BaseActivity() {
      * Get view model instance, set if null.
      * @return the ManageEstateViewModel instance.
      */
-    internal fun getViewModel(): ManageEstateViewModel {
+    override fun getViewModel(): ManageEstateViewModel {
         viewModel ?: run {
             viewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ManageEstateViewModel::class.java)
             viewModel?.setEstate(getEstate())
@@ -142,7 +143,7 @@ class ManageEstateActivity: BaseActivity() {
      * Switch visibility for floating buttons with animation.
      * @param toHide if must hide floating button.
      */
-    internal fun floatingVisibility(toHide: Boolean) {
+    override fun floatingVisibility(toHide: Boolean) {
         if (toHide) {
             activity_manage_estate_floating_add_estate.hide()
             activity_manage_estate_floating_add_image.hide()

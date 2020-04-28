@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
+import java.lang.ref.WeakReference
 
 /**
  * Observe value for stop refreshing animation.
@@ -81,16 +82,17 @@ fun Spinner.setOnItemSelected(listener: AdapterView.OnItemSelectedListener) {
 }
 
 /**
- * Save Listener for price in manage estate, needed for custom setter.
+ * Save Listener for price in manage estate, needed for custom setter,
+ * use weak reference to prevent memory leak.
  */
-private lateinit var listenerSave: TextWatcher
+private lateinit var listenerSave: WeakReference<TextWatcher>
 
 /**
  * Set listener for edit text price.
  */
 @BindingAdapter("onTextChanged")
 fun EditText.setOnTextChanged(listener: TextWatcher) {
-    listenerSave = listener
+    listenerSave = WeakReference(listener)
     addTextChangedListener(listener)
 }
 
@@ -100,7 +102,7 @@ fun EditText.setOnTextChanged(listener: TextWatcher) {
 @BindingAdapter("priceText")
 fun EditText.setPriceText(str: String?) {
     // Remove listener to prevent infinite loop
-    removeTextChangedListener(listenerSave)
+    removeTextChangedListener(listenerSave.get())
     if (str != null) {
         val cursorPosition = selectionStart
         // Convert price to pattern price
@@ -112,7 +114,7 @@ fun EditText.setPriceText(str: String?) {
         setSelection(if (cursorPosition > 0 && newCursorPosition <= str1.length) newCursorPosition else cursorPosition)
     }
     // Set listener
-    addTextChangedListener(listenerSave)
+    addTextChangedListener(listenerSave.get())
 }
 
 /**

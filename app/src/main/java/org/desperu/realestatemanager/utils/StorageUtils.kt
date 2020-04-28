@@ -185,10 +185,10 @@ object StorageUtils {
             val fos = FileOutputStream(file)
             try {
                 fos.write(bytes.toByteArray())
-                MediaScannerConnection.scanFile(context, arrayOf(file.path), arrayOf("image/jpeg"), null)
                 fos.fd.sync()
             } finally {
                 fos.close()
+                MediaScannerConnection.scanFile(context.applicationContext, arrayOf(file.path), arrayOf("image/jpeg"), null)
                 stringUri = getUriForFile(context.applicationContext, BuildConfig.APPLICATION_ID + ".fileprovider", file).toString()
             }
         } catch (e: IOException) {

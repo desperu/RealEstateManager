@@ -47,9 +47,26 @@ class ManageEstateFragment: BaseBindingFragment() {
 
     // FOR DATA
     @JvmField @State var fragmentKey: Int = -1
-    private lateinit var binding: ViewDataBinding // TODO use List<ViewDataBinding> to use only one instance
+    private lateinit var binding: ViewDataBinding
     private lateinit var viewModel: ManageEstateViewModel
     private lateinit var recyclerView: RecyclerView
+
+    /**
+     * Interface for fragment communication with it's parent activity.
+     */
+    internal interface Communication {
+        /**
+         * Get the view model instance from parent activity.
+         */
+        fun getViewModel(): ManageEstateViewModel
+
+        /**
+         * Manage floating buttons visibility, setup with recycler scrolling.
+         */
+        fun floatingVisibility(toHide: Boolean)
+    }
+
+    private lateinit var mCallback: Communication
 
     /**
      * Companion object, used to create new instance of this fragment.
@@ -73,7 +90,9 @@ class ManageEstateFragment: BaseBindingFragment() {
 
     override fun getBindingView(): View = configureViewModel()
 
-    override fun configureDesign() {}
+    override fun configureDesign() {
+        createCallbackToParentActivity()
+    }
 
     override fun updateDesign() {
         configureCorrespondingLayout()
@@ -102,11 +121,21 @@ class ManageEstateFragment: BaseBindingFragment() {
     // -----------------
 
     /**
-     * Configure data binding with view model.
+     * Configure callback for parent activity.
+     */
+    private fun createCallbackToParentActivity() {
+        mCallback = try {
+            activity as Communication
+        } catch (e: ClassCastException) {
+            throw ClassCastException("${activity?.parent?.javaClass?.simpleName} must implement Communication") }
+    }
+
+    /**
+     * Configure data binding and view model.
      */
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, getFragmentLayout(), container, false)
-        viewModel = (requireActivity() as ManageEstateActivity).getViewModel()
+        viewModel = mCallback.getViewModel()
 
         binding.setVariable(org.desperu.realestatemanager.BR.viewModel, viewModel)
         return binding.root
@@ -150,9 +179,9 @@ class ManageEstateFragment: BaseBindingFragment() {
         recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerView.addOnScrollListener( object: OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                (recyclerView.context as ManageEstateActivity).floatingVisibility(isLastVisible && recyclerView.adapter?.itemCount!! > 1)
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                mCallback.floatingVisibility(isLastVisible && recyclerView.adapter?.itemCount!! > 1)
             }
         })
         viewModel.updateRecyclerImageList()
