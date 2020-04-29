@@ -294,7 +294,7 @@ class ManageEstateFragment: BaseBindingFragment() {
      */
     private fun saveImageInStorage(bitmap: Bitmap) = storageAction {
         activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let {
-            setBitmapInStorage(context!!, it, FOLDER_NAME, Date().time.toString() + ".jpg", bitmap)
+            setBitmapInStorage(context?.applicationContext!!, it, FOLDER_NAME, Date().time.toString() + ".jpg", bitmap)
         }
     }
 

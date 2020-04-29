@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.item_image.view.*
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel
 
 class ImageViewModel(private val givenImage: Image): ViewModel() {
 

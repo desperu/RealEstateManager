@@ -188,8 +188,8 @@ object StorageUtils {
                 fos.fd.sync()
             } finally {
                 fos.close()
-                MediaScannerConnection.scanFile(context.applicationContext, arrayOf(file.path), arrayOf("image/jpeg"), null)
-                stringUri = getUriForFile(context.applicationContext, BuildConfig.APPLICATION_ID + ".fileprovider", file).toString()
+                MediaScannerConnection.scanFile(context, arrayOf(file.path), arrayOf("image/jpeg"), null)
+                stringUri = getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file).toString()
             }
         } catch (e: IOException) {
             e.printStackTrace()

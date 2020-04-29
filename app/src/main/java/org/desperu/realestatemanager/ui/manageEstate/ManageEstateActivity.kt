@@ -66,11 +66,6 @@ class ManageEstateActivity: BaseActivity(), Communication {
     // -----------------
 
     /**
-     * Get Estate from intent.
-     */
-    private fun getEstate() = intent.getParcelableExtra<Estate>(MANAGE_ESTATE)
-
-    /**
      * Configure Tab layout and View pager.
      */
     private fun configureViewPagerAndTabs() {
@@ -109,6 +104,11 @@ class ManageEstateActivity: BaseActivity(), Communication {
     }
 
     // --- GETTERS ---
+
+    /**
+     * Get Estate from intent.
+     */
+    private fun getEstate() = intent.getParcelableExtra<Estate>(MANAGE_ESTATE)
 
     /**
      * Get view model instance, set if null.

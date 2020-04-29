@@ -5,7 +5,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import icepick.Icepick
 import kotlinx.android.synthetic.main.toolbar.*
-import org.desperu.realestatemanager.R
 
 abstract class BaseActivity: AppCompatActivity() {
 

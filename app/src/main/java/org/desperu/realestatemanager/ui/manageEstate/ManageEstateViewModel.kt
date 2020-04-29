@@ -45,7 +45,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Set estate data with images and address.
      * @param givenEstate the given estate to manage.
      */
-    fun setEstate(givenEstate: Estate?) {
+    internal fun setEstate(givenEstate: Estate?) {
         if (givenEstate != null) {
             estate.value = givenEstate
             estate.value?.imageList?.let { oldImageList = it } // Save db image list
@@ -80,7 +80,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Set Image View Model List only if not already do.
      */
     @Suppress("unchecked_cast")
-    fun updateRecyclerImageList() {
+    internal fun updateRecyclerImageList() {
         if (!::imageVMList.isInitialized)
             imageVMList = oldImageList.map { image -> ImageViewModel(image, this) }.toMutableList()
         imageListAdapter.updateList(imageVMList as MutableList<Any>)
@@ -91,7 +91,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Add new image to image view model list.
      * @param imageUri the image uri to set.
      */
-    fun addImageToImageList(imageUri: String) {
+    internal fun addImageToImageList(imageUri: String) {
         val image = Image(imageUri = imageUri)
         imageVMList.add(ImageViewModel(image, this))
         val position = imageVMList.size.minus(1)
@@ -144,7 +144,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     /**
      * Create or update estate in database, depend if already exist.
      */
-    fun createOrUpdateEstate() {
+    internal fun createOrUpdateEstate() {
         bindDataInEstate()
 
         if (estate.value?.id == 0L) estate.value?.let { createEstate(it) }
@@ -178,6 +178,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     private fun updateEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
         estateRepository.updateEstate(estate)
         setEstateIdInOtherTables(estate.id)
+        // Sort image view model list, images to update/images to create
         val imageListPair = imageVMList.partition { oldImageList.contains(it.image.value) }
         imageRepository.updateImage(*imageListPair.first.map { it.image.value!! }.toTypedArray())
         imageRepository.createImage(*imageListPair.second.map { it.image.value!! }.toTypedArray())
