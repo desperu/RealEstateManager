@@ -4,6 +4,7 @@ import android.net.Uri
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
@@ -16,26 +17,27 @@ import java.lang.ref.WeakReference
 
 /**
  * Observe value for stop refreshing animation.
+ * @param refreshing the mutable boolean to observe.
  */
 @BindingAdapter("refreshingSwipe")
-fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: MutableLiveData<Boolean>?) {
-    val parentActivity: AppCompatActivity? = swipeRefreshLayout.context as AppCompatActivity
+fun SwipeRefreshLayout.setRefreshing(refreshing: MutableLiveData<Boolean>?) {
+    val parentActivity: AppCompatActivity? = context as AppCompatActivity?
     if (parentActivity != null && refreshing != null)
-        refreshing.observe(parentActivity, Observer { value -> swipeRefreshLayout.isRefreshing = value })
+        refreshing.observe(parentActivity, Observer { value -> isRefreshing = value } )
 }
 
 /**
- * Observe value for view visibility.// TODO useless, use android:visibility
+ * Set visibility for the associated view.
+ * @param show if true set visible, else set gone.
  */
-@BindingAdapter("mutableVisibility")
-fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
-    val parentActivity: AppCompatActivity? = view.context as AppCompatActivity?
-    if (parentActivity != null && visibility != null)
-        visibility.observe(parentActivity, Observer { value -> view.visibility = value })
+@BindingAdapter("show")
+fun View.setVisibility(show: Boolean?) {
+    visibility = if (show != null && show) View.VISIBLE else View.GONE
 }
 
 /**
  * Set on click listener for view.
+ * @param listener the listener to set for on click.
  */
 @BindingAdapter("onClick")
 fun View.onClick(listener: View.OnClickListener) {
@@ -44,6 +46,7 @@ fun View.onClick(listener: View.OnClickListener) {
 
 /**
  * Set on long click listener for view.
+ * @param listener the listener to set for on long click.
  */
 @BindingAdapter("onLongClick")
 fun View.onLongClick(listener: View.OnLongClickListener) {
@@ -52,8 +55,9 @@ fun View.onLongClick(listener: View.OnLongClickListener) {
 
 /**
  * Setter for image in image view.
+ * @param imageUri the uri of image to set.
  */
-@Suppress("DEPRECATION")
+@Suppress("deprecation")
 @BindingAdapter("imageUri")
 fun ImageView.setImageUri(imageUri: String?) { // TODO use glide if error persist
     if (!imageUri.isNullOrBlank())
@@ -64,6 +68,7 @@ fun ImageView.setImageUri(imageUri: String?) { // TODO use glide if error persis
 
 /**
  * Setter for spinners.
+ * @param string the string to set in spinner.
  */
 @BindingAdapter("setItem")
 fun Spinner.setItem(string: String?) {
@@ -75,9 +80,10 @@ fun Spinner.setItem(string: String?) {
 
 /**
  * Set listener for spinners.
+ * @param listener the listener to set for item selected.
  */
 @BindingAdapter("onItemSelected")
-fun Spinner.setOnItemSelected(listener: AdapterView.OnItemSelectedListener) {
+fun Spinner.setOnItemSelected(listener: OnItemSelectedListener) {
     onItemSelectedListener = listener
 }
 
@@ -89,6 +95,7 @@ private lateinit var listenerSave: WeakReference<TextWatcher>
 
 /**
  * Set listener for edit text price.
+ * @param listener the listener to set.
  */
 @BindingAdapter("onTextChanged")
 fun EditText.setOnTextChanged(listener: TextWatcher) {
@@ -98,6 +105,7 @@ fun EditText.setOnTextChanged(listener: TextWatcher) {
 
 /**
  * Custom setter for price in manage estate.
+ * @param str the string to convert and set.
  */
 @BindingAdapter("priceText")
 fun EditText.setPriceText(str: String?) {
@@ -107,10 +115,9 @@ fun EditText.setPriceText(str: String?) {
         val cursorPosition = selectionStart
         // Convert price to pattern price
         val str1 = convertPriceToPatternPrice(str, false)
-        val strLength: Int = str.length
         // Set pattern price to edit text, cursor with corrected position if needed
         setText(str1)
-        val newCursorPosition = cursorPosition + str1.length - strLength
+        val newCursorPosition = cursorPosition + str1.length - str.length
         setSelection(if (cursorPosition > 0 && newCursorPosition <= str1.length) newCursorPosition else cursorPosition)
     }
     // Set listener
@@ -119,6 +126,7 @@ fun EditText.setPriceText(str: String?) {
 
 /**
  * Custom setter for number (Int), in Edit Text.
+ * @param number the number to set.
  */
 @BindingAdapter("android:text")
 fun EditText.setNumber(number: Int) {
@@ -127,6 +135,7 @@ fun EditText.setNumber(number: Int) {
 
 /**
  * Custom getter for number (Int), in Edit Text.
+ * @return the integer value of the inserted text, 0 if blank.
  */
 @InverseBindingAdapter(attribute = "android:text")
 fun EditText.getNumber(): Int {
@@ -136,6 +145,7 @@ fun EditText.getNumber(): Int {
 
 /**
  * Custom setter for text view price with pattern, in estate item.
+ * @param price the price, convert with pattern to set.
  */
 @BindingAdapter("setPrice")
 fun TextView.setPrice(price: Long) {

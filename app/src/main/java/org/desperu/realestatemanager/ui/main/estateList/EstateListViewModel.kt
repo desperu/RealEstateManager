@@ -1,6 +1,6 @@
 package org.desperu.realestatemanager.ui.main.estateList
 
-import android.view.View
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,7 +29,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
     private lateinit var estateVMList: MutableList<EstateViewModel>
     private val mutableRefreshing = MutableLiveData<Boolean>()
-    private val mutableVisibility = MutableLiveData<Int>()
+    private val showEmptyText = ObservableBoolean(false)
 
     init {
         loadEstateList()
@@ -109,7 +109,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      */
     private fun updateUi() {
         mutableRefreshing.value = false
-        mutableVisibility.value = if (estateVMList.isEmpty()) View.VISIBLE else View.GONE
+        showEmptyText.set(estateVMList.isEmpty())
     }
 
     // -------------
@@ -151,5 +151,5 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     val getMutableRefreshing = mutableRefreshing
 
-    val getMutableVisibility = mutableVisibility
+    val getShowEmptyText = showEmptyText
 }

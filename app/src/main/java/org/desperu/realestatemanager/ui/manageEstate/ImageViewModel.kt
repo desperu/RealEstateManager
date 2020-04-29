@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.ui.manageEstate
 
 import android.view.View
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.item_image.view.*
@@ -10,7 +11,7 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
 
     // FOR DATA
     val image = MutableLiveData<Image>()
-    private val primaryVisibility = MutableLiveData<Int>()
+    private val showPrimary = ObservableBoolean()
     private lateinit var manageEstateViewModel: ManageEstateViewModel
 
     /**
@@ -37,11 +38,9 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
     private fun setGivenImage() { image.value = givenImage }
 
     /**
-     * Set mutable visibility for primary marker.
+     * Set visibility for primary marker.
      */
-    internal fun setPrimaryVisibility() {
-        primaryVisibility.value = if (image.value?.isPrimary!!) View.VISIBLE else View.GONE
-    }
+    internal fun setPrimaryVisibility() = showPrimary.set(image.value?.isPrimary!!)
 
     // -------------
     // LISTENER
@@ -84,7 +83,7 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
 
     // --- GETTERS ---
 
-    val getMutableVisibility = primaryVisibility
+    val getShowPrimary = showPrimary
 
     val getButtonListener = buttonListener
 }

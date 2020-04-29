@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -23,7 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/colorPassedWhite"
-                app:adapter="@{viewModel.getEstateListAdapter}"/>
+                app:adapter="@{viewModel.getEstateListAdapter}"
+                tools:listitem="@layout/item_estate"/>
 
             <TextView
                 android:id="@+id/fragment_estate_list_text_empty"
@@ -35,7 +37,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/fragment_estate_list_text_empty_size"
                 android:visibility="gone"
-                app:mutableVisibility="@{viewModel.getMutableVisibility}"/>
+                app:show="@{viewModel.getShowEmptyText}"/>
 
         </RelativeLayout>
 

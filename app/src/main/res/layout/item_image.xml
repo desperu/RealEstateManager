@@ -48,7 +48,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/holo_green_dark"
                 android:background="@drawable/container_border"
-                app:mutableVisibility="@{viewModel.getMutableVisibility}"/>
+                app:show="@{viewModel.getShowPrimary}"/>
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_image_text_description"
