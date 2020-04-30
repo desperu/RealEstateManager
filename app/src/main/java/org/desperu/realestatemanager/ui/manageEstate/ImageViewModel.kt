@@ -7,20 +7,29 @@ import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.item_image.view.*
 import org.desperu.realestatemanager.model.Image
 
+/**
+ * View Model witch provide data for image item.
+ *
+ * @param givenImage the given image data for this view model.
+ *
+ * @constructor Instantiates a new ImageViewModel.
+ *
+ * @property givenImage the given image data for this view model to set.
+ */
 class ImageViewModel(private val givenImage: Image): ViewModel() {
 
     // FOR DATA
     val image = MutableLiveData<Image>()
     private val showPrimary = ObservableBoolean()
-    private lateinit var manageEstateViewModel: ManageEstateViewModel
+    private lateinit var manageEstateVM: ManageEstateViewModel
 
     /**
      * Second constructor to set manage estate view model and allow actions in image list.
      * @param givenImage the given image object to set this view model.
-     * @param manageEstateViewModel the instance of parent view model.
+     * @param manageEstateVM the instance of parent view model.
      */
-    constructor(givenImage: Image, manageEstateViewModel: ManageEstateViewModel): this(givenImage) {
-        this.manageEstateViewModel = manageEstateViewModel
+    constructor(givenImage: Image, manageEstateVM: ManageEstateViewModel): this(givenImage) {
+        this.manageEstateVM = manageEstateVM
     }
 
     init {
@@ -58,11 +67,11 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
             "primary" -> {
                 image.value?.isPrimary = image.value?.isPrimary?.not()!!
                 setPrimaryVisibility()
-                manageEstateViewModel.managePrimaryImage(this)
+                manageEstateVM.managePrimaryImage(this)
             }
 
             // Delete this image.
-            "delete" -> manageEstateViewModel.removeImage(this)
+            "delete" -> manageEstateVM.removeImage(this)
         }
     }
 

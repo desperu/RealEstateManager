@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -16,7 +15,6 @@ import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.main.NEW_ESTATE
-import org.desperu.realestatemanager.ui.manageEstate.ManageEstateFragment.Communication
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
 import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.desperu.realestatemanager.view.MyPageTransformer
@@ -28,7 +26,32 @@ import org.desperu.realestatemanager.view.ViewPagerAdapter
 const val MANAGE_ESTATE: String = "manageEstate"
 
 /**
+ * Interface to allow communications with this activity.
+ */
+internal interface Communication {
+
+    /**
+     * Get the current view pager fragment instance.
+     * @return the current ManageEstateFragment instance.
+     */
+    fun getCurrentViewPagerFragment(): ManageEstateFragment
+
+    /**
+     * Get the ManageViewModel instance.
+     * @return the ManageViewModel instance.
+     */
+    fun getViewModel(): ManageEstateViewModel
+
+    /**
+     * Manage floating buttons visibility, setup with recycler scrolling.
+     * @param toHide if true hide buttons, else show.
+     */
+    fun floatingVisibility(toHide: Boolean)
+}
+
+/**
  * Activity to manage estate with images and address.
+ * @constructor Instantiates a new ManageEstateActivity.
  */
 class ManageEstateActivity: BaseActivity(), Communication {
 
@@ -97,21 +120,20 @@ class ManageEstateActivity: BaseActivity(), Communication {
      * On click add image.
      */
     fun onClickAddImage(v: View) {
-        val currentItem = viewPager.currentItem
-        val page = getCurrentViewPagerFragment()
-        if (currentItem == ESTATE_IMAGE && page != null)
-            (page as ManageEstateFragment).onClickAddImage()
+        if (viewPager.currentItem == ESTATE_IMAGE)
+            getCurrentViewPagerFragment().onClickAddImage()
     }
 
     // --- GETTERS ---
 
     /**
      * Get Estate from intent.
+     * @return the estate object retrieved from intent extra.
      */
     private fun getEstate() = intent.getParcelableExtra<Estate>(MANAGE_ESTATE)
 
     /**
-     * Get view model instance, set if null.
+     * Get the view model instance, set if null.
      * @return the ManageEstateViewModel instance.
      */
     override fun getViewModel(): ManageEstateViewModel {
@@ -126,8 +148,8 @@ class ManageEstateActivity: BaseActivity(), Communication {
      * Get the current view pager fragment instance.
      * @return the current fragment instance.
      */
-    internal fun getCurrentViewPagerFragment(): Fragment? =
-            viewPager.adapter?.instantiateItem(viewPager, viewPager.currentItem) as Fragment
+    override fun getCurrentViewPagerFragment(): ManageEstateFragment =
+            viewPager.adapter?.instantiateItem(viewPager, viewPager.currentItem) as ManageEstateFragment
 
     // -----------------
     // UI

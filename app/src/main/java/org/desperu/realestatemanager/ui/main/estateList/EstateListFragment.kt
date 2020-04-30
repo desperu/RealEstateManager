@@ -15,6 +15,10 @@ import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.view.enableSwipe
 
+/**
+ * Fragment to show estate list.
+ * @constructor Instantiates a new EstateListFragment.
+ */
 class EstateListFragment: BaseBindingFragment() {
 
     // FOR DATA

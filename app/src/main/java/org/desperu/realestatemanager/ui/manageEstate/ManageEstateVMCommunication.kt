@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 /**
  * The interface that allows communication for ManageEstateViewModel.
  */
-interface ManageEstateCommunication {
+interface ManageEstateVMCommunication {
 
     /**
      * Used to allow view model to update ui when an image item moved or is added in recycler,
@@ -23,37 +23,35 @@ interface ManageEstateCommunication {
 }
 
 /**
- * Implementation of the ManageEstateCommunication.
+ * Implementation of the ManageEstateVMCommunication.
  *
  * @property activity the Activity that is used to perform communication.
  *
- * @constructor Instantiates a new ManageEstateCommunicationImpl.
+ * @constructor Instantiates a new ManageEstateVMCommunicationImpl.
  *
  * @param activity the Activity that is used to perform communication to set.
  */
-class ManageEstateCommunicationImpl(private val activity: AppCompatActivity): ManageEstateCommunication {
+class ManageEstateVMCommunicationImpl(private val activity: AppCompatActivity): ManageEstateVMCommunication {
 
     /**
      * Get the current fragment of the activity from the view pager.
      */
-    private fun getCurrentFragment() = (activity as ManageEstateActivity)
-            .getCurrentViewPagerFragment() as ManageEstateFragment
+    private fun getCurrentFragment() =
+            (activity as Communication).getCurrentViewPagerFragment()
 
     /**
      * Used to allow view model to update ui when an image item moved or is added in recycler,
      * so send the new item position to the fragment witch manage recycler.
      * @param position the position to scroll to.
      */
-    override fun scrollToNewItem(position: Int) {
-        getCurrentFragment().scrollToNewItem(position)
-    }
+    override fun scrollToNewItem(position: Int) =
+            getCurrentFragment().scrollToNewItem(position)
 
     /**
      * Used to allow view model to delete an image in storage.
      * So send the image uri to the fragment witch manage images.
      * @param imageUri the uri of the image to delete in storage.
      */
-    override fun deleteImageInStorage(imageUri: String) {
-        getCurrentFragment().deleteImageInStorage(imageUri)
-    }
+    override fun deleteImageInStorage(imageUri: String) =
+            getCurrentFragment().deleteImageInStorage(imageUri)
 }

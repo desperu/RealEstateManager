@@ -23,11 +23,25 @@ import org.desperu.realestatemanager.view.RecyclerViewAdapter
 
 /**
  * View Model to manage full estate (estate, images and address) in database.
+ *
+ * @param estateRepository the estate repository interface witch provide database access.
+ * @param imageRepository the image repository interface witch provide database access.
+ * @param addressRepository the address repository interface witch provide database access.
+ * @param communication the manage estate view model communication interface witch provide view model communication.
+ * @param resourceService the resource service interface witch provide application resources access.
+ *
+ * @constructor Instantiates a new ManageEstateViewModel.
+ *
+ * @property estateRepository the estate repository interface witch provide database access to set.
+ * @property imageRepository the image repository interface witch provide database access to set.
+ * @property addressRepository the address repository interface witch provide database access to set.
+ * @property communication the manage estate view model communication interface witch provide view model communication to set.
+ * @property resourceService the resource service interface witch provide application resources access to set.
  */
 class ManageEstateViewModel(private val estateRepository: EstateRepository,
                             private val imageRepository: ImageRepository,
                             private val addressRepository: AddressRepository,
-                            private val communication: ManageEstateCommunication,
+                            private val communication: ManageEstateVMCommunication,
                             private val resourceService: ResourceService): ViewModel() {
 
     // FOR DATA

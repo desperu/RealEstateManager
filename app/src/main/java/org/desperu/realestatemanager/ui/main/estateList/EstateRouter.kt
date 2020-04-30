@@ -25,6 +25,7 @@ interface EstateRouter {
 
 /**
  * Implementation of the EstateRouter.
+ *
  * @property activity the Activity that is used to perform redirection.
  *
  * @constructor Instantiates a new EstateRouterImpl.
@@ -37,15 +38,13 @@ class EstateRouterImpl(private val activity: AppCompatActivity): EstateRouter {
      * Redirects the user to the EstateDetail Fragment to show estate details.
      * @param estate the estate to show details in the EstateDetail Fragment.
      */
-    override fun openEstateDetail(estate: Estate) {
+    override fun openEstateDetail(estate: Estate) =
         (activity as MainActivity).showEstateDetailFragment(estate)
-    }
 
     /**
      * Redirects the user to the ManageEstate Activity to manage estate.
      * @param estate the estate to manage in the ManageEstate Activity.
      */
-    override fun openManageEstate(estate: Estate) {
+    override fun openManageEstate(estate: Estate) =
         ManageEstateActivity.routeFromActivity(activity, estate)
-    }
 }

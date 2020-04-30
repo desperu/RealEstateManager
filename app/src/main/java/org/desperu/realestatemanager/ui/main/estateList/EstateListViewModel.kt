@@ -18,6 +18,20 @@ import org.desperu.realestatemanager.view.updateList
 
 /**
  * View Model witch provide data for estate list.
+ *
+ * @param estateRepository the estate repository interface witch provide database access.
+ * @param imageRepository the image repository interface witch provide database access.
+ * @param addressRepository the address repository interface witch provide database access.
+ * @param router the estate router interface witch provide user redirection.
+ * @param geocoder the geocoder service interface witch provide geocoder service access.
+ *
+ * @constructor Instantiates a new EstateListViewModel.
+ *
+ * @property estateRepository the estate repository interface witch provide database access to set.
+ * @property imageRepository the image repository interface witch provide database access to set.
+ * @property addressRepository the address repository interface witch provide database access to set.
+ * @property router the estate router interface witch provide user redirection to set.
+ * @property geocoder the geocoder service interface witch provide geocoder service access to set.
  */
 class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val imageRepository: ImageRepository,
@@ -81,7 +95,8 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
                 estateListAdapter.notifyItemChanged(position)
             }
             updateUi()
-            setLatLngInAddress(estate.address) // Set latitude and longitude for address in database
+            // Set latitude and longitude for the address if not already do.
+            setLatLngInAddress(estate.address)
         }
         return position
     }
@@ -101,6 +116,8 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         estateListAdapter.notifyDataSetChanged()
         updateList(estateVMList as MutableList<Any>)
         updateUi()
+        // Set latitude and longitude for each estate address if not already do.
+        estateList.forEach { setLatLngInAddress(it.address) }
     }
 
     /**

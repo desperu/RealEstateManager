@@ -34,6 +34,7 @@ const val NEW_ESTATE: String = "newEstate"
 
 /**
  * Activity to show estate list, estate details, and maps fragment.
+ * @constructor Instantiates a new MainActivity.
  */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 

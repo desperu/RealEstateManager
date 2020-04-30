@@ -13,8 +13,8 @@ import org.desperu.realestatemanager.service.ResourceServiceImpl
 import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouterImpl
-import org.desperu.realestatemanager.ui.manageEstate.ManageEstateCommunication
-import org.desperu.realestatemanager.ui.manageEstate.ManageEstateCommunicationImpl
+import org.desperu.realestatemanager.ui.manageEstate.ManageEstateVMCommunication
+import org.desperu.realestatemanager.ui.manageEstate.ManageEstateVMCommunicationImpl
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel
 import org.koin.java.KoinJavaComponent.inject
 
@@ -42,12 +42,12 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
                     geocoder as GeocoderService) as T
         } else if (modelClass.isAssignableFrom(ManageEstateViewModel::class.java)) {
             val resourceService = ResourceServiceImpl(activity)
-            val communication = ManageEstateCommunicationImpl(activity)
+            val communication = ManageEstateVMCommunicationImpl(activity)
             return ManageEstateViewModel(
                     inject(EstateRepository::class.java).value,
                     inject(ImageRepository::class.java).value,
                     inject(AddressRepository::class.java).value,
-                    communication as ManageEstateCommunication,
+                    communication as ManageEstateVMCommunication,
                     resourceService as ResourceService) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

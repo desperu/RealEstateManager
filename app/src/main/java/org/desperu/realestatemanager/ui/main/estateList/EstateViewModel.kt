@@ -9,6 +9,12 @@ import org.desperu.realestatemanager.model.Image
 
 /**
  * View Model witch provide data for estate item and estate detail.
+ *
+ * @param givenEstate the given estate data for this view model.
+ *
+ * @constructor Instantiates a new EstateViewModel.
+ *
+ * @property givenEstate the given estate data for this view model to set.
  */
 class EstateViewModel(private val givenEstate: Estate): ViewModel() {
 
@@ -19,8 +25,8 @@ class EstateViewModel(private val givenEstate: Estate): ViewModel() {
 
     /**
      * Second constructor to set router and allow user redirection.
-     * @param givenEstate the given estate object to set this view model.
-     * @param router the router interface.
+     * @param givenEstate the given estate object for this view model to set.
+     * @param router the router interface to set.
      */
     constructor(givenEstate: Estate, router: EstateRouter): this(givenEstate) {
         this.router = router
