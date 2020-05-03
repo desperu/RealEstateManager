@@ -11,14 +11,25 @@ import org.desperu.realestatemanager.ui.main.estateList.EstateViewModel
 import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
 
 /**
- * The argument name to received estate to this Fragment.
+ * The argument name for bundle, to received estate to this Fragment.
  */
 const val ESTATE_DETAIL: String = "estateDetail"
 
 /**
+ * Interface to share the view model instance of this fragment.
+ */
+internal interface ShareViewModel {
+    /**
+     * Get the view model instance of this fragment.
+     * @return the EstateViewModel instance.
+     */
+    fun getViewModel(): EstateViewModel?
+}
+
+/**
  * Fragment to show estate details.
  */
-class EstateDetailFragment: BaseBindingFragment() {
+class EstateDetailFragment: BaseBindingFragment(), ShareViewModel {
 
     // FOR DATA
     private lateinit var binding: FragmentEstateDetailBinding
@@ -31,27 +42,22 @@ class EstateDetailFragment: BaseBindingFragment() {
 
     override fun getBindingView(): View = configureViewModel()
 
-    override fun configureDesign() {
+    override fun configureDesign() {}
+
+    override fun updateDesign() {
         configureAndShowMapFragment()
     }
-
-    override fun updateDesign() {}
 
     // -----------------
     // CONFIGURATION
     // -----------------
 
     /**
-     * Get Estate from bundle.
-     */
-    private fun getEstate(): Estate? = arguments?.getParcelable(ESTATE_DETAIL)
-
-    /**
      * Configure data binding with view model.
      */
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_estate_detail, container, false)
-        viewModel = getEstate()?.let { EstateViewModel(it) }
+        viewModel = getViewModel()
 
         binding.viewModel = viewModel
 //        configureImageRecycler()
@@ -59,7 +65,7 @@ class EstateDetailFragment: BaseBindingFragment() {
     }
 
     /**
-     * Configure and show map fragment if google play services are available.
+     * Configure and show maps fragment if google play services are available.
      */
     private fun configureAndShowMapFragment() {
         mapFragment = childFragmentManager.findFragmentById(R.id.container_map)
@@ -69,5 +75,23 @@ class EstateDetailFragment: BaseBindingFragment() {
                     .add(R.id.container_map, mapFragment!!)
                     .commit()
         }
+    }
+
+    // --- GETTERS ---
+
+    /**
+     * Get Estate from bundle.
+     */
+    private fun getEstate(): Estate? = arguments?.getParcelable(ESTATE_DETAIL)
+
+    /**
+     * Get the view model instance, set if null.
+     * @return the EstateViewModel instance.
+     */
+    override fun getViewModel(): EstateViewModel? {
+        viewModel ?: run {
+            viewModel = getEstate()?.let { EstateViewModel(it) }
+        }
+        return viewModel
     }
 }

@@ -3,28 +3,19 @@ package org.desperu.realestatemanager.extension
 import android.net.Uri
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.LatLng
 import org.desperu.realestatemanager.R
+import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 import java.lang.ref.WeakReference
-
-/**
- * Observe value for stop refreshing animation.
- * @param refreshing the mutable boolean to observe.
- */
-@BindingAdapter("refreshingSwipe")
-fun SwipeRefreshLayout.setRefreshing(refreshing: MutableLiveData<Boolean>?) {
-    val parentActivity: AppCompatActivity? = context as AppCompatActivity?
-    if (parentActivity != null && refreshing != null)
-        refreshing.observe(parentActivity, Observer { value -> isRefreshing = value } )
-}
 
 /**
  * Set visibility for the associated view.
@@ -145,9 +136,36 @@ fun EditText.getNumber(): Int {
 
 /**
  * Custom setter for text view price with pattern, in estate item.
- * @param price the price, convert with pattern to set.
+ * @param price the price convert with pattern to set.
  */
 @BindingAdapter("setPrice")
 fun TextView.setPrice(price: Long) {
     text = convertPriceToPatternPrice(price.toString(), true)
+}
+
+/**
+ * Set a marker on the map, and animate camera to this point.
+ * @param estate the estate to set on the map.
+ */
+@BindingAdapter("setMarker")
+fun MapView.setMarker(estate: Estate?) {
+    estate?.let {
+        addMarker(it)
+        val estatePosition = LatLng(estate.address.latitude, estate.address.longitude)
+        animateCamera(estatePosition)
+    }
+}
+
+/**
+ * Set a marker for each estate in the list.
+ * @param estateList the given estate list to add each on the map.
+ */
+@BindingAdapter("setMarkerList")
+fun MapView.setMarkerList(estateList: List<Estate>?) {
+//    estateList?.forEach { estate -> addMarker(estate) }
+    getMapAsync {
+        val latLngBounds = it.projection.visibleRegion.latLngBounds
+        val estateListToShow = estateList?.filter { estate -> latLngBounds.contains(LatLng(estate.address.latitude, estate.address.longitude)) }
+        estateListToShow?.forEach { estate -> addMarker(estate) }
+    }
 }

@@ -5,6 +5,9 @@
     <data>
         <variable
             name="viewModel"
+            type="org.desperu.realestatemanager.ui.main.estateList.EstateViewModel" />
+        <variable
+            name="viewModel2"
             type="org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel" />
     </data>
 
@@ -29,7 +32,9 @@
             android:id="@+id/fragment_maps_maps_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:setMarker="@{viewModel.getEstate}"
+            app:setMarkerList="@{viewModel2.getEstateList}"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fragment_maps_floating_button_location"

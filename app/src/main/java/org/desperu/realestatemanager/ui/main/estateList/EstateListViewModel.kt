@@ -1,7 +1,7 @@
 package org.desperu.realestatemanager.ui.main.estateList
 
 import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.MutableLiveData
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -41,8 +41,9 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
-    private lateinit var estateVMList: MutableList<EstateViewModel>
-    private val mutableRefreshing = MutableLiveData<Boolean>()
+    private val estateVMList = mutableListOf<EstateViewModel>()
+    private val estateList = ObservableField<List<Estate>>()
+    private val refreshing = ObservableBoolean(false)
     private val showEmptyText = ObservableBoolean(false)
 
     init {
@@ -70,14 +71,14 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     /**
      * Reload estate list from database.
      */
-    fun reloadEstateList() = loadEstateList()
+    fun reloadEstateList() { refreshing.set(true); loadEstateList() }
 
     // -------------
     // ADD ESTATE
     // -------------
 
     /**
-     * Add new, or updated estate.
+     * Add new, or updated estate in the list and update user interface.
      * @param estate the new or updated estate.
      * @return the position affected in the recycler view.
      */
@@ -111,13 +112,18 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      */
     @Suppress("unchecked_cast")
     private fun onRetrieveEstateList(estateList: List<Estate>) {
-        estateVMList = (estateList.map { estate -> EstateViewModel(estate, router) }).toMutableList()
+        // For Recycler adapter
+        estateVMList.clear()
+        estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router) })
         estateListAdapter.updateList(estateVMList as MutableList<Any>)
         estateListAdapter.notifyDataSetChanged()
+        // For Map List
+        this.estateList.set(estateList)
+        // For Swipe To Delete
         updateList(estateVMList as MutableList<Any>)
-        updateUi()
         // Set latitude and longitude for each estate address if not already do.
         estateList.forEach { setLatLngInAddress(it.address) }
+        updateUi()
     }
 
     /**
@@ -125,7 +131,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * and show text empty if list is empty.
      */
     private fun updateUi() {
-        mutableRefreshing.value = false
+        refreshing.set(false)
         showEmptyText.set(estateVMList.isEmpty())
     }
 
@@ -148,6 +154,25 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         }
     }
 
+    // -------------
+    // MAP
+    // -------------
+
+    /**
+     * Update the estate list for the map.
+     */
+    internal fun updateEstateList() {
+        val tempEstateList = estateList.get()
+        estateList.set(null)
+        estateList.set(tempEstateList)
+    }
+
+    /**
+     * Redirect the user to estate detail fragment.
+     * @param estate the estate associated with the marker.
+     */
+    internal fun onInfoClick(estate: Estate?) = estate?.let { router.openEstateDetail(it) }
+
     // --- MANAGE ---
 
     /**
@@ -164,9 +189,11 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     val getEstateListAdapter = estateListAdapter
 
-    val getEstateVMList = if (::estateVMList.isInitialized) estateVMList else mutableListOf()
+    val getEstateVMList = estateVMList
 
-    val getMutableRefreshing = mutableRefreshing
+    val getEstateList = estateList
+
+    val getRefreshing = refreshing
 
     val getShowEmptyText = showEmptyText
 }

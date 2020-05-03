@@ -34,7 +34,6 @@ class EstateListFragment: BaseBindingFragment() {
     override fun configureDesign() {}
 
     override fun updateDesign() {
-        configureSwipeRefresh()
         configureSwipeToDeleteForRecycler()
     }
 
@@ -52,13 +51,6 @@ class EstateListFragment: BaseBindingFragment() {
         viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
         binding.viewModel = viewModel
         return binding.root
-    }
-
-    /**
-     * Configure swipe to refresh layout.
-     */
-    private fun configureSwipeRefresh() {
-        fragment_estate_list_swipe_refresh.setOnRefreshListener { viewModel?.reloadEstateList() }
     }
 
     /**

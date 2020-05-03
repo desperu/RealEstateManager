@@ -13,7 +13,8 @@
         android:id="@+id/fragment_estate_list_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:refreshingSwipe="@{viewModel.getMutableRefreshing}">
+        app:refreshing="@{viewModel.getRefreshing}"
+        app:onRefreshListener="@{() -> viewModel.reloadEstateList()}">
 
         <RelativeLayout
             android:layout_width="match_parent"

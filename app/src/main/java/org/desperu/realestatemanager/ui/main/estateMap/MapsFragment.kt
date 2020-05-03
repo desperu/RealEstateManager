@@ -13,10 +13,8 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -25,8 +23,12 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentMapsBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
-import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
+import org.desperu.realestatemanager.extension.animateCamera
+import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
+import org.desperu.realestatemanager.ui.main.estateDetail.ShareViewModel
+import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
+import org.desperu.realestatemanager.ui.main.estateList.EstateViewModel
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import pub.devrel.easypermissions.EasyPermissions
@@ -37,21 +39,21 @@ import pub.devrel.easypermissions.EasyPermissions
 const val MAP_VIEW_BUNDLE_KEY: String = "MapViewBundleKey"
 
 /**
- * Fragment to show Google maps, and markers for estates in the map.
+ * Fragment to show Google maps, with markers for estates in the map.
+ * @constructor Instantiates a new MapsFragment.
  */
-class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraIdleListener {
+class MapsFragment : BaseBindingFragment() {
 
     // FOR DATA
     private lateinit var binding: FragmentMapsBinding
-    private lateinit var viewModel: EstateListViewModel
+    private var viewModel: EstateViewModel? = null
+    private var viewModel2: EstateListViewModel? = null
     private var mMap: GoogleMap? = null
     private var mMapView: MapView? = null
     private var mapViewBundle: Bundle? = null
 
     // FOR LOCATION
     private var isLocationEnabled = false
-    private var myLocation: Location? = null
 
     // --------------
     // BASE METHODS
@@ -63,43 +65,17 @@ class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMark
 
     override fun updateDesign() {
         configureMapView()
-        onClickMyLocation
     }
 
     // --------------
     // METHODS OVERRIDE
     // --------------
 
-    override fun onMapReady(googleMap: GoogleMap?) {
-        mMap = googleMap
-
-        // Configure Map when initialized
-        configureMapLocation()
-        configureMapZoomButton()
-        configureMapGestureAndListener()
-//        mMap.getUiSettings().isCompassEnabled = true
-//        googleMap.getUiSettings().isRotateGesturesEnabled = true
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
         isLocationEnabled = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
-        if (isLocationEnabled) updateMapWithLocation(userLocation)
-    }
-
-    override fun onMarkerClick(marker: Marker): Boolean {
-        repositionMapToolbar()
-        return marker.snippet != null
-    }
-
-    override fun onMapLongClick(latLng: LatLng) {
-        mMap?.addMarker(MarkerOptions().position(latLng))
-    }
-
-    override fun onCameraIdle() {
-        // TODO set corresponding markers for estates
     }
 
     override fun onAttach(context: Context) {
@@ -150,8 +126,14 @@ class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMark
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_maps, container, false)
 
-        viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
+        viewModel = (parentFragment as? ShareViewModel)?.getViewModel()
         binding.viewModel = viewModel
+
+        if (viewModel == null) {
+            viewModel2 = ViewModelProvider(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
+            binding.viewModel2 = viewModel2
+        }
+
         return binding.root
     }
 
@@ -161,7 +143,19 @@ class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMark
     private fun configureMapView() {
         mMapView = fragment_maps_maps_view
         mMapView?.onCreate(mapViewBundle)
-        mMapView?.getMapAsync(this)
+        mMapView?.getMapAsync { mMap = it; configureAskedMap() }
+    }
+
+    /**
+     * Configure Map view with the good mode.
+     */
+    private fun configureAskedMap() {
+        if (viewModel == null) {
+            configureMapLocation()
+            configureMapZoomButton()
+        } else
+            fragment_maps_floating_button_location.visibility = View.GONE
+        configureMapGestureAndListener()
     }
 
     /**
@@ -190,6 +184,7 @@ class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMark
     private fun configureMapGestureAndListener() = mMap?.apply {
         uiSettings?.setAllGesturesEnabled(true)
         setOnMarkerClickListener(::onMarkerClick)
+        setOnInfoWindowClickListener(::onInfoClick)
         setOnMapLongClickListener(::onMapLongClick)
         setOnCameraIdleListener(::onCameraIdle)
     }
@@ -216,8 +211,36 @@ class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMark
         mMap?.isMyLocationEnabled = isLocationEnabled
         if (isLocationEnabled) updateMapWithLocation(userLocation)
         else checkLocationPermissionsStatus()
-//        startNewRequest(this.queryTerm)
     }
+
+    /**
+     * On marker click, show marker data.
+     * @param marker the clicked marker.
+     */
+    private fun onMarkerClick(marker: Marker): Boolean {
+        repositionMapToolbar()
+//        return marker.snippet != null
+        return false
+    }
+
+    /**
+     * On info window click, redirect user to estate detail fragment.
+     * @param marker the clicked info window marker's.
+     */
+    private fun onInfoClick(marker: Marker) {
+        viewModel2?.onInfoClick(marker.tag as Estate?)
+    }
+
+    /**
+     * On map long click, this add a marker at the long click position.
+     * @param latLng the LatLng corresponding with the long click position.
+     */
+    private fun onMapLongClick(latLng: LatLng) { mMap?.addMarker(MarkerOptions().position(latLng)) }
+
+    /**
+     * On camera idle (camera move), update marker estates on map, only when show estate list on map.
+     */
+    private fun onCameraIdle() { viewModel2?.updateEstateList() }
 
     /**
      * Method called when query text change.
@@ -234,31 +257,25 @@ class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMark
 
     /**
      * Update map with user location, animate camera to this point.
-     * @param userLocation Current user location.
+     * @param userLocation the user location to animate map to.
      */
     private fun updateMapWithLocation(userLocation: Location?) {
-        if (userLocation != null) {
-            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    LatLng(userLocation.latitude, userLocation.longitude),
-//                    Go4LunchPrefs.getInt(context, MAP_ZOOM_LEVEL, ZOOM_LEVEL_DEFAULT)),
-                    13F),
-                    1500, null)
-//            myLocation = userLocation
-        }
+        userLocation?.let { mMapView?.animateCamera(LatLng(it.latitude, it.longitude)) }
     }
-
-    /**
-     * Add a new marker on the map.
-     * @param restaurant Restaurant object with data from firestore.
-     * @param place Current place object found.
-     */
-//    private fun addMarker(restaurant: Restaurant, place: Place) {
-//        mMap!!.addMarker(MarkerOptions()
-//                .position(Objects.requireNonNull(place.getLatLng()))
-//                .title(place.getName())
-//                .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant)))
-//                .snippet(place.getId()))
-//        this.isPlacesUpdating = false
+//
+//    /**
+//     * Add a new marker for an estate on the map.
+//     * @param estate the estate to set on the map
+//     */
+//    internal fun addMarker(estate: Estate) {
+//        val estateLatLng = LatLng(estate.address.latitude, estate.address.longitude)
+//        mMap?.addMarker(MarkerOptions()
+//                .position(estateLatLng)
+//                .title("${estate.type} ${estate.address.city}")
+////                .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant)))
+//                .snippet(convertPriceToPatternPrice(estate.price.toString(), true))
+//        )
+//        updateMapWithLocation(estateLatLng)
 //    }
 
     /**
@@ -314,7 +331,7 @@ class MapsFragment : BaseBindingFragment(), OnMapReadyCallback, GoogleMap.OnMark
     private val userLocation: Location?
         get() {
             val lm = (context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager)
-            myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            var myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             if (myLocation == null) {
                 val criteria = Criteria()
                 criteria.accuracy = Criteria.ACCURACY_COARSE
