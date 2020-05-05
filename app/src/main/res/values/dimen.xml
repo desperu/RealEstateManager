@@ -32,6 +32,10 @@
     <dimen name="item_estate_text_location_size">16sp</dimen>
     <dimen name="item_estate_text_price_size">20sp</dimen>
 
+    <!-- Estate Detail Fragment -->
+    <dimen name="fragment_estate_detail_container_map_width">200dp</dimen>
+    <dimen name="fragment_estate_detail_container_map_height">200dp</dimen>
+
     <!-- Maps Fragment -->
     <dimen name="fragment_maps_floating_button_location_margin">15dp</dimen>
     <dimen name="fragment_maps_floating_button_location_margin_kitkat">3dp</dimen>

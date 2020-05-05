@@ -68,11 +68,11 @@ class EstateDetailFragment: BaseBindingFragment(), ShareViewModel {
      * Configure and show maps fragment if google play services are available.
      */
     private fun configureAndShowMapFragment() {
-        mapFragment = childFragmentManager.findFragmentById(R.id.container_map)
+        mapFragment = childFragmentManager.findFragmentById(R.id.fragment_estate_detail_container_map)
         if (mapFragment == null) {
             mapFragment = MapsFragment()
             childFragmentManager.beginTransaction()
-                    .add(R.id.container_map, mapFragment!!)
+                    .replace(R.id.fragment_estate_detail_container_map, mapFragment!!)
                     .commit()
         }
     }

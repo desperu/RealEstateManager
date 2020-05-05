@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.facebook.stetho.Stetho
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_maps.view.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
@@ -26,6 +27,7 @@ import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.utils.RC_ESTATE
+import org.desperu.realestatemanager.view.MapMotionLayout
 
 /**
  * The name of the argument for passing the new or updated estate to this Activity.
@@ -186,16 +188,27 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onBackPressed() {
+        // Try to get MapsFragment instance child of EstateDetailFragment, for action below.
+        val mapsFragment = (fm.findFragmentById(R.id.activity_main_frame_layout)
+                ?.childFragmentManager?.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?)
+
         // If drawer is open, close it.
         if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
             activity_main_drawer_layout.closeDrawer(GravityCompat.START)
+
         // If search view is shown, hide it.
         else if (toolbar_search_view != null && toolbar_search_view.isShown)
             hideSearchViewIfVisible()
+
+        // If map is expended in estate detail fragment, collapse it.
+        else if (mapsFragment?.view?.fragment_maps_fullscreen_button?.tag == "fullSize")
+                MapMotionLayout(this, mapsFragment.view).switchMapSize()
+
         // If current fragment is EstateListFragment, remove it and call super to finish activity.
         else if (fragment?.javaClass == EstateListFragment::class.java) {
             fm.popBackStackImmediate()
             super.onBackPressed()
+
         // Else show previous fragment in back stack, and set fragment field with restored fragment.
         } else {
             super.onBackPressed()

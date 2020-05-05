@@ -31,6 +31,7 @@ import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
 import org.desperu.realestatemanager.ui.main.estateList.EstateViewModel
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
+import org.desperu.realestatemanager.view.MapMotionLayout
 import pub.devrel.easypermissions.EasyPermissions
 
 /**
@@ -153,6 +154,7 @@ class MapsFragment : BaseBindingFragment() {
         if (viewModel == null) {
             configureMapLocation()
             configureMapZoomButton()
+            fragment_maps_fullscreen_button.visibility = View.GONE
         } else
             fragment_maps_floating_button_location.visibility = View.GONE
         configureMapGestureAndListener()
@@ -187,6 +189,7 @@ class MapsFragment : BaseBindingFragment() {
         setOnInfoWindowClickListener(::onInfoClick)
         setOnMapLongClickListener(::onMapLongClick)
         setOnCameraIdleListener(::onCameraIdle)
+        fragment_maps_fullscreen_button.setOnClickListener(onClickFullScreen)
     }
 
     /**
@@ -212,6 +215,11 @@ class MapsFragment : BaseBindingFragment() {
         if (isLocationEnabled) updateMapWithLocation(userLocation)
         else checkLocationPermissionsStatus()
     }
+
+    /**
+     * On click listener for switch map size (little size and full screen), use motion layout to perform animation.
+     */
+    private val onClickFullScreen = View.OnClickListener { MapMotionLayout(context!!, view).switchMapSize() }
 
     /**
      * On marker click, show marker data.
@@ -285,8 +293,8 @@ class MapsFragment : BaseBindingFragment() {
     private fun repositionMapToolbar() {
         if (mMapView != null && mMapView?.findViewWithTag<View>(GOOGLE_MAP_TOOLBAR) != null) {
             // Get the toolbar view
-            val button: View = mMapView?.findViewWithTag(GOOGLE_MAP_TOOLBAR)!!
-            val layoutParams = button.layoutParams as RelativeLayout.LayoutParams
+            val button: View? = mMapView?.findViewWithTag(GOOGLE_MAP_TOOLBAR)
+            val layoutParams = button?.layoutParams as RelativeLayout.LayoutParams
             // position to the left of custom My Location button
             layoutParams.setMargins(0, 0, 0, resources.getDimension(R.dimen.fragment_maps_toolbar_margin_bottom).toInt())
             layoutParams.marginEnd = resources.getDimension(R.dimen.fragment_maps_toolbar_margin_end).toInt()
@@ -301,8 +309,8 @@ class MapsFragment : BaseBindingFragment() {
     private fun repositionMapZoom() {
         if (mMapView != null && mMapView?.findViewWithTag<View>(GOOGLE_MAP_ZOOM_OUT_BUTTON) != null) {
             // Get the zoom button view
-            val button: View = mMapView?.findViewWithTag(GOOGLE_MAP_ZOOM_OUT_BUTTON)!!
-            val layoutParams = button.layoutParams as LinearLayout.LayoutParams
+            val button: View? = mMapView?.findViewWithTag(GOOGLE_MAP_ZOOM_OUT_BUTTON)
+            val layoutParams = button?.layoutParams as LinearLayout.LayoutParams
             // position to the top of custom My Location button
             layoutParams.setMargins(0, 0, resources.getDimension(R.dimen.fragment_maps_zoom_button_margin_end).toInt(), resources.getDimension(R.dimen.fragment_maps_zoom_button_margin_bottom).toInt())
         }

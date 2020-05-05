@@ -23,13 +23,20 @@ const val ESTATE_ADDRESS = 2
 const val ESTATE_SALE = 3
 
 
-// FOR GOOGLE MAPS, TO REPLACE BUTTON
+// FOR GOOGLE MAPS
+
+// TO REPLACE BUTTON
 
 // Map Toolbar Tag
 const val GOOGLE_MAP_TOOLBAR = "GoogleMapToolbar"
 
 // Zoom button Tag
 const val GOOGLE_MAP_ZOOM_OUT_BUTTON = "GoogleMapZoomOutButton"
+
+// FOR MAP ANIMATION MARKER
+
+const val LITTLE_SIZE = "littleSize"
+const val FULL_SIZE = "fullSize"
 
 
 // FOR PERMISSIONS

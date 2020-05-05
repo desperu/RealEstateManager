@@ -9,12 +9,16 @@
     </data>
 
     <ScrollView
+        android:id="@+id/fragment_estate_detail_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/motion_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layoutDescription="@xml/scene_map">
 
             <TextView
                 android:id="@+id/fragment_estate_detail_text_city"
@@ -25,16 +29,17 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="@{viewModel.getEstate.address.city}"/>
-<!-- TODO use dimen -->
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/container_map"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_margin="@dimen/default_large_margin"
+<!--            TODO on test -->
+<!--            <androidx.fragment.app.FragmentContainerView-->
+            <FrameLayout
+                android:id="@+id/fragment_estate_detail_container_map"
+                android:layout_width="@dimen/fragment_estate_detail_container_map_width"
+                android:layout_height="@dimen/fragment_estate_detail_container_map_height"
+                app:barrierMargin="@dimen/default_large_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_estate_detail_text_city" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.motion.widget.MotionLayout>
 
     </ScrollView>
 
