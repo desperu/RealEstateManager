@@ -3,9 +3,12 @@ package org.desperu.realestatemanager.ui.main
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
@@ -179,11 +182,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.activity_main_menu_search -> switchSearchViewVisibility()
             R.id.activity_main_menu_add -> showManageEstateActivity(null)
-            R.id.activity_main_menu_update -> {}
-            R.id.activity_main_menu_search ->
-                toolbar_search_view.apply { visibility = View.VISIBLE; onActionViewExpanded() }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -198,7 +200,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         // If search view is shown, hide it.
         else if (toolbar_search_view != null && toolbar_search_view.isShown)
-            hideSearchViewIfVisible()
+            switchSearchViewVisibility()
 
         // If map is expended in estate detail fragment, collapse it.
         else if (mapsFragment?.view?.fragment_maps_fullscreen_button?.tag == "fullSize")
@@ -213,6 +215,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         } else {
             super.onBackPressed()
             fragment = fm.findFragmentById(R.id.activity_main_frame_layout)
+            animMenuItem(false)
+            Handler().postDelayed( { animMenuItem(true) }, resources.getInteger(R.integer.menuAnimDuration).toLong())
         }
     }
 
@@ -224,7 +228,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * Show EstateDetailFragment for the given estate.
      * @param estate the estate to show details.
      */
-    internal fun showEstateDetailFragment(estate: Estate) = configureAndShowFragment(EstateDetailFragment::class.java, estate)
+    internal fun showEstateDetailFragment(estate: Estate) {
+        configureAndShowFragment(EstateDetailFragment::class.java, estate)
+        animMenuItem(false)
+        Handler().postDelayed( { animMenuItem(true) }, 500)
+    }
 
 //    /**
 //     * Manage click on Your Lunch button.
@@ -290,20 +298,50 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun setTitleActivity(titleFragment: String) { title = titleFragment }
 
     /**
-     * Hide search view if visible, and clear query.
-     */
-    private fun hideSearchViewIfVisible() { // TODO to perfect, if already check in parent function, submit = true why??
-        if (toolbar_search_view != null && toolbar_search_view.isShown) {
-            toolbar_search_view.visibility = View.GONE
-            toolbar_search_view.setQuery(null, true)
-        }
-    }
-
-    /**
      * Show Toast for given message.
      * @param message the given message to show.
      */
     private fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+    /**
+     * Switch search view visibility, clear query and start animations.
+     */
+    private fun switchSearchViewVisibility() {
+        // Hide search view
+        if (toolbar_search_view != null && toolbar_search_view.isShown) {
+            val animation: Animation = AnimationUtils.loadAnimation(baseContext, R.anim.search_view_anim_hide)
+            (toolbar_search_view as View).startAnimation(animation)
+            toolbar_search_view.visibility = View.INVISIBLE
+            toolbar_search_view.setQuery(null, true)
+            animMenuItem(true)
+        } else { // Show search view
+            animMenuItem(false)
+            toolbar_search_view.visibility = View.VISIBLE
+            val animation: Animation = AnimationUtils.loadAnimation(baseContext, R.anim.search_view_anim_show)
+            (toolbar_search_view as View).startAnimation(animation)
+            toolbar_search_view.onActionViewExpanded()
+        }
+    }
+
+    /**
+     * Menu item animation, for show and hide, from, to right out of screen.
+     * @param toShow {@code true} for show and {@code false} to hide menu item.
+     */
+    private fun animMenuItem(toShow: Boolean) {
+
+        // Create animation object.
+        val animRes = if (toShow) R.anim.menu_item_anim_show else R.anim.menu_item_anim_hide
+        val animation: Animation = AnimationUtils.loadAnimation(this, animRes)
+
+        // Get view for each menu item.
+        val menuItemList = listOf<View?>(
+                findViewById(R.id.activity_main_menu_search),
+                findViewById(R.id.activity_main_menu_add),
+                findViewById(R.id.activity_main_menu_update))
+
+        // Set animation for each menu item.
+        menuItemList.forEach { it?.startAnimation(animation) }
+    }
 
     // -----------------
     // UTILS

@@ -88,7 +88,6 @@
     <dimen name="nav_header_height">220dp</dimen>
 
     <!-- Toolbar -->
-    <dimen name="toolbar_search_view_height">36dp</dimen>
-    <dimen name="toolbar_search_view_margin">10dp</dimen>
+    <dimen name="toolbar_search_view_height">56dp</dimen>
 
 </resources>

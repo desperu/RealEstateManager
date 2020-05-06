@@ -2,24 +2,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/activity_main_menu_update"
+        android:icon="@drawable/ic_baseline_update_white_24"
+        android:visible="false"
+        android:title="@string/menu_item_update"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/activity_main_menu_add"
         android:icon="@drawable/ic_baseline_add_white_48"
         app:showAsAction="ifRoom"
-        android:title="@string/menu_item_add">
-    </item>
-
-    <item
-        android:id="@+id/activity_main_menu_update"
-        android:icon="@drawable/ic_baseline_update_white_24"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_item_update">
-    </item>
+        android:title="@string/menu_item_add" />
 
     <item
         android:id="@+id/activity_main_menu_search"
         android:icon="@drawable/ic_baseline_search_white_24"
         app:showAsAction="ifRoom"
-        android:title="@string/menu_item_search">
-    </item>
+        android:title="@string/menu_item_search" />
 
 </menu>

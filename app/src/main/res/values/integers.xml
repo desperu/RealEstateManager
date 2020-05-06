@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <integer name="menuAnimDuration">500</integer>
     <integer name="mapAnimDuration">800</integer>
 
 </resources>

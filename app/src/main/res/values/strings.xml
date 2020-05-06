@@ -2,6 +2,8 @@
 
     <!-- ACTIVITY AND FRAGMENT NAME -->
     <string name="app_name">Real Estate Manager</string>
+    <string name="fragment_estate_detail_name">Estate Detail</string>
+    <string name="fragment_maps_name">Estate Map</string>
     <string name="activity_manage_estate">Manage Estate</string>
 
     <!-- LAYOUTS -->
@@ -72,6 +74,7 @@
     <string name="menu_item_add">Add</string>
     <string name="menu_item_update">Update</string>
     <string name="menu_item_search">Search</string>
+    <string name="menu_item_valid">Valid</string>
     <string name="activity_main_search_edit_text_hint">Search estate</string>
 
 </resources>

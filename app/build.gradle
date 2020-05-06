@@ -43,6 +43,10 @@ android {
         jvmTarget = "1.8"
     }
 
+    kapt {
+        generateStubs = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
