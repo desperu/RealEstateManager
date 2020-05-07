@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import org.desperu.realestatemanager.utils.EQUALS
+import org.desperu.realestatemanager.utils.NOT_EQUALS
 
 /**
  * Class witch provides a model for address.
@@ -31,4 +33,30 @@ data class Address(@PrimaryKey(autoGenerate = false)
                    var city: String = "",
                    var country: String = "",
                    var latitude: Double = 0.0,
-                   var longitude: Double = 0.0): Parcelable
+                   var longitude: Double = 0.0
+): Parcelable, Comparable<Address> {
+
+    /**
+     * Compare this address to another address. Compare fields one to one,
+     * if one field is different with the other one, return 1,
+     * else the two addresses are equals, return 0
+     *
+     * @param other the other address to compare with.
+     *
+     * @return {@code 0} if equals, {@code 1} otherwise.
+     */
+    override fun compareTo(other: Address): Int = when {
+
+        estateId != other.estateId -> NOT_EQUALS
+        streetNumber != other.streetNumber -> NOT_EQUALS
+        streetName != other.streetName -> NOT_EQUALS
+        flatBuilding != other.flatBuilding -> NOT_EQUALS
+        postalCode != other.postalCode -> NOT_EQUALS
+        city != other.city -> NOT_EQUALS
+        country != other.country -> NOT_EQUALS
+        latitude != other.latitude -> NOT_EQUALS
+        longitude != other.longitude -> NOT_EQUALS
+
+        else -> EQUALS
+    }
+}

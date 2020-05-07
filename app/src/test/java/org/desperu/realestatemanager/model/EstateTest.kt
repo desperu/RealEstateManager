@@ -1,5 +1,7 @@
 package org.desperu.realestatemanager.model
 
+import org.desperu.realestatemanager.utils.EQUALS
+import org.desperu.realestatemanager.utils.NOT_EQUALS
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -92,5 +94,41 @@ class EstateTest {
         assertEquals(estate.realEstateAgent, realEstateAgent)
         assertEquals(estate.imageList, imageList)
         assertEquals(estate.address, address)
+    }
+
+    @Test
+    fun given_estate_When_compareTo_Then_checkEquals() {
+        val estate = Estate()
+        estate.imageList = imageList
+        estate.address = address
+
+        assertEquals(EQUALS, estate.compareTo(estate))
+    }
+
+    @Test
+    fun given_originalEstate_When_compareTo_Then_checkNotEquals() {
+        val originalEstate = Estate()
+        originalEstate.imageList = imageList
+        originalEstate.address = address
+
+        // Change an estate field value, not in child object.
+        val finalEstate = originalEstate.copy()
+        finalEstate.price = 1200000L
+
+        assertEquals(NOT_EQUALS, originalEstate.compareTo(finalEstate))
+
+        // Change an image field value in estate image list.
+        val finalEstate2 = originalEstate.copy()
+        finalEstate2.imageList = originalEstate.imageList.map { it.copy() }.toMutableList()
+        finalEstate2.imageList[0].isPrimary = true
+
+        assertEquals(NOT_EQUALS, originalEstate.compareTo(finalEstate2))
+
+        // Change an address field value in estate address.
+        val finalEstate3 = originalEstate.copy()
+        finalEstate3.address = originalEstate.address.copy()
+        finalEstate3.address.streetNumber = 23
+
+        assertEquals(NOT_EQUALS, originalEstate.compareTo(finalEstate3))
     }
 }

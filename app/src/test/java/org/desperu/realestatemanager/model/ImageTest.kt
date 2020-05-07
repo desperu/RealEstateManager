@@ -1,5 +1,7 @@
 package org.desperu.realestatemanager.model
 
+import org.desperu.realestatemanager.utils.EQUALS
+import org.desperu.realestatemanager.utils.NOT_EQUALS
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -54,5 +56,22 @@ class ImageTest {
         assertEquals(image.isPrimary, isPrimary)
         assertEquals(image.description, description)
         assertEquals(image.rotation, rotation)
+    }
+
+    @Test
+    fun given_image_When_compareTo_Then_checkEquals() {
+        val image = Image()
+
+        assertEquals(EQUALS, image.compareTo(image))
+    }
+
+    @Test
+    fun given_originalImage_When_compareTo_Then_checkNotEquals() {
+        val originalImage = Image()
+
+        val finalImage = originalImage.copy()
+        finalImage.estateId = 2L
+
+        assertEquals(NOT_EQUALS, originalImage.compareTo(finalImage))
     }
 }

@@ -74,7 +74,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     private fun setSpecificValues() {
         price.set(estate.value?.price.toString())
 
-        if (estate.value?.type.isNullOrBlank()) // TODO is it requested by client? but it is show in ui...
+        if (estate.value?.type.isNullOrBlank()) // TODO is it requested by client? but it is show in ui... and create mistake when compare estates
             estate.value?.type = resourceService.getStringArray(R.array.estate_type_list)[0]
         if (estate.value?.interestPlaces.isNullOrBlank())
             estate.value?.interestPlaces = resourceService.getStringArray(R.array.estate_interest_places_list)[0]
@@ -169,7 +169,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Bind data in estate object, set price from ui to estate object.
      * Set updated image list in estate object to properly update ui after estate management.
      */
-    private fun bindDataInEstate() {
+    internal fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
         estate.value?.imageList = imageVMList.map { it.image.value!! } as MutableList<Image>
     }

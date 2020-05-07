@@ -1,5 +1,7 @@
 package org.desperu.realestatemanager.model
 
+import org.desperu.realestatemanager.utils.EQUALS
+import org.desperu.realestatemanager.utils.NOT_EQUALS
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -71,5 +73,22 @@ class AddressTest {
         assertEquals(address.country, country)
         assertEquals(address.latitude, latitude, 0.0)
         assertEquals(address.longitude, longitude, 0.0)
+    }
+
+    @Test
+    fun given_address_When_compareTo_Then_checkEquals() {
+        val address = Address()
+
+        assertEquals(EQUALS, address.compareTo(address))
+    }
+
+    @Test
+    fun given_originalAddress_When_compareTo_Then_checkNotEquals() {
+        val originalAddress = Address()
+
+        val finalAddress = originalAddress.copy()
+        finalAddress.streetNumber = 23
+
+        assertEquals(NOT_EQUALS, originalAddress.compareTo(finalAddress))
     }
 }

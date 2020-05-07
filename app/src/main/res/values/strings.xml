@@ -16,6 +16,12 @@
 
     <!-- Manage Estate Activity -->
     <string name="activity_manage_estate_save_estate_message">Estate saved!</string>
+    <!-- Alert Dialog Save Estate -->
+    <string name="alert_dialog_save_estate_title">Estate Modified !</string>
+    <string name="alert_dialog_save_estate_message">Do you want to save modifications?</string>
+    <string name="alert_dialog_save_estate_positive_button">Save</string>
+    <string name="alert_dialog_save_estate_negative_button">Dismiss</string>
+
     <!-- Estate Data Fragment -->
     <string name="fragment_estate_data_text_category_estate_data">Estate Data</string>
     <string name="fragment_estate_data_text_type">Estate Type</string>

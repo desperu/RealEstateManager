@@ -56,3 +56,10 @@ const val RC_PERM_LOCATION = 500
 // FOR SAVE IMAGE
 
 const val FOLDER_NAME = "EstateImages"
+
+
+// FOR COMPARISON RESULT
+
+
+const val EQUALS = 0
+const val NOT_EQUALS = 1

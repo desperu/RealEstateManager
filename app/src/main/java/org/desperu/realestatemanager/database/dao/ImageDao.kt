@@ -21,11 +21,12 @@ interface ImageDao {
     suspend fun getImage(imageId: Long): Image
 
     /**
-     * Returns the image list from database ordered for given estate id.
+     * Returns the image list from database ordered for the given estate id,
+     * ordered with the primary in first.
      * @param estateId the estate id to get the corresponding image list from database.
-     * @return the corresponding image list.
+     * @return the estate's image list.
      */
-    @Query("SELECT * FROM Image WHERE estateId = :estateId")
+    @Query("SELECT * FROM Image WHERE estateId = :estateId ORDER BY isPrimary DESC")
     suspend fun getImageList(estateId: Long): List<Image>
 
     /**
