@@ -1,11 +1,10 @@
 package org.desperu.realestatemanager.ui.main.estateList
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_estate_list.*
 import kotlinx.android.synthetic.main.fragment_estate_list.view.*
 import org.desperu.realestatemanager.R
@@ -29,11 +28,12 @@ class EstateListFragment: BaseBindingFragment() {
     // BASE METHODS
     // --------------
 
-    override fun getBindingView(): View = configureViewModel(inflater, container)
+    override fun getBindingView(): View = configureViewModel()
 
     override fun configureDesign() {}
 
     override fun updateDesign() {
+        configureRecyclerView()
         configureSwipeToDeleteForRecycler()
     }
 
@@ -44,13 +44,23 @@ class EstateListFragment: BaseBindingFragment() {
     /**
      * Configure data binding, recycler view and view model.
      */
-    private fun configureViewModel(inflater: LayoutInflater, container: ViewGroup?): View {
+    private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_estate_list, container, false)
-        binding.fragmentEstateListRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+//        binding.fragmentEstateListRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
         binding.viewModel = viewModel
         return binding.root
+    }
+
+    /**
+     * Configure recycler view.
+     */
+    private fun configureRecyclerView() {
+        binding.fragmentEstateListRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+        val controller = AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_anim_fall_down)
+        binding.fragmentEstateListRecyclerView.layoutAnimation = controller
+        binding.fragmentEstateListRecyclerView.scheduleLayoutAnimation()
     }
 
     /**

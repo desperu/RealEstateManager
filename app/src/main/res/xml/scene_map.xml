@@ -11,10 +11,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_text_city" />
 
-            <CustomAttribute
-                app:attributeName="layout_margin"
-                app:customDimension="@dimen/default_large_margin" />
-
         </Constraint>
 
     </ConstraintSet>
@@ -30,10 +26,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <CustomAttribute
-                app:attributeName="layout_margin"
-                app:customDimension="0dp" />
-
         </Constraint>
 
     </ConstraintSet>
@@ -42,7 +34,7 @@
     <Transition
         app:constraintSetStart="@+id/start"
         app:constraintSetEnd="@+id/end"
-        app:duration="@integer/mapAnimDuration">
+        app:duration="@integer/map_anim_duration">
 
         <!-- At 30% of animation, set view in center of screen to perfect expend animation. -->
         <KeyFrameSet>

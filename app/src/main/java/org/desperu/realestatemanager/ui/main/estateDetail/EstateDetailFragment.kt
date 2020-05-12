@@ -1,6 +1,5 @@
 package org.desperu.realestatemanager.ui.main.estateDetail
 
-import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -91,10 +90,8 @@ class EstateDetailFragment: BaseBindingFragment(), ShareViewModel {
     // -----------------
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        Handler().postDelayed( {
-            menu.findItem(R.id.activity_main_menu_update).isVisible = true
-            super.onPrepareOptionsMenu(menu)
-        }, 450)
+        menu.findItem(R.id.activity_main_menu_update).isVisible = true
+        super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

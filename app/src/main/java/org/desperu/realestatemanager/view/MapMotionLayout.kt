@@ -90,7 +90,7 @@ class MapMotionLayout(private val context: Context, private val view: View?) {
         // At the end of animation, restore scroll view height to allow scroll.
         Handler().postDelayed( {
             view?.rootView?.fragment_estate_detail_scrollview?.updateLayoutParams { height = WRAP_CONTENT }
-        }, context.resources.getInteger(R.integer.mapAnimDuration).toLong())
+        }, context.resources.getInteger(R.integer.map_anim_duration).toLong())
     }
 
     /**

@@ -162,10 +162,28 @@ fun MapView.setMarker(estate: Estate?) {
  */
 @BindingAdapter("setMarkerList")
 fun MapView.setMarkerList(estateList: List<Estate>?) {
-//    estateList?.forEach { estate -> addMarker(estate) }
     getMapAsync {
         val latLngBounds = it.projection.visibleRegion.latLngBounds
         val estateListToShow = estateList?.filter { estate -> latLngBounds.contains(LatLng(estate.address.latitude, estate.address.longitude)) }
         estateListToShow?.forEach { estate -> addMarker(estate) }
     }
+}
+
+/**
+ * Set background color for item in estate list, depends of estate type.
+ * @param type the estate type of the item.
+ */
+@Suppress("deprecation")
+@BindingAdapter("setBackgroundColor")
+fun View.setBackgroundColor(type: String?) {
+    val typeList = resources.getStringArray(R.array.estate_type_list)
+    setBackgroundColor(resources.getColor(
+            when (type) {
+                typeList[0] -> R.color.colorFlat
+                typeList[1] -> R.color.colorDuplex
+                typeList[2] -> R.color.colorHouse
+                typeList[3] -> R.color.colorPenthouse
+                else -> R.color.colorNoType
+            }
+    ))
 }

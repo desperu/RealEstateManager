@@ -24,7 +24,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+<!-- TODO use coordinator to center image without deformation -->
             <ImageView
                 android:id="@+id/item_image_photo"
                 android:layout_width="match_parent"

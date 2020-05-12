@@ -40,7 +40,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val geocoder: GeocoderService): ViewModel() {
 
     // FOR DATA
-    private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate)
+    private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate_large)
     private val estateVMList = mutableListOf<EstateViewModel>()
     private val estateList = ObservableField<List<Estate>>()
     private val refreshing = ObservableBoolean(false)

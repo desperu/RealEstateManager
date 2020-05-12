@@ -3,7 +3,6 @@ package org.desperu.realestatemanager.ui.main
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,6 +28,7 @@ import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
 import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
+import org.desperu.realestatemanager.utils.FULL_SIZE
 import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.desperu.realestatemanager.view.MapMotionLayout
 
@@ -203,7 +203,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             switchSearchViewVisibility()
 
         // If map is expended in estate detail fragment, collapse it.
-        else if (mapsFragment?.view?.fragment_maps_fullscreen_button?.tag == "fullSize")
+        else if (mapsFragment?.view?.fragment_maps_fullscreen_button?.tag == FULL_SIZE)
                 MapMotionLayout(this, mapsFragment.view).switchMapSize()
 
         // If current fragment is EstateListFragment, remove it and call super to finish activity.
@@ -215,8 +215,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         } else {
             super.onBackPressed()
             fragment = fm.findFragmentById(R.id.activity_main_frame_layout)
-            animMenuItem(false)
-            Handler().postDelayed( { animMenuItem(true) }, resources.getInteger(R.integer.menuAnimDuration).toLong())
         }
     }
 
@@ -228,11 +226,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * Show EstateDetailFragment for the given estate.
      * @param estate the estate to show details.
      */
-    internal fun showEstateDetailFragment(estate: Estate) {
-        configureAndShowFragment(EstateDetailFragment::class.java, estate)
-        animMenuItem(false)
-        Handler().postDelayed( { animMenuItem(true) }, 500)
-    }
+    internal fun showEstateDetailFragment(estate: Estate) =
+            configureAndShowFragment(EstateDetailFragment::class.java, estate)
 
 //    /**
 //     * Manage click on Your Lunch button.

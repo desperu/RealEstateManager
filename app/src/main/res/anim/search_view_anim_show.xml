@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@integer/menuAnimDuration">
+    android:duration="@integer/menu_anim_duration">
 
     <translate
         android:fromXDelta="-100%"
@@ -10,7 +10,7 @@
     <alpha
         android:fromAlpha="0"
         android:toAlpha="1"
-        android:interpolator="@android:anim/decelerate_interpolator" />
+        android:interpolator="@android:anim/linear_interpolator" />
 
     <scale
         android:fromXScale="105%"
