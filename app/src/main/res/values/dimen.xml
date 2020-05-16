@@ -44,6 +44,13 @@
     <dimen name="item_estate_large_text_price_size">20sp</dimen>
 
     <!-- Estate Detail Fragment -->
+    <dimen name="fragment_estate_detail_text_title_size">24sp</dimen>
+    <dimen name="fragment_estate_detail_text_category_size">20sp</dimen>
+    <dimen name="fragment_estate_detail_text_subcategory_size">16sp</dimen>
+    <dimen name="fragment_estate_detail_text_subcategory_drawable_padding">10dp</dimen>
+    <dimen name="fragment_estate_detail_text_max_width">100dp</dimen>
+    <dimen name="fragment_estate_detail_text_subcategory_value_margin_start">40dp</dimen>
+    <dimen name="fragment_estate_detail_text_subcategory_value_margin_bottom">10dp</dimen>
     <dimen name="fragment_estate_detail_container_map_width">200dp</dimen>
     <dimen name="fragment_estate_detail_container_map_height">200dp</dimen>
 

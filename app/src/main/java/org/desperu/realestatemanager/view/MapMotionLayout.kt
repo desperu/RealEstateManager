@@ -16,6 +16,7 @@ import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.utils.FULL_SIZE
 import org.desperu.realestatemanager.utils.LITTLE_SIZE
 
+
 /**
  * Class of Map View with Motion Layout animation.
  *
@@ -27,11 +28,10 @@ import org.desperu.realestatemanager.utils.LITTLE_SIZE
  * @property context the context from this method is called to set.
  * @property view the view that contains map view and motion layout to set.
  */
-@Suppress("deprecation")
 class MapMotionLayout(private val context: Context, private val view: View?) {
 
     // Motion layout view object to perform animations.
-    private val motionLayout = view?.rootView?.motion_layout
+    private val motionLayout = view?.rootView?.fragment_estate_detail_motion_layout
 
     // FOR DATA
     private val button = view?.fragment_maps_fullscreen_button
@@ -50,6 +50,7 @@ class MapMotionLayout(private val context: Context, private val view: View?) {
     /**
      * Switch button icon and tag, associated with view animation.
      */
+    @Suppress("deprecation")
     private fun switchButtonState() {
         val drawable: Drawable
         val tag: String
@@ -68,12 +69,63 @@ class MapMotionLayout(private val context: Context, private val view: View?) {
     }
 
     /**
+     * Set needed measured constraints for the motion layout scene transition and apply them to the transition.
+     * Set the final size of map view (full screen), and the translation Y to correct it's position in the scroll view.
+     * And for others containers, set translation to animate them out of screen.
+     */
+    private fun setMeasuredConstraints() {
+        val constraintEnd = motionLayout?.getConstraintSet(R.id.end)
+
+        if (view != null) {
+
+            // Set final size of map view (full screen size), with the first parent full screen view.
+            // Because if we use MATCH_PARENT, there's ui mistakes when user interact with the map.
+            val mainFrame = view.parent.parent.parent.parent as View
+            constraintEnd?.constrainWidth(R.id.fragment_estate_detail_container_map, mainFrame.measuredWidth)
+            constraintEnd?.constrainHeight(R.id.fragment_estate_detail_container_map, mainFrame.measuredHeight)
+
+            // Set the map view position in the scroll view, for that the top of the map view
+            // match the top of the screen fragment (the bottom of the app bar).
+            val scrollPosition = view.rootView.fragment_estate_detail_scrollview.scrollY.toFloat()
+            constraintEnd?.setTranslationY(R.id.fragment_estate_detail_container_map, scrollPosition)
+
+            // To animate image container way off-screen to the top.
+            val containerImagesBottom = view.rootView.fragment_estate_detail_container_images.bottom.toFloat()
+            constraintEnd?.setTranslationY(R.id.fragment_estate_detail_container_images, - containerImagesBottom)
+
+            // To animate title container way off-screen to the top.
+            val containerTitleBottom = view.rootView.fragment_estate_detail_container_title.bottom.toFloat()
+            constraintEnd?.setTranslationY(R.id.fragment_estate_detail_container_title, - containerTitleBottom - containerImagesBottom)
+
+            // To animate address container way off-screen to the left.
+            val containerAddressRight = view.rootView.fragment_estate_detail_container_address.right.toFloat()
+            constraintEnd?.setTranslationX(R.id.fragment_estate_detail_container_address, - containerAddressRight)
+
+            // To animate data container way off-screen to the bottom.
+            val containerDataTop = view.rootView.fragment_estate_detail_container_data.top.toFloat()
+            constraintEnd?.setTranslationY(R.id.fragment_estate_detail_container_data, containerDataTop)
+
+            // To animate sale data container way off-screen to the bottom.
+            val containerSaleDataTop = view.rootView.fragment_estate_detail_container_sale_data.top.toFloat()
+            constraintEnd?.setTranslationY(R.id.fragment_estate_detail_container_sale_data, containerSaleDataTop)
+
+            // Apply measured constraints to the motion layout transition.
+            motionLayout?.setTransition(R.id.start, R.id.end)
+        }
+    }
+
+    /**
      * Expend map view to full screen, switch scroll view height to allow full screen for child.
      */
     private fun expendMapView() = performAnimation {
 
         // Before animation, switch scroll view height to allow full screen for child.
+        // Because if the scroll view height is lower than the device screen,
+        // it's create an ui mistake when perform expend animation.
         view?.rootView?.fragment_estate_detail_scrollview?.updateLayoutParams { height = MATCH_PARENT }
+
+        // Set needed measured constraints to the motion layout scene transition.
+        setMeasuredConstraints()
 
         // Start expend animation with motion layout.
         motionLayout?.transitionToState(R.id.end)

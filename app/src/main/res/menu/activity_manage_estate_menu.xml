@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/activity_manage_estate_menu_valid"
-        android:icon="@drawable/ic_baseline_check_white_48"
+        android:icon="@drawable/ic_baseline_done_white_24"
         android:title="@string/menu_item_valid"
         app:showAsAction="ifRoom" />
 

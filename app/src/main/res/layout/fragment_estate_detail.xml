@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <data>
         <variable
@@ -12,32 +13,361 @@
         android:id="@+id/fragment_estate_detail_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:clipChildren="false"
+        tools:ignore="UnusedAttribute">
 
         <androidx.constraintlayout.motion.widget.MotionLayout
-            android:id="@+id/motion_layout"
+            android:id="@+id/fragment_estate_detail_motion_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:currentState="@id/start"
             app:layoutDescription="@xml/scene_map">
 
-            <TextView
-                android:id="@+id/fragment_estate_detail_text_city"
+            <LinearLayout
+                android:id="@+id/fragment_estate_detail_container_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_large_margin"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
+                    android:text="@{viewModel.getEstate.type}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_title_city"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
+                    android:text="@{viewModel.getEstate.address.city}"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_estate_detail_container_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_title"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/default_large_margin"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
+                    app:setPrice="@{viewModel.getEstate.price}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_category_images"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_large_margin"
+                    android:text="@string/fragment_estate_detail_text_category_images"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_category_size"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fragment_estate_detail_recycler_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/default_large_margin"
+                    android:orientation="horizontal"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_category_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_large_margin"
+                    android:text="@string/fragment_estate_detail_text_category_description"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_category_size"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/default_large_margin"
+                    android:text="@{viewModel.getEstate.description}"
+                    android:textColor="@color/colorLightDark"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_estate_detail_container_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_large_margin"
+                android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:text="@{viewModel.getEstate.address.city}"/>
-<!--            TODO on test -->
-<!--            <androidx.fragment.app.FragmentContainerView-->
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_estate_detail_container_map">
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_subcategory_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                    android:text="@string/fragment_estate_detail_text_subcategory_location"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_baseline_location_black_24"
+                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                    android:drawableTint="@color/colorLightDark" />
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_street"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:text="@{`` + viewModel.getEstate.address.streetNumber}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_flat_building"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:text="@{viewModel.getEstate.address.flatBuilding}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:text="@{viewModel.getEstate.address.city}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_postal_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:text="@{`` + viewModel.getEstate.address.postalCode}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_country"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:text="@{viewModel.getEstate.address.country}"/>
+
+            </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/fragment_estate_detail_container_map"
                 android:layout_width="@dimen/fragment_estate_detail_container_map_width"
                 android:layout_height="@dimen/fragment_estate_detail_container_map_height"
-                app:barrierMargin="@dimen/default_large_margin"
+                android:layout_margin="@dimen/default_large_margin"
+                android:isScrollContainer="false"
+                android:outlineProvider="paddedBounds"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_estate_detail_text_city" />
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images" />
+
+            <LinearLayout
+                android:id="@+id/fragment_estate_detail_container_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_large_margin"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map">
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_subcategory_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_estate_detail_text_subcategory_surface"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_baseline_surface_black_24"
+                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                    android:drawableTint="@color/colorLightDark"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textColor="@color/colorLightDark"
+                    android:text="@{`` + viewModel.getEstate.surfaceArea}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_subcategory_room_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_estate_detail_text_subcategory_room_number"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_baseline_home_black_24"
+                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                    android:drawableTint="@color/colorLightDark" />
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_room_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textColor="@color/colorLightDark"
+                    android:text="@{`` + viewModel.getEstate.roomNumber}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_subcategory_bathroom_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_estate_detail_text_subcategory_bathroom_number"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_baseline_hot_tub_black_24"
+                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                    android:drawableTint="@color/colorLightDark" />
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_bathroom_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textColor="@color/colorLightDark" />
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_subcategory_bedroom_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_estate_detail_text_subcategory_bedroom_number"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_baseline_bedroom_black_24"
+                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                    android:drawableTint="@color/colorLightDark" />
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_bedroom_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textColor="@color/colorLightDark" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_estate_detail_container_sale_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_large_margin"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/fragment_estate_detail_container_data"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_subcategory_sale_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_estate_detail_text_subcategory_sale_date"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_baseline_event_black_24"
+                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                    android:drawableTint="@color/colorLightDark"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_sale_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textColor="@color/colorLightDark"
+                    android:text="@{viewModel.getEstate.saleDate}"/>
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_subcategory_real_estate_agent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_estate_detail_text_subcategory_real_estate_agent"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_baseline_person_black_24"
+                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                    android:drawableTint="@color/colorLightDark" />
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_real_estate_agent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    android:textColor="@color/colorLightDark"
+                    android:text="@{viewModel.getEstate.realEstateAgent}"/>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 

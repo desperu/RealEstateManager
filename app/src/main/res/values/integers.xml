@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="menu_anim_duration">300</integer>
-    <integer name="item_anim_duration">300</integer>
-    <integer name="map_anim_duration">800</integer>
+    <integer name="menu_anim_duration">200</integer>
+    <integer name="map_anim_duration">500</integer>
 
 </resources>

@@ -2,39 +2,172 @@
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Start state of the animation, the little size. -->
+    <!-- Motion Layout Scene used to animate map expansion/collapse in estate detail fragment. -->
+
+    <!-- Start state of the screen before animation, the little size. It's the base screen state. -->
     <ConstraintSet android:id="@+id/start">
-        <Constraint android:id="@id/fragment_estate_detail_container_map">
+
+        <!-- Start state of the map container, the center of the animation,
+             in Little Screen Size. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_map">
             <Layout
                 android:layout_width="@dimen/fragment_estate_detail_container_map_width"
                 android:layout_height="@dimen/fragment_estate_detail_container_map_height"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_text_city" />
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images" />
+        </Constraint>
 
+        <!-- Start state of the title container. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_title">
+            <Layout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+        </Constraint>
+
+        <!-- Start state of the images container. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_images">
+            <Layout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_title"
+                app:layout_constraintStart_toStartOf="parent"/>
+        </Constraint>
+
+        <!-- Start state of the address container. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_address">
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_estate_detail_container_map" />
+        </Constraint>
+
+        <!-- Start state of the data container. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_data" >
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"/>
+        </Constraint>
+
+        <!-- Start state of the sale data container. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_sale_data">
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/fragment_estate_detail_container_data"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"
+                app:layout_constraintBottom_toBottomOf="parent" />
         </Constraint>
 
     </ConstraintSet>
 
+
     <!-- End state of the animation, the full screen size. -->
     <ConstraintSet android:id="@+id/end">
+
+        <!-- End state of the map container, the center of the animation,
+             in Full Screen Size -->
         <Constraint android:id="@id/fragment_estate_detail_container_map">
             <Layout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+        </Constraint>
 
+        <!-- End state of the title container, way off-screen to the top. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_title">
+            <Layout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/fragment_estate_detail_container_images"
+                app:layout_constraintStart_toStartOf="parent"/>
+        </Constraint>
+
+        <!-- End state of the images container, way off-screen to the top. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_images">
+            <Layout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+        </Constraint>
+
+        <!-- End state of the address container, way off-screen to the left. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_address">
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </Constraint>
+
+        <!-- End state of the data container, way off-screen to the bottom. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_data" >
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"/>
+        </Constraint>
+
+        <!-- End state of the sale data container, way off-screen to the bottom. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_sale_data">
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"/>
         </Constraint>
 
     </ConstraintSet>
+
 
     <!-- Start animation transition from constraint set start to constraint set end.  -->
     <Transition
         app:constraintSetStart="@+id/start"
         app:constraintSetEnd="@+id/end"
-        app:duration="@integer/map_anim_duration">
+        app:duration="@integer/map_anim_duration"
+        app:motionInterpolator="easeInOut">
 
         <!-- At 30% of animation, set view in center of screen to perfect expend animation. -->
         <KeyFrameSet>

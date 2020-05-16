@@ -8,12 +8,13 @@
     <!-- Real Estate Manager Colors -->
 
     <!-- Translucent Colors -->
-    <color name="colorLightGrey">#974D4D4D</color>
-    <color name="colorLightDark">#43000000</color>
+    <color name="colorTransGrey">#974D4D4D</color>
+    <color name="colorTransDark">#43000000</color>
 
     <!-- Normal Colors -->
     <color name="colorPink">#FF2ED1</color>
     <color name="colorGrey">#4D4D4D</color>
+    <color name="colorLightDark">#454545</color>
     <color name="colorLightBlue">#8C9EFF</color>
     <color name="colorPassedWhite">#eeeeee</color>
     <color name="colorPurple">@color/design_default_color_primary</color>

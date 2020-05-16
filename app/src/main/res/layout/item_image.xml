@@ -56,7 +56,7 @@
                 android:layout_height="@dimen/item_image_text_description_height"
                 android:layout_above="@id/item_image_toggle_button_container"
                 android:gravity="center"
-                android:background="@color/colorLightDark"
+                android:background="@color/colorTransDark"
                 android:maxLines="2"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/item_image_text_description_size"
