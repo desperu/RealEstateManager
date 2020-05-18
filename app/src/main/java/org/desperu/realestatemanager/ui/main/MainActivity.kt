@@ -25,9 +25,12 @@ import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.estateDetail.ESTATE_DETAIL
 import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailFragment
 import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
+import org.desperu.realestatemanager.ui.main.estateMap.ESTATE_LIST_MAP
+import org.desperu.realestatemanager.ui.main.estateMap.MAP_MODE
 import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
+import org.desperu.realestatemanager.utils.FULL_MODE
 import org.desperu.realestatemanager.utils.FULL_SIZE
 import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.desperu.realestatemanager.view.MapMotionLayout
@@ -39,6 +42,8 @@ const val NEW_ESTATE: String = "newEstate"
 
 /**
  * Activity to show estate list, estate details, and maps fragment.
+ * With option menu and drawer layout to navigate in application.
+ *
  * @constructor Instantiates a new MainActivity.
  */
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +51,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // FOR DATA
     private val fm = supportFragmentManager
     private var fragment: Fragment? = null
+
+    // Try to get Fragment instance from back stack, if not found value was null.
+    private val estateListFragment
+        get() = (fm.findFragmentByTag(EstateListFragment::class.java.simpleName) as EstateListFragment?)
+
+    private val estateDetailFragment
+        get() = (fm.findFragmentByTag(EstateDetailFragment::class.java.simpleName) as EstateDetailFragment?)
+
+    // Try to get MapsFragment instance child of EstateDetailFragment.
+    private val mapsFragmentChildDetail
+        get() = (fm.findFragmentById(R.id.activity_main_frame_layout)?.childFragmentManager
+                ?.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?)
 
     // --------------
     // BASE METHODS
@@ -104,6 +121,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             // Populate estate to fragment with bundle if there's one.
             if (estate != null) populateEstateToFragment(fragment!!, estate)
 
+            // Populate estate list to maps fragment with bundle.
+            if (fragmentClass == MapsFragment::class.java) setMapsFragmentBundle(fragment!!)
+
             // Clear all back stack when recall Estate List Fragment,
             // because it's the root fragment of this activity.
             if (fragmentClass == EstateListFragment::class.java)
@@ -129,6 +149,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun populateEstateToFragment(fragment: Fragment, estate: Estate) {
         val bundle = Bundle()
         bundle.putParcelable(ESTATE_DETAIL, estate)
+        fragment.arguments = bundle
+    }
+
+    /**
+     * Set Maps Fragment Bundle to send data, populate estate list and set the map mode.
+     * @param fragment the fragment instance to send data.
+     */
+    private fun setMapsFragmentBundle(fragment: Fragment) {
+        val bundle = Bundle()
+        bundle.putParcelableArrayList(ESTATE_LIST_MAP, estateListFragment?.getViewModel()?.getEstateList?.get() as ArrayList<Estate>?)
+        bundle.putInt(MAP_MODE, FULL_MODE)
         fragment.arguments = bundle
     }
 
@@ -190,10 +221,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onBackPressed() {
-        // Try to get MapsFragment instance child of EstateDetailFragment, for action below.
-        val mapsFragment = (fm.findFragmentById(R.id.activity_main_frame_layout)
-                ?.childFragmentManager?.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?)
-
         // If drawer is open, close it.
         if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
             activity_main_drawer_layout.closeDrawer(GravityCompat.START)
@@ -203,8 +230,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             switchSearchViewVisibility()
 
         // If map is expended in estate detail fragment, collapse it.
-        else if (mapsFragment?.view?.fragment_maps_fullscreen_button?.tag == FULL_SIZE)
-                MapMotionLayout(this, mapsFragment.view).switchMapSize()
+        else if (mapsFragmentChildDetail?.view?.fragment_maps_fullscreen_button?.tag == FULL_SIZE)
+                MapMotionLayout(this, mapsFragmentChildDetail?.view).switchMapSize()
 
         // If current fragment is EstateListFragment, remove it and call super to finish activity.
         else if (fragment?.javaClass == EstateListFragment::class.java) {
@@ -352,12 +379,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun handleResponseManageEstate(requestCode: Int, resultCode: Int, data: Intent?) {
         // If result code and request code matches with manage estate result, populate new estate to the list.
         if (resultCode == RESULT_OK && requestCode == RC_ESTATE) {
-            // Try to get EstateListFragment instance from back stack, if not found value was null.
-            val estateListFragment = (fm.findFragmentByTag(EstateListFragment::class.java.simpleName) as EstateListFragment?)
-            // If an instance was found, add or update estate in list of view model and recycler view.
-            val position = estateListFragment?.getViewModel()?.addOrUpdateEstate(data?.getParcelableExtra(NEW_ESTATE))
+            val newEstate: Estate? = data?.getParcelableExtra(NEW_ESTATE)
+
+            // Add or update estate in list of view model and recycler view, if an instance was found.
+            val position = estateListFragment?.getViewModel()?.addOrUpdateEstate(newEstate)
             // If an estate was added or updated, position is not null, scroll the recycler to the estate position.
-            position?.let { estateListFragment.scrollToNewItem(it) }
+            position?.let { estateListFragment?.scrollToNewItem(it) }
+
+            // Update estate detail data, with it's view model.
+            estateDetailFragment?.getViewModel?.updateEstate(newEstate)
+            // Update estate bundle for estate detail fragment.
+            newEstate?.let { estateDetailFragment?.let { it1 -> populateEstateToFragment(it1, it) } }
         }
     }
 }

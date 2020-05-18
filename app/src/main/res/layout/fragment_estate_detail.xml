@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.main.estateList.EstateViewModel" />
+            type="org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailViewModel" />
     </data>
 
     <ScrollView
@@ -95,7 +95,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/default_large_margin"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal"
+                    app:adapter="@{viewModel.getImageListAdapter}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_category_description"
@@ -368,7 +369,7 @@
                     android:text="@{viewModel.getEstate.realEstateAgent}"/>
 
             </LinearLayout>
-
+<!-- TODO add interest places ... -->
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
     </ScrollView>

@@ -2,6 +2,7 @@
 <resources>
 
     <integer name="menu_anim_duration">200</integer>
+    <integer name="item_anim_duration">300</integer>
     <integer name="map_anim_duration">500</integer>
 
 </resources>

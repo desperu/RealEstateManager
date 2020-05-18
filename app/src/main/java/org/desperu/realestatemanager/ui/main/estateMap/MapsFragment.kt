@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.GoogleMap
@@ -25,31 +26,47 @@ import org.desperu.realestatemanager.databinding.FragmentMapsBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.extension.animateCamera
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.ui.main.MainActivity
-import org.desperu.realestatemanager.ui.main.estateDetail.ShareViewModel
-import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
-import org.desperu.realestatemanager.ui.main.estateList.EstateViewModel
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import org.desperu.realestatemanager.view.MapMotionLayout
 import pub.devrel.easypermissions.EasyPermissions
 
 /**
- * Argument name for bundle, to save map key when recreate fragment.
+ * Argument name for bundle, to save map view state.
  */
 const val MAP_VIEW_BUNDLE_KEY: String = "MapViewBundleKey"
 
 /**
+ * Argument name for bundle, to received estate in this fragment.
+ */
+const val ESTATE_MAP: String = "estateMap"
+
+/**
+ * Argument name for bundle, to received estate list in this fragment.
+ */
+const val ESTATE_LIST_MAP: String = "estateListMap"
+
+/**
+ * Argument name for bundle, to received the map mode to set.
+ */
+const val MAP_MODE: String = "mapMode"
+
+/**
  * Fragment to show Google maps, with markers for estates in the map.
+ *
  * @constructor Instantiates a new MapsFragment.
  */
 class MapsFragment : BaseBindingFragment() {
 
+    // FROM BUNDLE
+    private val estate: Estate? get() = arguments?.getParcelable(ESTATE_MAP)
+    private val estateList: List<Estate>? get() = arguments?.getParcelableArrayList(ESTATE_LIST_MAP)
+    private val mapMode: Int? get() = arguments?.getInt(MAP_MODE)
+
     // FOR DATA
     private lateinit var binding: FragmentMapsBinding
-    private var viewModel: EstateViewModel? = null
-    private var viewModel2: EstateListViewModel? = null
-    private var mMap: GoogleMap? = null
+    private var viewModel: MapsViewModel? = null
+    private var mGoogleMap: GoogleMap? = null
     private var mMapView: MapView? = null
     private var mapViewBundle: Bundle? = null
 
@@ -80,9 +97,9 @@ class MapsFragment : BaseBindingFragment() {
     }
 
     override fun onAttach(context: Context) {
-        if (isGooglePlayServicesAvailable(context))
+        if (isGooglePlayServicesAvailable(context)) // TODO check internet connexion, check client ask
             super.onAttach(context)
-        else { // If Google Play Services aren't available, hide map view and show message
+        else { // If Google Play Services aren't available, hide map view and show message.
             fragment_maps_text_no_google_services.visibility = View.VISIBLE
             fragment_maps_maps_view.visibility = View.GONE
         }
@@ -126,15 +143,9 @@ class MapsFragment : BaseBindingFragment() {
      */
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_maps, container, false)
+        viewModel = ViewModelProvider(this, ViewModelFactory(activity as AppCompatActivity)).get(MapsViewModel::class.java)
 
-        viewModel = (parentFragment as? ShareViewModel)?.getViewModel()
         binding.viewModel = viewModel
-
-        if (viewModel == null) {
-            viewModel2 = ViewModelProvider(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
-            binding.viewModel2 = viewModel2
-        }
-
         return binding.root
     }
 
@@ -144,19 +155,22 @@ class MapsFragment : BaseBindingFragment() {
     private fun configureMapView() {
         mMapView = fragment_maps_maps_view
         mMapView?.onCreate(mapViewBundle)
-        mMapView?.getMapAsync { mMap = it; configureAskedMap() }
+        mMapView?.getMapAsync { mGoogleMap = it; configureMapMode() }
     }
 
     /**
-     * Configure Map view with the good mode.
+     * Configure Map view with the good mode, little mode or full mode.
      */
-    private fun configureAskedMap() {
-        if (viewModel == null) {
+    private fun configureMapMode() {
+        if (mapMode == FULL_MODE) { // Full mode
+            estateList?.let { viewModel?.setEstateList(it) }
             configureMapLocation()
             configureMapZoomButton()
             fragment_maps_fullscreen_button.visibility = View.GONE
-        } else
+        } else { // Little mode
+            estate?.let { viewModel?.setEstate(it) }
             fragment_maps_floating_button_location.visibility = View.GONE
+        }
         configureMapGestureAndListener()
     }
 
@@ -165,8 +179,8 @@ class MapsFragment : BaseBindingFragment() {
      */
     private fun configureMapLocation() {
         checkLocationPermissionsStatus()
-        mMap?.isMyLocationEnabled = isLocationEnabled
-        mMap?.uiSettings?.isMyLocationButtonEnabled = false
+        mGoogleMap?.isMyLocationEnabled = isLocationEnabled
+        mGoogleMap?.uiSettings?.isMyLocationButtonEnabled = false
         fragment_maps_floating_button_location.setOnClickListener(onClickMyLocation)
         if (isLocationEnabled) updateMapWithLocation(userLocation)
     }
@@ -175,7 +189,7 @@ class MapsFragment : BaseBindingFragment() {
      * Configure map zoom control, and reposition them.
      */
     private fun configureMapZoomButton() {
-        mMap?.uiSettings?.isZoomControlsEnabled = true
+        mGoogleMap?.uiSettings?.isZoomControlsEnabled = true
 //        mMap?.uiSettings?.isZoomControlsEnabled = Go4LunchPrefs.getBoolean(context, MAP_ZOOM_BUTTON, ZOOM_BUTTON_DEFAULT)
         repositionMapZoom()
     }
@@ -183,7 +197,7 @@ class MapsFragment : BaseBindingFragment() {
     /**
      * Configure map gesture and listeners.
      */
-    private fun configureMapGestureAndListener() = mMap?.apply {
+    private fun configureMapGestureAndListener() = mGoogleMap?.apply {
         uiSettings?.setAllGesturesEnabled(true)
         setOnMarkerClickListener(::onMarkerClick)
         setOnInfoWindowClickListener(::onInfoClick)
@@ -211,10 +225,12 @@ class MapsFragment : BaseBindingFragment() {
      * If location is enabled, update map with location, else ask for location permissions.
      */
     private val onClickMyLocation = View.OnClickListener {
-        mMap?.isMyLocationEnabled = isLocationEnabled
+        mGoogleMap?.isMyLocationEnabled = isLocationEnabled
         if (isLocationEnabled) updateMapWithLocation(userLocation)
         else checkLocationPermissionsStatus()
     }
+
+//    private val onLongClickMyLocation = View.OnLongClickListener {  } // TODO to implement with update camera with user and estate in screen
 
     /**
      * On click listener for switch map size (little size and full screen), use motion layout to perform animation.
@@ -236,19 +252,19 @@ class MapsFragment : BaseBindingFragment() {
      * @param marker the clicked info window marker's.
      */
     private fun onInfoClick(marker: Marker) {
-        viewModel2?.onInfoClick(marker.tag as Estate?)
+        viewModel?.onInfoClick(marker.tag as Estate?)
     }
 
     /**
      * On map long click, this add a marker at the long click position.
      * @param latLng the LatLng corresponding with the long click position.
      */
-    private fun onMapLongClick(latLng: LatLng) { mMap?.addMarker(MarkerOptions().position(latLng)) }
+    private fun onMapLongClick(latLng: LatLng) { mGoogleMap?.addMarker(MarkerOptions().position(latLng)) }
 
     /**
      * On camera idle (camera move), update marker estates on map, only when show estate list on map.
      */
-    private fun onCameraIdle() { viewModel2?.updateEstateList() }
+    private fun onCameraIdle() { viewModel?.updateEstateList() }
 
     /**
      * Method called when query text change.
@@ -353,5 +369,5 @@ class MapsFragment : BaseBindingFragment() {
      * Get screen global location.
      * @return LatLng bounds for current screen.
      */
-    private val getLatLngBounds = mMap?.projection?.visibleRegion?.latLngBounds
+    private val getLatLngBounds = mGoogleMap?.projection?.visibleRegion?.latLngBounds
 }

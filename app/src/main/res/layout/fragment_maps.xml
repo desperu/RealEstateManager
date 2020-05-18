@@ -5,10 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.main.estateList.EstateViewModel" />
-        <variable
-            name="viewModel2"
-            type="org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel" />
+            type="org.desperu.realestatemanager.ui.main.estateMap.MapsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +34,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:setMarker="@{viewModel.getEstate}"
-            app:setMarkerList="@{viewModel2.getEstateList}"/>
+            app:setMarkerList="@{viewModel.getEstateList}"/>
 
         <ImageButton
             android:id="@+id/fragment_maps_fullscreen_button"

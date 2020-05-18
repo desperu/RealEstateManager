@@ -178,7 +178,8 @@
                         android:layout_below="@+id/fragment_estate_sale_text_real_estate_agent"
                         android:inputType="text"
                         android:hint="@null"
-                        android:importantForAutofill="no" />
+                        android:importantForAutofill="no"
+                        android:text="@={viewModel.estate.realEstateAgent}"/>
 
                 </RelativeLayout>
 

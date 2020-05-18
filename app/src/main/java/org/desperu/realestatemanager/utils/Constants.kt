@@ -33,6 +33,11 @@ const val GOOGLE_MAP_TOOLBAR = "GoogleMapToolbar"
 // Zoom button Tag
 const val GOOGLE_MAP_ZOOM_OUT_BUTTON = "GoogleMapZoomOutButton"
 
+// FOR THE MAP MODE
+
+const val LITTLE_MODE = 0
+const val FULL_MODE = 1
+
 // FOR MAP ANIMATION MARKER
 
 const val LITTLE_SIZE = "littleSize"
