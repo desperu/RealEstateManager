@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.ui.manageEstate.ImageViewModel
+import org.desperu.realestatemanager.ui.manageEstate.ManageImageViewModel
 import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
 import org.desperu.realestatemanager.ui.main.estateList.EstateViewModel
 import org.desperu.realestatemanager.ui.main.MainActivity
@@ -110,8 +110,8 @@ private fun <T : ViewModel?> getItemId(swipedItem: Any, modelClass: Class<T>): L
     if (modelClass.isAssignableFrom(EstateViewModel::class.java)) {
         return (swipedItem as EstateViewModel).getEstate.value?.id!!
     }
-    else if (modelClass.isAssignableFrom(ImageViewModel::class.java)) {
-        return (swipedItem as ImageViewModel).image.value?.id!!
+    else if (modelClass.isAssignableFrom(ManageImageViewModel::class.java)) {
+        return (swipedItem as ManageImageViewModel).image.value?.id!!
     }
     throw IllegalArgumentException("Unknown View Model class")
 }

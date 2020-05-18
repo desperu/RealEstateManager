@@ -45,8 +45,8 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
                             private val resourceService: ResourceService): ViewModel() {
 
     // FOR DATA
-    private val imageListAdapter = RecyclerViewAdapter(R.layout.item_image)
-    private lateinit var imageVMList: MutableList<ImageViewModel>
+    private val imageListAdapter = RecyclerViewAdapter(R.layout.item_manage_image)
+    private lateinit var manageImageVMList: MutableList<ManageImageViewModel>
     val estate = MutableLiveData<Estate>()
     var price = ObservableField<String>()
     private var oldImageList = listOf<Image>()
@@ -90,25 +90,25 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // -------------
 
     /**
-     * Update Recycler Adapter Image View Model List.
-     * Set Image View Model List only if not already do.
+     * Update Recycler Adapter Manage Image View Model List.
+     * Set Manage Image View Model List only if not already do.
      */
     @Suppress("unchecked_cast")
     internal fun updateRecyclerImageList() {
-        if (!::imageVMList.isInitialized)
-            imageVMList = oldImageList.map { image -> ImageViewModel(image, this) }.toMutableList()
-        imageListAdapter.updateList(imageVMList as MutableList<Any>)
+        if (!::manageImageVMList.isInitialized)
+            manageImageVMList = oldImageList.map { image -> ManageImageViewModel(image, this) }.toMutableList()
+        imageListAdapter.updateList(manageImageVMList as MutableList<Any>)
         imageListAdapter.notifyDataSetChanged()
     }
 
     /**
-     * Add new image to image view model list.
+     * Add new image to manage image view model list.
      * @param imageUri the image uri to set.
      */
     internal fun addImageToImageList(imageUri: String) {
         val image = Image(imageUri = imageUri)
-        imageVMList.add(ImageViewModel(image, this))
-        val position = imageVMList.size.minus(1)
+        manageImageVMList.add(ManageImageViewModel(image, this))
+        val position = manageImageVMList.size.minus(1)
         imageListAdapter.notifyItemInserted(position)
         communication.scrollToNewItem(position)
     }
@@ -171,7 +171,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     internal fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
-        estate.value?.imageList = imageVMList.map { it.image.value!! } as MutableList<Image>
+        estate.value?.imageList = manageImageVMList.map { it.image.value!! } as MutableList<Image>
     }
 
     /**
@@ -181,7 +181,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     private fun createEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
         val estateId = estateRepository.createEstate(estate)
         setEstateIdInOtherTables(estateId)
-        imageVMList.map { it.image.value!! }.let { imageRepository.createImage(*it.toTypedArray()) }
+        manageImageVMList.map { it.image.value!! }.let { imageRepository.createImage(*it.toTypedArray()) }
         addressRepository.createAddress(estate.address)
     }
 
@@ -193,7 +193,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
         estateRepository.updateEstate(estate)
         setEstateIdInOtherTables(estate.id)
         // Sort image view model list, images to update/images to create
-        val imageListPair = imageVMList.partition { oldImageList.contains(it.image.value) }
+        val imageListPair = manageImageVMList.partition { oldImageList.contains(it.image.value) }
         imageRepository.updateImage(*imageListPair.first.map { it.image.value!! }.toTypedArray())
         imageRepository.createImage(*imageListPair.second.map { it.image.value!! }.toTypedArray())
         addressRepository.updateAddress(estate.address)
@@ -205,7 +205,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     private fun setEstateIdInOtherTables(estateId: Long) {
         // Other tables
-        imageVMList.forEach { it.image.value?.estateId = estateId }
+        manageImageVMList.forEach { it.image.value?.estateId = estateId }
         estate.value?.address?.estateId = estateId
     }
 
@@ -218,35 +218,35 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * so if another is primary, set it to not primary.
      * If the given image is set to primary, update the recycler adapter list
      * to move the given image at first position and scroll recycler to it.
-     * @param imageVM the image view model witch user change image primary state.
+     * @param manageImageVM the manage image view model witch user change image primary state.
      */
-    internal fun managePrimaryImage(imageVM: ImageViewModel) {
+    internal fun managePrimaryImage(manageImageVM: ManageImageViewModel) {
         // Manage primary image in list
-        if (imageVM.image.value?.isPrimary!!) {
-            imageVMList.forEach {
-                if (it != imageVM && it.image.value?.isPrimary!!) {
+        if (manageImageVM.image.value?.isPrimary!!) {
+            manageImageVMList.forEach {
+                if (it != manageImageVM && it.image.value?.isPrimary!!) {
                     it.image.value?.isPrimary = false
                     it.setPrimaryVisibility()
                 }
             }
             // Update list and ui
-            val position = imageVMList.indexOf(imageVM)
-            imageVMList.removeAt(position)
-            imageVMList.add(0, imageVM)
+            val position = manageImageVMList.indexOf(manageImageVM)
+            manageImageVMList.removeAt(position)
+            manageImageVMList.add(0, manageImageVM)
             communication.scrollToNewItem(0)
             imageListAdapter.notifyItemMoved(position, 0)
         }
     }
 
     /**
-     * Remove the given image in image view model list, storage and database.
-     * @param imageVM the view model of the image to remove.
+     * Remove the given image in manage image view model list, storage and database.
+     * @param manageImageVM the view model of the image to remove.
      */
-    internal fun removeImage(imageVM: ImageViewModel) {
-        val position = imageVMList.indexOf(imageVM)
-        imageVMList.removeAt(position)
+    internal fun removeImage(manageImageVM: ManageImageViewModel) {
+        val position = manageImageVMList.indexOf(manageImageVM)
+        manageImageVMList.removeAt(position)
         imageListAdapter.notifyItemRemoved(position)
-        imageVM.image.value?.let {
+        manageImageVM.image.value?.let {
             deleteImage(it.id) // database
             communication.deleteImageInStorage(it.imageUri) // external storage
         }

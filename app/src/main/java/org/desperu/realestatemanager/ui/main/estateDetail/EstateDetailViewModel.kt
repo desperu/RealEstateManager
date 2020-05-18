@@ -1,12 +1,10 @@
 package org.desperu.realestatemanager.ui.main.estateDetail
 
 import androidx.databinding.ObservableField
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.ui.manageEstate.ImageViewModel
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
 
 /**

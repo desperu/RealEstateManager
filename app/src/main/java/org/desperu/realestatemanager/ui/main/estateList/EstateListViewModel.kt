@@ -37,12 +37,13 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val imageRepository: ImageRepository,
                           private val addressRepository: AddressRepository,
                           private val router: EstateRouter,
-                          private val geocoder: GeocoderService): ViewModel() {
+                          private val geocoder: GeocoderService
+): ViewModel() {
 
     // FOR DATA
     private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate_large)
     private val estateVMList = mutableListOf<EstateViewModel>()
-    private val estateList = ObservableField<List<Estate>>()
+    private val estateList = ObservableField<List<Estate>>() // TODO remove not used
     private val refreshing = ObservableBoolean(false)
     private val showEmptyText = ObservableBoolean(false)
 
@@ -153,25 +154,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             }
         }
     }
-
-    // -------------
-    // MAP
-    // -------------
-
-    /**
-     * Update the estate list for the map.
-     */
-    internal fun updateEstateList() {
-        val tempEstateList = estateList.get()
-        estateList.set(null)
-        estateList.set(tempEstateList)
-    }
-
-    /**
-     * Redirect the user to estate detail fragment.
-     * @param estate the estate associated with the marker.
-     */
-    internal fun onInfoClick(estate: Estate?) = estate?.let { router.openEstateDetail(it) }
 
     // --- MANAGE ---
 

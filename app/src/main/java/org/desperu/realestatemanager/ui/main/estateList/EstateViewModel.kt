@@ -11,26 +11,20 @@ import org.desperu.realestatemanager.model.Image
  * View Model witch provide data for estate item and estate detail.
  *
  * @param givenEstate the given estate data for this view model.
+ * @param router the router interface for redirect user.
  *
  * @constructor Instantiates a new EstateViewModel.
  *
  * @property givenEstate the given estate data for this view model to set.
+ * @property router the router interface for redirect user to set.
  */
-class EstateViewModel(private val givenEstate: Estate): ViewModel() {
+class EstateViewModel(private val givenEstate: Estate,
+                      private val router: EstateRouter
+): ViewModel() {
 
     // FOR DATA
     private val estate = MutableLiveData<Estate>()
     private val primaryImage = MutableLiveData<Image>()
-    private lateinit var router: EstateRouter
-
-    /**
-     * Second constructor to set router and allow user redirection.
-     * @param givenEstate the given estate object for this view model to set.
-     * @param router the router interface to set.
-     */
-    constructor(givenEstate: Estate, router: EstateRouter): this(givenEstate) {
-        this.router = router
-    }
 
     init {
         setEstate()
