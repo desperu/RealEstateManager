@@ -135,12 +135,74 @@ fun EditText.getNumber(): Int {
 }
 
 /**
- * Custom setter for text view price with pattern, in estate item.
- * @param price the price convert with pattern to set.
+ * Custom setter for text view price with pattern, in estate item and detail.
+ * @param price the price to convert with pattern and to set.
  */
 @BindingAdapter("setPrice")
 fun TextView.setPrice(price: Long) {
-    text = convertPriceToPatternPrice(price.toString(), true)
+    text = if (price != 0L)
+                convertPriceToPatternPrice(price.toString(), true)
+           else
+                resources.getString(R.string.fragment_estate_detail_text_no_data)
+}
+
+/**
+ * Custom setter for title text view in estate detail (type and city).
+ * @param estate the estate used to set title.
+ */
+@BindingAdapter("setTitle")
+fun TextView.setTitle(estate: Estate?) {
+    estate?.let {
+        text = when {
+            estate.type.isNotBlank() && estate.address.city.isNotBlank() ->
+                resources.getString(R.string.fragment_estate_detail_text_title_at, estate.type, estate.address.city)
+            estate.type.isNotBlank() -> estate.type
+            estate.address.city.isNotBlank() -> estate.address.city
+            else -> resources.getString(R.string.fragment_estate_detail_text_no_data)
+        }
+    }
+}
+
+/**
+ * Custom setter for street number and name text view in estate detail (type and city).
+ * @param estate the estate used to set title.
+ */
+@BindingAdapter("setStreet")
+fun TextView.setStreet(estate: Estate?) {
+    estate?.let {
+        text = when {
+            estate.address.streetNumber != 0 && estate.address.streetName.isNotBlank() ->
+                "${estate.address.streetNumber}, ${estate.address.streetName}"
+            else -> resources.getString(R.string.fragment_estate_detail_text_no_data)
+        }
+    }
+}
+
+/**
+ * Set address value in text view, if value is blank or equal 0, hide the text view.
+ * @param value the value to set.
+ */
+@BindingAdapter("setAddress")
+fun TextView.setAddress(value: String?) {
+    value?.let {
+        if (value.isNotBlank() && value != "0") text = value
+        else visibility = View.GONE
+    }
+}
+
+/**
+ * Set value in text view, if value is blank or equal 0, show text no data.
+ * @param value the value to set.
+ */
+@BindingAdapter("setValue")
+fun TextView.setValue(value: String?) {
+    value?.let {
+        text = if (value.isNotBlank() && value != "0")
+                    if (tag == "surfaceDetail")
+                        "$value " + resources.getString(R.string.fragment_estate_data_text_surface_unity)
+                    else value
+               else resources.getString(R.string.fragment_estate_detail_text_no_data)
+    }
 }
 
 /**

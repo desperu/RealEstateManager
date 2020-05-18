@@ -11,6 +11,8 @@
     <!-- Estate List Fragment -->
     <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate !</string>
     <!-- Estate Detail Fragment -->
+    <string name="fragment_estate_detail_text_title_at">%1$s at %2$s</string>
+    <string name="fragment_estate_detail_text_no_data">N/A</string>
     <string name="fragment_estate_detail_text_category_images">Images</string>
     <string name="fragment_estate_detail_text_category_description">Description</string>
     <string name="fragment_estate_detail_text_no_description">There\'s no description set !</string>

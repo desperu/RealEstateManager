@@ -21,9 +21,16 @@
 
     <!-- Estate type colors -->
     <color name="colorFlat">#9C27B0</color>
-    <color name="colorDuplex">#673AB7</color>
-    <color name="colorHouse">#00897B</color>
-    <color name="colorPenthouse">#00695C</color>
-    <color name="colorNoType">#AD1457</color>
+    <color name="colorDuplex">#7C208C</color>
+    <color name="colorHouse">#673AB7</color>
+    <color name="colorPenthouse">#4A2C81</color>
+    <color name="colorNoType">#93114A</color>
+
+<!--    TODO remove if not used -->
+<!--    <color name="colorFlat">#9C27B0</color>-->
+<!--    <color name="colorDuplex">#673AB7</color>-->
+<!--    <color name="colorHouse">#00897B</color>-->
+<!--    <color name="colorPenthouse">#00695C</color>-->
+<!--    <color name="colorNoType">#AD1457</color>-->
 
 </resources>

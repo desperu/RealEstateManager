@@ -93,10 +93,6 @@ class MapMotionLayout(private val context: Context, private val view: View?) {
             val containerImagesBottom = view.rootView.fragment_estate_detail_container_images.bottom.toFloat()
             constraintEnd?.setTranslationY(R.id.fragment_estate_detail_container_images, - containerImagesBottom)
 
-            // To animate title container way off-screen to the top.
-            val containerTitleBottom = view.rootView.fragment_estate_detail_container_title.bottom.toFloat()
-            constraintEnd?.setTranslationY(R.id.fragment_estate_detail_container_title, - containerTitleBottom - containerImagesBottom)
-
             // To animate address container way off-screen to the left.
             val containerAddressRight = view.rootView.fragment_estate_detail_container_address.right.toFloat()
             constraintEnd?.setTranslationX(R.id.fragment_estate_detail_container_address, - containerAddressRight)

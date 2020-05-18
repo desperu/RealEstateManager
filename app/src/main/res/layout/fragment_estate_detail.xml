@@ -25,49 +25,27 @@
             app:layoutDescription="@xml/scene_map">
 
             <LinearLayout
-                android:id="@+id/fragment_estate_detail_container_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_large_margin"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_type"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:gravity="center"
-                    android:ellipsize="end"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
-                    android:text="@{viewModel.getEstate.type}"/>
-
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_title_city"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:gravity="center"
-                    android:ellipsize="end"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
-                    android:text="@{viewModel.getEstate.address.city}"/>
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/fragment_estate_detail_container_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_title"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/fragment_estate_detail_text_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_large_margin"
+                    android:layout_marginEnd="@dimen/default_large_margin"
+                    android:layout_marginTop="@dimen/default_large_margin"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
+                    app:setTitle="@{viewModel.getEstate}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_price"
@@ -113,8 +91,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/default_large_margin"
-                    android:text="@{viewModel.getEstate.description}"
-                    android:textColor="@color/colorLightDark"/>
+                    android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                    app:setValue="@{viewModel.getEstate.description}" />
 
             </LinearLayout>
 
@@ -151,7 +130,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/colorLightDark"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:text="@{`` + viewModel.getEstate.address.streetNumber}"/>
+                    app:setStreet="@{viewModel.getEstate}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_flat_building"
@@ -163,7 +142,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/colorLightDark"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:text="@{viewModel.getEstate.address.flatBuilding}"/>
+                    app:setAddress="@{viewModel.getEstate.address.flatBuilding}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_city"
@@ -175,7 +154,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/colorLightDark"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:text="@{viewModel.getEstate.address.city}"/>
+                    app:setAddress="@{viewModel.getEstate.address.city}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_postal_code"
@@ -187,7 +166,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/colorLightDark"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:text="@{`` + viewModel.getEstate.address.postalCode}"/>
+                    app:setAddress="@{`` + viewModel.getEstate.address.postalCode}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_country"
@@ -199,7 +178,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/colorLightDark"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:text="@{viewModel.getEstate.address.country}"/>
+                    app:setAddress="@{viewModel.getEstate.address.country}"/>
 
             </LinearLayout>
 
@@ -242,7 +221,8 @@
                     android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                     android:textColor="@color/colorLightDark"
-                    android:text="@{`` + viewModel.getEstate.surfaceArea}"/>
+                    android:tag="surfaceDetail"
+                    app:setValue="@{`` + viewModel.getEstate.surfaceArea}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_subcategory_room_number"
@@ -264,7 +244,7 @@
                     android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                     android:textColor="@color/colorLightDark"
-                    android:text="@{`` + viewModel.getEstate.roomNumber}"/>
+                    app:setValue="@{`` + viewModel.getEstate.roomNumber}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_subcategory_bathroom_number"
@@ -341,7 +321,7 @@
                     android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                     android:textColor="@color/colorLightDark"
-                    android:text="@{viewModel.getEstate.saleDate}"/>
+                    app:setValue="@{viewModel.getEstate.saleDate}"/>
 
                 <TextView
                     android:id="@+id/fragment_estate_detail_text_subcategory_real_estate_agent"
@@ -366,7 +346,7 @@
                     android:ellipsize="end"
                     android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                     android:textColor="@color/colorLightDark"
-                    android:text="@{viewModel.getEstate.realEstateAgent}"/>
+                    app:setValue="@{viewModel.getEstate.realEstateAgent}"/>
 
             </LinearLayout>
 <!-- TODO add interest places ... -->

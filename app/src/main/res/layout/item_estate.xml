@@ -48,7 +48,7 @@
                     android:textSize="@dimen/item_estate_text_type_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
-                    android:text="@{viewModel.getEstate.type}" />
+                    app:setValue="@{viewModel.getEstate.type}" />
 
                 <TextView
                     android:id="@+id/item_estate_text_location"
@@ -60,7 +60,7 @@
                     android:textSize="@dimen/item_estate_text_location_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
-                    android:text="@{viewModel.getEstate.address.city}" />
+                    app:setValue="@{viewModel.getEstate.address.city}" />
 
                 <TextView
                     android:id="@+id/item_estate_text_price"
