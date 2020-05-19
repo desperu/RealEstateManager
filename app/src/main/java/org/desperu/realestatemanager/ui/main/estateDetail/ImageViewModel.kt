@@ -9,12 +9,16 @@ import org.desperu.realestatemanager.model.Image
  * View Model witch provide data for image item.
  *
  * @param givenImage the given image data for this view model.
+ * @param estateDetailVM the instance of the parent view model.
  *
  * @constructor Instantiates a new ImageViewModel.
  *
  * @property givenImage the given image data for this view model to set.
+ * @property estateDetailVM the instance of the parent view model to set.
  */
-class ImageViewModel(private val givenImage: Image): ViewModel() {
+class ImageViewModel(private val givenImage: Image,
+                     private val estateDetailVM: EstateDetailViewModel
+): ViewModel() {
 
     // FOR DATA
     private val image = MutableLiveData<Image>()
@@ -33,15 +37,13 @@ class ImageViewModel(private val givenImage: Image): ViewModel() {
     private fun setGivenImage() { image.value = givenImage }
 
     // -------------
-    // LISTENER
+    // ACTION
     // -------------
 
-//    /**
-//     * Item on click listener.
-//     */
-//    val itemClick = View.OnClickListener {
-//        estate.value?.let { estate ->  router.openEstateDetail(estate) }
-//    }
+    /**
+     * On image click, redirect to the show images activity thought interface images router.
+     */
+    fun onImageClick() = image.value?.let { estateDetailVM.onImageClick(it) }
 
     // --- GETTERS ---
 

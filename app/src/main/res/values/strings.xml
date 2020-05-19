@@ -5,6 +5,7 @@
     <string name="fragment_estate_detail_name">Estate Detail</string>
     <string name="fragment_maps_name">Estate Map</string>
     <string name="activity_manage_estate">Manage Estate</string>
+    <string name="activity_show_images">Estate\'s Images</string>
 
     <!-- LAYOUTS -->
     <!-- Main Activity -->

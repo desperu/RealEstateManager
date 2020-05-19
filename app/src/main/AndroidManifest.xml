@@ -40,6 +40,13 @@
             android:label="@string/activity_manage_estate"
             android:parentActivityName=".ui.main.MainActivity" />
 
+        <!-- SHOW IMAGES ACTIVITY -->
+        <activity
+            android:name=".ui.showImages.ShowImagesActivity"
+            android:label="@string/activity_show_images"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/ShowImages"/>
+
         <!-- FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"

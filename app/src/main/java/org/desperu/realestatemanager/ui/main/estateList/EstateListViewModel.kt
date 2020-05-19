@@ -2,6 +2,8 @@ package org.desperu.realestatemanager.ui.main.estateList
 
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +43,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 ): ViewModel() {
 
     // FOR DATA
-    private val estateListAdapter: RecyclerViewAdapter = RecyclerViewAdapter(R.layout.item_estate_large)
+    private val estateListAdapter = MutableLiveData(RecyclerViewAdapter(R.layout.item_estate_large))
     private val estateVMList = mutableListOf<EstateViewModel>()
     private val estateList = ObservableField<List<Estate>>() // TODO remove not used
     private val refreshing = ObservableBoolean(false)
@@ -58,15 +60,13 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     /**
      * Load estate list with images and address for each, from database.
      */
-    private fun loadEstateList() {
-        viewModelScope.launch(Dispatchers.Main) {
-            val estateList = estateRepository.getAll().toMutableList()
-            estateList.forEach { estate ->
-                estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
-                estate.address = addressRepository.getAddress(estate.id)
-            }
-            onRetrieveEstateList(estateList)
+    private fun loadEstateList() = viewModelScope.launch(Dispatchers.Main) {
+        val estateList = estateRepository.getAll().toMutableList()
+        estateList.forEach { estate ->
+            estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
+            estate.address = addressRepository.getAddress(estate.id)
         }
+        onRetrieveEstateList(estateList)
     }
 
     /**
@@ -90,11 +90,11 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             if (oldEstateVM == null) { // Add new element in first position
                 position = 0
                 estateVMList.add(position, EstateViewModel(estate, router))
-                estateListAdapter.notifyItemInserted(position)
+                estateListAdapter.value?.notifyItemInserted(position)
             } else { // Update existing element at his position
                 position = estateVMList.indexOf(oldEstateVM)
                 estateVMList[position] = EstateViewModel(estate, router)
-                estateListAdapter.notifyItemChanged(position)
+                estateListAdapter.value?.notifyItemChanged(position)
             }
             updateUi()
             // Set latitude and longitude for the address if not already do.
@@ -116,8 +116,8 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         // For Recycler adapter
         estateVMList.clear()
         estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router) })
-        estateListAdapter.updateList(estateVMList as MutableList<Any>)
-        estateListAdapter.notifyDataSetChanged()
+        estateListAdapter.value?.updateList(estateVMList as MutableList<Any>)
+        estateListAdapter.value?.notifyDataSetChanged()
         // For Map List
         this.estateList.set(estateList)
         // For Swipe To Delete
@@ -169,7 +169,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     // --- GETTERS ---
 
-    val getEstateListAdapter = estateListAdapter
+    val getEstateListAdapter: LiveData<RecyclerViewAdapter> = estateListAdapter
 
     val getEstateVMList = estateVMList
 

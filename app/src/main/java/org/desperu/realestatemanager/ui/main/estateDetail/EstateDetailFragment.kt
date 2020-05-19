@@ -7,11 +7,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateDetailBinding
+import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouterImpl
@@ -64,7 +66,8 @@ class EstateDetailFragment: BaseBindingFragment() {
      */
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_estate_detail, container, false)
-        viewModel = estate?.let { EstateDetailViewModel(it) }
+        viewModel = ViewModelProvider(this, ViewModelFactory(activity as AppCompatActivity)).get(EstateDetailViewModel::class.java)
+        estate?.let { viewModel?.setEstate(it) }
 
         binding.viewModel = viewModel
         return binding.root

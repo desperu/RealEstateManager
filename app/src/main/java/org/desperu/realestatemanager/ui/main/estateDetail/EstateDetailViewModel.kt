@@ -10,40 +10,39 @@ import org.desperu.realestatemanager.view.RecyclerViewAdapter
 /**
  * View Model witch provide data for estate detail.
  *
- * @param givenEstate the given estate data for this view model.
+ * @param router the images router interface witch provide user redirection.
  *
  * @constructor Instantiates a new EstateDetailViewModel.
  *
- * @property givenEstate the given estate data for this view model to set.
+ * @property router the estate router interface witch provide user redirection to set.
  */
-class EstateDetailViewModel(private val givenEstate: Estate): ViewModel() {
+class EstateDetailViewModel(private val router: ImagesRouter): ViewModel() {
 
     // FOR DATA
     private val imageListAdapter = RecyclerViewAdapter(R.layout.item_image)
     private val estate = ObservableField<Estate>()
-
-    init {
-        setEstate()
-        setImageList(givenEstate)
-    }
 
     // -------------
     // SET ESTATE
     // -------------
 
     /**
-     * Set given estate for the view model.
+     * Set given estate and the estate's image list for the view model.
+     * @param givenEstate the given estate to set.
      */
-    private fun setEstate() { estate.set(givenEstate) }
+    internal fun setEstate(givenEstate: Estate) {
+        estate.set(givenEstate)
+        setImageList(givenEstate)
+    }
 
     /**
      * Update estate data.
      * @param newEstate the new estate to set.
      */
     internal fun updateEstate(newEstate: Estate?) {
-        if (newEstate?.id == givenEstate.id) {
+        if (newEstate?.id == estate.get()?.id) {
             estate.set(newEstate)
-            setImageList(newEstate)
+            newEstate?.let { setImageList(it) }
         }
     }
 
@@ -57,10 +56,24 @@ class EstateDetailViewModel(private val givenEstate: Estate): ViewModel() {
      */
     @Suppress("unchecked_cast")
     private fun setImageList(estate: Estate) {
-        val imageVMList = estate.imageList.map { ImageViewModel(it) }.toMutableList()
-        if (imageVMList.isEmpty()) imageVMList.add(ImageViewModel(Image()))
+        val imageVMList = estate.imageList.map { ImageViewModel(it, this) }.toMutableList()
+        if (imageVMList.isEmpty()) imageVMList.add(ImageViewModel(Image(), this))
         imageListAdapter.updateList(imageVMList as MutableList<Any>)
         imageListAdapter.notifyDataSetChanged()
+    }
+
+    // -------------
+    // REDIRECTION
+    // -------------
+
+    /**
+     * Redirect the user to the show images activity, with the clicked image position.
+     * @param image the clicked image.
+     */
+    internal fun onImageClick(image: Image) {
+        estate.get()?.imageList?.let {
+            router.openShowImages(it as ArrayList<Image>, it.indexOf(image))
+        }
     }
 
     // --- GETTERS ---

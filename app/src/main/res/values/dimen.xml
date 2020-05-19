@@ -109,6 +109,12 @@
     <dimen name="item_manage_image_primary_marker_margin">20dp</dimen>
     <dimen name="item_manage_image_primary_marker_text_size">16sp</dimen>
 
+    <!-- Show images Activity -->
+    <dimen name="activity_show_images_toolbar_margin_top">24dp</dimen>
+    <!-- Image Fragment -->
+    <dimen name="fragment_image_text_description_height">80dp</dimen>
+    <dimen name="fragment_image_text_description_size">24sp</dimen>
+
     <!-- MENU -->
 
     <!-- Menu Drawer -->

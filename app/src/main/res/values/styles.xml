@@ -50,4 +50,10 @@
         <item name="colorAccent">@android:color/holo_green_dark</item>
     </style>
 
+    <!-- Show Images Theme -->
+    <style name="ShowImages" parent="AppTheme">
+        <item name="colorPrimary">@color/colorTransGrey</item>
+        <item name="colorPrimaryDark">@color/colorTransGrey</item>
+    </style>
+
 </resources>

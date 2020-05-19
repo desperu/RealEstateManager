@@ -58,7 +58,7 @@ class ManageEstateFragment: BaseBindingFragment() {
     companion object {
         /**
          * Create a new instance of this fragment and set fragmentKey.
-         * @param fragmentKey the fragment key to configure
+         * @param fragmentKey the fragment key to configure the asked fragment.
          * @return the new instance of ManageEstateFragment.
          */
         fun newInstance(fragmentKey: Int): ManageEstateFragment {

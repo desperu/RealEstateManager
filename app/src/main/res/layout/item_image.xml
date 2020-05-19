@@ -15,7 +15,8 @@
         app:elevation="@dimen/item_image_card_view_elevation"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="@dimen/item_image_card_view_corner_radius"
-        app:cardPreventCornerOverlap="true">
+        app:cardPreventCornerOverlap="true"
+        android:onClick="@{() -> viewModel.onImageClick()}">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -45,7 +46,7 @@
                 android:textStyle="bold"
                 android:hint="@string/fragment_estate_data_text_description"
                 android:textColorHint="@android:color/white"
-                android:text="@={viewModel.getImage.description}" />
+                app:setValue="@{viewModel.getImage.description}" />
 
         </RelativeLayout>
 

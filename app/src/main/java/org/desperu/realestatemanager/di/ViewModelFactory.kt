@@ -10,6 +10,8 @@ import org.desperu.realestatemanager.service.GeocoderService
 import org.desperu.realestatemanager.service.GeocoderServiceImpl
 import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.service.ResourceServiceImpl
+import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailViewModel
+import org.desperu.realestatemanager.ui.main.estateDetail.ImagesRouterImpl
 import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouterImpl
@@ -56,7 +58,7 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
                         geocoder as GeocoderService) as T
             }
 
-            // Return a ManageEstateViewModel Class.
+            // Return a ManageEstateViewModel instance.
             modelClass.isAssignableFrom(ManageEstateViewModel::class.java) -> {
                 val resourceService = ResourceServiceImpl(activity)
                 val communication = ManageEstateVMCommunicationImpl(activity)
@@ -68,10 +70,16 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
                         resourceService as ResourceService) as T
             }
 
-            // Return a MapsViewModel Class.
+            // Return a MapsViewModel instance.
             modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
                 val router = EstateRouterImpl(activity)
                 return MapsViewModel(router) as T
+            }
+
+            // Return a EstateDetailViewModel instance.
+            modelClass.isAssignableFrom(EstateDetailViewModel::class.java) -> {
+                val router = ImagesRouterImpl(activity)
+                return EstateDetailViewModel(router) as T
             }
 
             // Asked View Model Class Not Found.

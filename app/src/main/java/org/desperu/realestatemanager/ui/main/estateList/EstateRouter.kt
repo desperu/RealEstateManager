@@ -6,7 +6,7 @@ import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 
 /**
- * The router that allows redirection of the user.
+ * The estate router that allows redirection of the user.
  */
 interface EstateRouter {
 
