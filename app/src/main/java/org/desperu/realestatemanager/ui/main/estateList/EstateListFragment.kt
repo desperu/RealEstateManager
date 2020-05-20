@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.ui.main.estateList
 
+import android.content.res.Configuration
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
@@ -57,11 +58,21 @@ class EstateListFragment: BaseBindingFragment() {
      * Configure recycler view.
      */
     private fun configureRecyclerView() {
-        binding.fragmentEstateListRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+        binding.fragmentEstateListRecyclerView.layoutManager = GridLayoutManager(activity, columnNumber)
         val controller = AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_anim_fall_down)
         binding.fragmentEstateListRecyclerView.layoutAnimation = controller
         binding.fragmentEstateListRecyclerView.scheduleLayoutAnimation()
     }
+
+    /**
+     * Column number for the grid layout, depends of screen orientation.
+     */
+    private val columnNumber: Int
+        get() = when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> 2
+            Configuration.ORIENTATION_LANDSCAPE -> 3
+            else -> 2
+        }
 
     /**
      * Configure swipe to delete gesture for recycler view.

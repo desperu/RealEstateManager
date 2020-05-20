@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel" />
+            type="org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel" />
     </data>
 
     <LinearLayout

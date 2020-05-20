@@ -16,9 +16,9 @@ import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouterImpl
 import org.desperu.realestatemanager.ui.main.estateMap.MapsViewModel
-import org.desperu.realestatemanager.ui.manageEstate.ManageEstateVMCommunication
-import org.desperu.realestatemanager.ui.manageEstate.ManageEstateVMCommunicationImpl
-import org.desperu.realestatemanager.ui.manageEstate.ManageEstateViewModel
+import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateVMCommunication
+import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateVMCommunicationImpl
+import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
 import org.koin.java.KoinJavaComponent.inject
 
 /**

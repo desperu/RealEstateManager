@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.showImages
+package org.desperu.realestatemanager.ui.showImages.fragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

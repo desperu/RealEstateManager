@@ -1,6 +1,7 @@
-package org.desperu.realestatemanager.ui.manageEstate
+package org.desperu.realestatemanager.ui.manageEstate.fragment
 
 import androidx.appcompat.app.AppCompatActivity
+import org.desperu.realestatemanager.ui.manageEstate.Communication
 
 /**
  * The interface that allows communication for ManageEstateViewModel.

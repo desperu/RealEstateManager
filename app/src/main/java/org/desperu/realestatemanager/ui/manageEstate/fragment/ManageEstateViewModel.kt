@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.manageEstate
+package org.desperu.realestatemanager.ui.manageEstate.fragment
 
 import android.text.Editable
 import android.text.TextWatcher

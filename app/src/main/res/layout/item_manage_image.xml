@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.manageEstate.ManageImageViewModel" />
+            type="org.desperu.realestatemanager.ui.manageEstate.fragment.ManageImageViewModel" />
     </data>
 
     <RelativeLayout

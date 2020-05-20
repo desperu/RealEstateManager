@@ -24,11 +24,12 @@ import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.main.NEW_ESTATE
+import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateFragment
+import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
 import org.desperu.realestatemanager.utils.EQUALS
 import org.desperu.realestatemanager.utils.ESTATE_IMAGE
 import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.desperu.realestatemanager.view.MyPageTransformer
-import org.desperu.realestatemanager.view.ViewPagerAdapter
 
 /**
  * The name of the argument for passing estate to this Activity.
@@ -106,7 +107,7 @@ class ManageEstateActivity: BaseActivity(), Communication {
      */
     private fun configureViewPagerAndTabs() {
         viewPager = activity_manage_estate_view_pager
-        viewPager.adapter = ViewPagerAdapter(this, supportFragmentManager,
+        viewPager.adapter = ManageEstateAdapter(this, supportFragmentManager,
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
         viewPager.setPageTransformer(true, MyPageTransformer(viewPager))
         val tabLayout: TabLayout = activity_manage_estate_pager_tabs

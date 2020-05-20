@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.showImages.ShowImageViewModel" />
+            type="org.desperu.realestatemanager.ui.showImages.fragment.ShowImageViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,12 +15,17 @@
         android:onClick="showToolbar">
 
         <ImageView
+            android:id="@+id/fragment_image_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:rotation="@{viewModel.getImage.rotation}"
-            app:imageUri="@{viewModel.getImage.imageUri}"/>
+            app:imageUri="@{viewModel.getImage.imageUri}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/fragment_image_text_description"
@@ -35,7 +40,7 @@
             android:textSize="@dimen/fragment_image_text_description_size"
             android:textColorHint="@android:color/white"
             app:setValue="@{viewModel.getImage.description}"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/fragment_image_image_view"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

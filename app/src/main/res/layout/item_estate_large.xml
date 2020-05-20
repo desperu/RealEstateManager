@@ -22,11 +22,11 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/default_margin">
+            android:padding="@dimen/default_margin">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/item_estate_image"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/item_estate_large_image_width_height"
                 android:layout_height="@dimen/item_estate_large_image_width_height"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"

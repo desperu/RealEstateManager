@@ -36,7 +36,7 @@
     <dimen name="item_estate_large_card_view_margin">5dp</dimen>
     <dimen name="item_estate_large_card_view_elevation">2dp</dimen>
     <dimen name="item_estate_large_card_view_corner_radius">10dp</dimen>
-    <dimen name="item_estate_large_image_width_height">200dp</dimen>
+    <dimen name="item_estate_large_image_width_height">180dp</dimen>
     <dimen name="item_estate_large_linear_padding">10dp</dimen>
     <dimen name="item_estate_large_text_type_size">16sp</dimen>
     <dimen name="item_estate_large_text_location_margin_top_and_bottom">5dp</dimen>

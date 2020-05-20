@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -78,6 +79,9 @@ class EstateDetailFragment: BaseBindingFragment() {
      */
     private fun configureImageRecycler() {
         binding.fragmentEstateDetailRecyclerImages.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+        val controller = AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_anim_fall_down)
+        binding.fragmentEstateDetailRecyclerImages.layoutAnimation = controller
+        binding.fragmentEstateDetailRecyclerImages.scheduleLayoutAnimation()
     }
 
     /**

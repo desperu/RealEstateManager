@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.showImages
+package org.desperu.realestatemanager.ui.showImages.fragment
 
 import android.os.Bundle
 import android.view.View

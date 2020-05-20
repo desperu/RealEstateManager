@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.manageEstate
+package org.desperu.realestatemanager.ui.manageEstate.fragment
 
 import android.Manifest.permission.*
 import android.app.Activity.RESULT_OK
@@ -32,6 +32,7 @@ import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateImageBinding
 import org.desperu.realestatemanager.extension.createDatePickerDialog
 import org.desperu.realestatemanager.extension.toBitmap
+import org.desperu.realestatemanager.ui.manageEstate.Communication
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.StorageUtils.deleteFileInStorage
 import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritable

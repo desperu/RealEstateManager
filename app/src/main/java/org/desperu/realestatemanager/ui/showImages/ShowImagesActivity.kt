@@ -35,7 +35,7 @@ class ShowImagesActivity: BaseActivity() {
 
     // FOR DATA
     private lateinit var viewPager: ViewPager
-    private lateinit var mAdapter: ViewPagerAdapter
+    private lateinit var mAdapter: ShowImageAdapter
 
     /**
      * Companion object, used to redirect to this Activity.
@@ -88,7 +88,7 @@ class ShowImagesActivity: BaseActivity() {
     private fun configureViewPager() {
         viewPager = activity_show_images_view_pager
 
-        mAdapter = ViewPagerAdapter(supportFragmentManager,
+        mAdapter = ShowImageAdapter(supportFragmentManager,
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
         viewPager.adapter = mAdapter
         viewPager.setPageTransformer(true, DepthPageTransformer())

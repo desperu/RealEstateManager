@@ -4,8 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import org.desperu.realestatemanager.model.Image
+import org.desperu.realestatemanager.ui.showImages.fragment.ShowImageFragment
 
-class ViewPagerAdapter(fm: FragmentManager,
+class ShowImageAdapter(fm: FragmentManager,
                        behavior: Int) : FragmentPagerAdapter(fm, behavior) {
 
     private lateinit var imageList: List<Image>
