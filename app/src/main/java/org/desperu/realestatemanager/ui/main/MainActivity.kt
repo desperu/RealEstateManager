@@ -213,8 +213,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.activity_main_menu_search -> switchSearchViewVisibility()
             R.id.activity_main_menu_add -> showManageEstateActivity(null)
+            R.id.activity_main_menu_search -> switchSearchViewVisibility()
         }
 
         return super.onOptionsItemSelected(item)

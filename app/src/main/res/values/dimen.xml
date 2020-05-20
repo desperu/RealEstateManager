@@ -119,6 +119,7 @@
 
     <!-- Menu Drawer -->
     <dimen name="nav_header_height">220dp</dimen>
+    <dimen name="nav_header_text_app_size">26sp</dimen>
 
     <!-- Toolbar -->
     <dimen name="toolbar_search_view_height">56dp</dimen>
