@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.desperu.realestatemanager.ui.main.filter.FilterViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTransGrey"
+        android:paddingTop="@dimen/fragment_filter_scroll_padding_top"
+        android:clickable="true"
+        android:focusable="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/filterBackground">
+
+            <TextView
+                android:id="@+id/fragment_filter_category_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_estate_data_text_type"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <LinearLayout
+                android:id="@+id/fragment_filter_container_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_filter_category_type">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fragment_filter_item_margin"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="type"
+                    android:text="@string/fragment_filter_text_flat"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/text_filter_unselected"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fragment_filter_item_margin"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="type"
+                    android:text="@string/fragment_filter_text_duplex"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/text_filter_unselected"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fragment_filter_item_margin"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="type"
+                    android:text="@string/fragment_filter_text_house"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/text_filter_unselected"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fragment_filter_item_margin"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="type"
+                    android:text="@string/fragment_filter_text_penthouse"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/text_filter_unselected"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_filter_category_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_estate_detail_text_subcategory_location"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_container_type"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_subcategory_location_around"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/fragment_filter_text_around"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_location"/>
+
+            <LinearLayout
+                android:id="@+id/fragment_filter_container_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/default_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_location_around">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/default_margin"
+                    android:gravity="center"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="myLocation"
+                    android:text="@string/fragment_filter_text_my_location"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/fragment_filter_text_category_size"
+                    android:background="@drawable/text_filter_unselected"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/default_margin"
+                    android:gravity="center"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:background="@drawable/text_filter_unselected"
+                    android:textColor="@android:color/white"
+                    android:hint="@string/fragment_estate_address_text_city"
+                    android:textColorHint="@color/colorPassedWhite"
+                    android:inputType="text"
+                    android:autofillHints="@string/fragment_estate_address_text_city"
+                    app:onTextChanged="@{viewModel.getOnTextChanged}"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_filter_subcategory_location_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/fragment_filter_text_distance"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_container_location"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_location_text_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_location_distance"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_seekbar_distance" />
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_location_text_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_location_distance"
+                app:layout_constraintEnd_toEndOf="@id/fragment_filter_seekbar_distance" />
+
+            <org.desperu.realestatemanager.view.CustomSeekBar
+                android:id="@+id/fragment_filter_seekbar_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:tag="distance"
+                app:bar_color="@color/barColor"
+                app:bar_highlight_color="@color/selectedBar"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="15"
+                app:left_thumb_color="@color/selectedFilter"
+                app:left_thumb_color_pressed="@color/selectedFilter"
+                app:max_value="100"
+                app:min_value="0"
+                app:right_thumb_color="@color/selectedFilter"
+                app:right_thumb_color_pressed="@color/selectedFilter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_location_text_min"
+                app:onRangeChanged="@{viewModel.getOnRangeChanged}"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_category_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_estate_data_text_price"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_distance"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_price_text_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_price"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_seekbar_price" />
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_price_text_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_price"
+                app:layout_constraintEnd_toEndOf="@id/fragment_filter_seekbar_price" />
+
+            <org.desperu.realestatemanager.view.CustomSeekBar
+                android:id="@+id/fragment_filter_seekbar_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:tag="price"
+                app:bar_color="@color/barColor"
+                app:bar_highlight_color="@color/selectedBar"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="15"
+                app:left_thumb_color="@color/selectedFilter"
+                app:left_thumb_color_pressed="@color/selectedFilter"
+                app:max_value="100"
+                app:min_value="0"
+                app:right_thumb_color="@color/selectedFilter"
+                app:right_thumb_color_pressed="@color/selectedFilter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_price_text_min"
+                app:onRangeChanged="@{viewModel.getOnRangeChanged}"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_category_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_estate_data_text_surface_area"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_price"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_surface_text_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_surface"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_seekbar_surface" />
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_surface_text_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_surface"
+                app:layout_constraintEnd_toEndOf="@id/fragment_filter_seekbar_surface" />
+
+            <org.desperu.realestatemanager.view.CustomSeekBar
+                android:id="@+id/fragment_filter_seekbar_surface"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:tag="surface"
+                app:bar_color="@color/barColor"
+                app:bar_highlight_color="@color/selectedBar"
+                app:corner_radius="10"
+                app:data_type="_float"
+                app:gap="15"
+                app:left_thumb_color="@color/selectedFilter"
+                app:left_thumb_color_pressed="@color/selectedFilter"
+                app:max_value="100"
+                app:min_value="0"
+                app:right_thumb_color="@color/selectedFilter"
+                app:right_thumb_color_pressed="@color/selectedFilter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_surface_text_min"
+                app:onRangeChanged="@{viewModel.getOnRangeChanged}"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_category_rooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_estate_data_text_rooms_number"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_surface"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_rooms_text_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_rooms"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_seekbar_rooms" />
+
+            <TextView
+                android:id="@+id/fragment_filter_seekbar_rooms_text_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_rooms"
+                app:layout_constraintEnd_toEndOf="@id/fragment_filter_seekbar_rooms" />
+
+            <org.desperu.realestatemanager.view.CustomSeekBar
+                android:id="@+id/fragment_filter_seekbar_rooms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_large_margin"
+                android:layout_marginEnd="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:tag="rooms"
+                app:bar_color="@color/barColor"
+                app:bar_highlight_color="@color/selectedBar"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="15"
+                app:left_thumb_color="@color/selectedFilter"
+                app:left_thumb_color_pressed="@color/selectedFilter"
+                app:max_value="100"
+                app:min_value="0"
+                app:right_thumb_color="@color/selectedFilter"
+                app:right_thumb_color_pressed="@color/selectedFilter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_rooms_text_min"
+                app:onRangeChanged="@{viewModel.getOnRangeChanged}"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_category_interest_places"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_estate_address_text_category_interest_places"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_seekbar_rooms"/>
+
+            <LinearLayout
+                android:id="@+id/fragment_filter_container_interest_places"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_filter_category_interest_places">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fragment_filter_item_margin"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="interestPlaces"
+                    android:text="@string/fragment_filter_text_school"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/text_filter_unselected"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fragment_filter_item_margin"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="interestPlaces"
+                    android:text="@string/fragment_filter_text_shop"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/text_filter_unselected"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fragment_filter_item_margin"
+                    android:padding="@dimen/fragment_filter_item_filter_padding"
+                    android:tag="interestPlaces"
+                    android:text="@string/fragment_filter_text_park"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/text_filter_unselected"
+                    app:onClick="@{viewModel.getOnClickFilter}"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_filter_category_sale_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_estate_sale_text_sale_date"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_container_interest_places"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_subcategory_begin_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/fragment_filter_text_begin_date"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_begin_date"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_sale_date"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_begin_date"
+                android:layout_width="@dimen/fragment_filter_text_date_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fragment_filter_end_date"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_begin_date"
+                android:text="@={viewModel.saleBegin}"/>
+
+            <View
+                android:id="@+id/fragment_filter_begin_date_divider"
+                android:layout_width="@dimen/fragment_filter_text_date_width"
+                android:layout_height="1dp"
+                android:background="@color/colorTransDark"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_begin_date"
+                app:layout_constraintEnd_toEndOf="@id/fragment_filter_begin_date"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_begin_date"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_subcategory_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/fragment_filter_text_end_date"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_end_date"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_sale_date"/>
+
+            <TextView
+                android:id="@+id/fragment_filter_end_date"
+                android:layout_width="@dimen/fragment_filter_text_date_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fragment_filter_text_category_size"
+                app:layout_constraintStart_toEndOf="@id/fragment_filter_begin_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_end_date"
+                android:text="@={viewModel.saleEnd}"/>
+
+            <View
+                android:id="@+id/fragment_filter_end_date_divider"
+                android:layout_width="@dimen/fragment_filter_text_date_width"
+                android:layout_height="1dp"
+                android:background="@color/colorTransDark"
+                app:layout_constraintStart_toStartOf="@id/fragment_filter_end_date"
+                app:layout_constraintEnd_toEndOf="@id/fragment_filter_end_date"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_end_date"/>
+
+            <LinearLayout
+                android:id="@+id/fragment_filter_container_bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_filter_begin_date_divider">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/fragment_filter_button_margin"
+                    android:contentDescription="@null"
+                    android:rotation="45"
+                    app:srcCompat="@drawable/ic_baseline_add_white_48"
+                    android:onClick="@{() -> viewModel.removeFilters()}"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/fragment_filter_button_margin"
+                    android:contentDescription="@null"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/ic_baseline_filter_list_black_48"
+                    android:onClick="@{() -> viewModel.applyFilters()}"/>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>

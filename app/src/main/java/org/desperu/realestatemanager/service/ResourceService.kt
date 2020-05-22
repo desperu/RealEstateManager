@@ -1,7 +1,9 @@
 package org.desperu.realestatemanager.service
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.annotation.ArrayRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 /**
@@ -30,6 +32,17 @@ interface ResourceService{
      * application.
      */
     fun getStringArray(@ArrayRes arrayRes: Int): Array<String>
+
+    /**
+     * Returns the Drawable with the given unique identifier from the resources of the
+     * application.
+     *
+     * @param drawableRes the unique identifier of the Drawable resource.
+     *
+     * @return the Drawable with the given unique identifier from the resources of the
+     * application.
+     */
+    fun getDrawable(@DrawableRes drawableRes: Int): Drawable
 }
 
 /**
@@ -65,4 +78,16 @@ class ResourceServiceImpl(private val context: Context) : ResourceService{
      * application.
      */
     override fun getStringArray(arrayRes: Int): Array<String> = context.resources.getStringArray(arrayRes)
+
+    /**
+     * Returns the Drawable with the given unique identifier from the resources of the
+     * application.
+     *
+     * @param drawableRes the unique identifier of the Drawable resource.
+     *
+     * @return the Drawable with the given unique identifier from the resources of the
+     * application.
+     */
+    @Suppress("deprecation")
+    override fun getDrawable(@DrawableRes drawableRes: Int): Drawable = context.resources.getDrawable(drawableRes)
 }

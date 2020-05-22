@@ -10,23 +10,43 @@
     tools:openDrawer="start"
     tools:context=".ui.main.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include
-            layout="@layout/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/activity_main_frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+            <FrameLayout
+                android:id="@+id/activity_main_frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/activity_main_floating_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/activity_main_floating_margin"
+            android:tint="@android:color/white"
+            app:elevation="@dimen/default_elevation"
+            app:maxImageSize="@dimen/activity_main_floating_max_image_size"
+            app:srcCompat="@drawable/ic_baseline_filter_list_black_48"
+            app:backgroundTint="@color/filterBackground"
+            android:onClick="onClickFilter"/>
+
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/activity_main_nav_view"

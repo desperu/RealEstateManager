@@ -18,8 +18,8 @@ import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
-import org.desperu.realestatemanager.utils.Utils.todayDate
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import java.lang.ref.WeakReference
 
 /**
  * View Model to manage full estate (estate, images and address) in database.
@@ -45,10 +45,12 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
                             private val resourceService: ResourceService): ViewModel() {
 
     // FOR DATA
-    private val imageListAdapter = RecyclerViewAdapter(R.layout.item_manage_image)
+    private val imageListAdapter = WeakReference(RecyclerViewAdapter(R.layout.item_manage_image))
     private lateinit var manageImageVMList: MutableList<ManageImageViewModel>
     val estate = MutableLiveData<Estate>()
     var price = ObservableField<String>()
+    val saleDate = ObservableField<String>()
+    val soldDate = ObservableField<String>()
     private var oldImageList = listOf<Image>()
 
     // -------------
@@ -73,16 +75,18 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     private fun setSpecificValues() {
         price.set(estate.value?.price.toString())
+        saleDate.set(estate.value?.saleDate)
+        soldDate.set(estate.value?.soldDate)
 
-        if (estate.value?.type.isNullOrBlank()) // TODO is it requested by client? but it is show in ui... and create mistake when compare estates
-            estate.value?.type = resourceService.getStringArray(R.array.estate_type_list)[0]
-        if (estate.value?.interestPlaces.isNullOrBlank())
-            estate.value?.interestPlaces = resourceService.getStringArray(R.array.estate_interest_places_list)[0]
-        if (estate.value?.state.isNullOrBlank())
-            estate.value?.state = resourceService.getStringArray(R.array.estate_state_list)[0]
-
-        if (estate.value?.saleDate.isNullOrBlank())
-            estate.value?.saleDate = todayDate()
+//        if (estate.value?.type.isNullOrBlank()) // TODO is it requested by client? but it is show in ui... and create mistake when compare estates
+//            estate.value?.type = resourceService.getStringArray(R.array.estate_type_list)[0]
+//        if (estate.value?.interestPlaces.isNullOrBlank())
+//            estate.value?.interestPlaces = resourceService.getStringArray(R.array.estate_interest_places_list)[0]
+//        if (estate.value?.state.isNullOrBlank())
+//            estate.value?.state = resourceService.getStringArray(R.array.estate_state_list)[0]
+//
+//        if (estate.value?.saleDate.isNullOrBlank())
+//            estate.value?.saleDate = todayDate()
     }
 
     // -------------
@@ -97,8 +101,8 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     internal fun updateRecyclerImageList() {
         if (!::manageImageVMList.isInitialized)
             manageImageVMList = oldImageList.map { image -> ManageImageViewModel(image, this) }.toMutableList()
-        imageListAdapter.updateList(manageImageVMList as MutableList<Any>)
-        imageListAdapter.notifyDataSetChanged()
+        imageListAdapter.get()?.updateList(manageImageVMList as MutableList<Any>)
+        imageListAdapter.get()?.notifyDataSetChanged()
     }
 
     /**
@@ -109,7 +113,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
         val image = Image(imageUri = imageUri)
         manageImageVMList.add(ManageImageViewModel(image, this))
         val position = manageImageVMList.size.minus(1)
-        imageListAdapter.notifyItemInserted(position)
+        imageListAdapter.get()?.notifyItemInserted(position)
         communication.scrollToNewItem(position)
     }
 
@@ -166,11 +170,13 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     }
 
     /**
-     * Bind data in estate object, set price from ui to estate object.
+     * Bind data in estate object, set price, sale date and sold date from ui to estate object.
      * Set updated image list in estate object to properly update ui after estate management.
      */
     internal fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
+        estate.value?.saleDate = saleDate.get().toString()
+        estate.value?.soldDate = soldDate.get().toString()
         estate.value?.imageList = manageImageVMList.map { it.image.value!! } as MutableList<Image>
     }
 
@@ -178,7 +184,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Create new estate with image and address.
      * @param estate the estate to create in database.
      */
-    private fun createEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
+    private fun createEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Default) {
         val estateId = estateRepository.createEstate(estate)
         setEstateIdInOtherTables(estateId)
         manageImageVMList.map { it.image.value!! }.let { imageRepository.createImage(*it.toTypedArray()) }
@@ -189,7 +195,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Update estate with it's images and address.
      * @param estate the estate to update in database.
      */
-    private fun updateEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Main) {
+    private fun updateEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Default) {
         estateRepository.updateEstate(estate)
         setEstateIdInOtherTables(estate.id)
         // Sort image view model list, images to update/images to create
@@ -234,7 +240,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
             manageImageVMList.removeAt(position)
             manageImageVMList.add(0, manageImageVM)
             communication.scrollToNewItem(0)
-            imageListAdapter.notifyItemMoved(position, 0)
+            imageListAdapter.get()?.notifyItemMoved(position, 0)
         }
     }
 
@@ -245,7 +251,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     internal fun removeImage(manageImageVM: ManageImageViewModel) {
         val position = manageImageVMList.indexOf(manageImageVM)
         manageImageVMList.removeAt(position)
-        imageListAdapter.notifyItemRemoved(position)
+        imageListAdapter.get()?.notifyItemRemoved(position)
         manageImageVM.image.value?.let {
             deleteImage(it.id) // database
             communication.deleteImageInStorage(it.imageUri) // external storage

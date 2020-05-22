@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.LatLng
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
+import org.desperu.realestatemanager.view.CustomSeekBar
+import org.desperu.realestatemanager.view.OnRangeChangeListener
 import java.lang.ref.WeakReference
 
 /**
@@ -248,4 +250,13 @@ fun View.setBackgroundColor(type: String?) {
                 else -> R.color.colorNoType
             }
     ))
+}
+
+/**
+ * Set on range changed listener for custom range seek bar view.
+ * @param listener the listener to set.
+ */
+@BindingAdapter("onRangeChanged")
+fun CustomSeekBar.setRangeChangeListener(listener: OnRangeChangeListener) {
+    setOnRangeChangeListener(listener)
 }

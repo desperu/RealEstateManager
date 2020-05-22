@@ -136,6 +136,12 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         showEmptyText.set(estateVMList.isEmpty())
     }
 
+    /**
+     * Update estate list with filtered or unfiltered estate list.
+     * @param estateList the new estate list to set.
+     */
+    internal fun updateEstateList(estateList: List<Estate>) = onRetrieveEstateList(estateList)
+
     // -------------
     // ADDRESS
     // -------------

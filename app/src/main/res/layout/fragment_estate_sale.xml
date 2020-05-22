@@ -60,7 +60,7 @@
                         android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"
-                        android:text="@={viewModel.estate.saleDate}"
+                        android:text="@={viewModel.saleDate}"
                         android:tag="saleDate" />
 
                     <View
@@ -101,7 +101,7 @@
                         android:layout_marginTop="@dimen/fragments_manage_estate_text_category_margin"
                         android:textStyle="bold"
                         android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"
-                        android:text="@={viewModel.estate.soldDate}"
+                        android:text="@={viewModel.soldDate}"
                         android:tag="soldDate" />
 
                     <View

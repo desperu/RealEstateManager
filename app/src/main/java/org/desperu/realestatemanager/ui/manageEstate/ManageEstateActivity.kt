@@ -162,7 +162,7 @@ class ManageEstateActivity: BaseActivity(), Communication {
     /**
      * On click add estate button.
      */
-    fun onClickAddEstate(v: View) = saveEstateAndFinish()
+    fun onClickAddEstate(v: View) { saveEstateAndFinish() }
 
     /**
      * On click add image.

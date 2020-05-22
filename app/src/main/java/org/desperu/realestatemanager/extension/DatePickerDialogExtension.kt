@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Context
 import android.widget.TextView
+import androidx.databinding.ObservableField
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.stringToDate
@@ -16,9 +17,10 @@ import java.util.*
  * @param pickerView the associated picker text view.
  * @param date the given string date, to set DatePickerDialog.
  */
-internal fun createDatePickerDialog(context: Context, pickerView: TextView, date: String?) {
+internal fun createDatePickerDialog(context: Context, pickerView: TextView, date: ObservableField<String>?) {
     val cal: Calendar = Calendar.getInstance()
-    if (!date.isNullOrEmpty()) stringToDate(date)?.let { cal.time = it }
+    val dateValue = date?.get()
+    if (!dateValue.isNullOrEmpty()) stringToDate(dateValue)?.let { cal.time = it }
     val year: Int = cal.get(Calendar.YEAR)
     val monthOfYear: Int = cal.get(Calendar.MONTH)
     val dayOfMonth: Int = cal.get(Calendar.DAY_OF_MONTH)

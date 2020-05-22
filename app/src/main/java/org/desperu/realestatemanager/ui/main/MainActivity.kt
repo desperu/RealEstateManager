@@ -28,6 +28,8 @@ import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
 import org.desperu.realestatemanager.ui.main.estateMap.ESTATE_LIST_MAP
 import org.desperu.realestatemanager.ui.main.estateMap.MAP_MODE
 import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
+import org.desperu.realestatemanager.ui.main.filter.FILTER_ESTATE_LIST
+import org.desperu.realestatemanager.ui.main.filter.FilterFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.utils.FULL_MODE
@@ -36,9 +38,31 @@ import org.desperu.realestatemanager.utils.RC_ESTATE
 import org.desperu.realestatemanager.view.MapMotionLayout
 
 /**
- * The name of the argument for passing the new or updated estate to this Activity.
+ * The argument name for intent to received the new or updated estate in this Activity.
  */
 const val NEW_ESTATE: String = "newEstate"
+
+/**
+ * The argument name for intent to received the new estate list, filtered or unfiltered, in this Activity.
+ */
+const val NEW_ESTATE_LIST: String = "newEstateList"
+
+/**
+ * Interface to allow communications with this activity.
+ */
+interface MainCommunication {
+    /**
+     * Get the current fragment instance, from fragment manager.
+     * @return the current Fragment instance.
+     */
+    fun getCurrentFragment(): Fragment?
+
+    /**
+     * Update estate list after filtered or unfiltered list.
+     * @param estateList the new estate list to set.
+     */
+    fun updateEstateList(estateList: List<Estate>)
+}
 
 /**
  * Activity to show estate list, estate details, and maps fragment.
@@ -46,7 +70,7 @@ const val NEW_ESTATE: String = "newEstate"
  *
  * @constructor Instantiates a new MainActivity.
  */
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener, MainCommunication {
 
     // FOR DATA
     private val fm = supportFragmentManager
@@ -61,7 +85,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     // Try to get MapsFragment instance child of EstateDetailFragment.
     private val mapsFragmentChildDetail
-        get() = (fm.findFragmentById(R.id.activity_main_frame_layout)?.childFragmentManager
+        get() = (getCurrentFragment()?.childFragmentManager
                 ?.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?)
 
     // --------------
@@ -141,14 +165,33 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
+    private fun configureAndAddFragment() {
+        val fragment = FilterFragment()
+        estateListFragment?.getViewModel()?.getEstateList?.get()?.let { populateEstateListToFragment(fragment, it) }
+        fm.beginTransaction()
+                .add(activity_main_frame_layout.id, fragment, fragment.javaClass.simpleName)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit()
+    }
+
     /**
      * Populate estate to fragment with bundle.
      * @param fragment the fragment instance to send estate.
      * @param estate the estate to populate.
      */
     private fun populateEstateToFragment(fragment: Fragment, estate: Estate) {
-        val bundle = Bundle()
-        bundle.putParcelable(ESTATE_DETAIL, estate)
+        fragment.arguments = fragment.arguments ?: Bundle()
+        fragment.arguments?.putParcelable(ESTATE_DETAIL, estate)
+    }
+
+    /**
+     * Populate estate list to fragment with bundle.
+     * @param fragment the fragment instance to send estate.
+     * @param estateList the estate list to populate.
+     */
+    private fun populateEstateListToFragment(fragment: Fragment, estateList: List<Estate>) {
+        val bundle = Bundle() // TODO("to perfect")
+        bundle.putParcelableArrayList(FILTER_ESTATE_LIST, estateList as ArrayList)
         fragment.arguments = bundle
     }
 
@@ -225,8 +268,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (activity_main_drawer_layout.isDrawerOpen(GravityCompat.START))
             activity_main_drawer_layout.closeDrawer(GravityCompat.START)
 
+        // If filter fragment is shown, hide it.
+        else if (fm.findFragmentById(R.id.activity_main_frame_layout) is FilterFragment) {
+            fm.beginTransaction().remove(fm.findFragmentById(R.id.activity_main_frame_layout) as FilterFragment).commit()
+            activity_main_floating_filter.visibility = View.VISIBLE
+
         // If search view is shown, hide it.
-        else if (toolbar_search_view != null && toolbar_search_view.isShown)
+        } else if (toolbar_search_view != null && toolbar_search_view.isShown)
             switchSearchViewVisibility()
 
         // If map is expended in estate detail fragment, collapse it.
@@ -241,9 +289,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // Else show previous fragment in back stack, and set fragment field with restored fragment.
         } else {
             super.onBackPressed()
-            fragment = fm.findFragmentById(R.id.activity_main_frame_layout)
+            fragment = getCurrentFragment()
         }
     }
+
+//    override fun onUserInteraction() {
+//        super.onUserInteraction()
+//        // To check nav drawer item when view pager change page.
+//        activity_main_nav_view.menu.getItem(viewPager.getCurrentItem()).isChecked = true
+//    }
 
     // --------------------
     // ACTION
@@ -255,6 +309,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     internal fun showEstateDetailFragment(estate: Estate) =
             configureAndShowFragment(EstateDetailFragment::class.java, estate)
+
+    /**
+     * On click fab filter action.
+     * @param v the clicked view (the fab).
+     */
+    fun onClickFilter(v: View) { configureAndAddFragment(); v.visibility = View.INVISIBLE }
 
 //    /**
 //     * Manage click on Your Lunch button.
@@ -307,6 +367,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     private fun showSettingsActivity() {
 //        startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
+    // -----------------
+    // DATA
+    // -----------------
+
+    /**
+     * Update estate list with new filtered or unfiltered estate list.
+     * @param estateList the new estate list to set.
+     */
+    override fun updateEstateList(estateList: List<Estate>) {
+        estateListFragment?.getViewModel()?.updateEstateList(estateList)
     }
 
     // -----------------
@@ -392,4 +464,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             newEstate?.let { estateDetailFragment?.let { it1 -> populateEstateToFragment(it1, it) } }
         }
     }
+
+    /**
+     * Return the current fragment instance attached to frame layout 1.
+     * @return the current fragment instance attached to frame layout 1.
+     */
+    override fun getCurrentFragment(): Fragment? = fm.findFragmentById(R.id.activity_main_frame_layout)
 }

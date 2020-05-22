@@ -58,6 +58,7 @@
                     android:layout_above="@id/item_image_toggle_button_container"
                     android:gravity="center"
                     android:background="@color/colorTransDark"
+                    android:focusedByDefault="false"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:textColor="@android:color/white"

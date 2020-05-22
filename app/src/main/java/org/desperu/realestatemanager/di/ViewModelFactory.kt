@@ -16,6 +16,8 @@ import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
 import org.desperu.realestatemanager.ui.main.estateList.EstateRouterImpl
 import org.desperu.realestatemanager.ui.main.estateMap.MapsViewModel
+import org.desperu.realestatemanager.ui.main.filter.FilterVMCommunicationImpl
+import org.desperu.realestatemanager.ui.main.filter.FilterViewModel
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateVMCommunication
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateVMCommunicationImpl
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
@@ -43,7 +45,6 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
      * @throws IllegalArgumentException if the class of the ViewModel is not one of the expected ones.
      */
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-
         when {
 
             // Return an EstateListViewModel instance.
@@ -80,6 +81,13 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
             modelClass.isAssignableFrom(EstateDetailViewModel::class.java) -> {
                 val router = ImagesRouterImpl(activity)
                 return EstateDetailViewModel(router) as T
+            }
+
+            // Return a FilterViewModel instance.
+            modelClass.isAssignableFrom(FilterViewModel::class.java) -> {
+                val resourceService = ResourceServiceImpl(activity)
+                val communication = FilterVMCommunicationImpl(activity)
+                return FilterViewModel(resourceService, communication) as T
             }
 
             // Asked View Model Class Not Found.

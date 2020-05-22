@@ -33,4 +33,13 @@
 <!--    <color name="colorPenthouse">#00695C</color>-->
 <!--    <color name="colorNoType">#AD1457</color>-->
 
+    <!-- Filter colors -->
+    <color name="filterBackground">#596CCF</color>
+    <color name="selectedFilter">#4297FF</color>
+    <color name="unselectedFilter">#4053BA</color>
+    <color name="barColor">#4631408E</color>
+    <color name="selectedBar">#4F90E1</color>
+    <color name="unselectedBar">#8F404C8E</color>
+    <color name="bottomBarRed">@android:color/holo_red_dark</color>
+
 </resources>

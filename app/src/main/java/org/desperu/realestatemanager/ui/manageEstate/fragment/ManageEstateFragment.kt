@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.annotation.ArrayRes
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -123,8 +124,8 @@ class ManageEstateFragment: BaseBindingFragment() {
             ESTATE_IMAGE -> configureImageRecycler()
             ESTATE_ADDRESS -> configureSpinner(fragment_estate_address_spinner_interest_places, R.array.estate_interest_places_list)
             ESTATE_SALE -> { configureSpinner(fragment_estate_sale_spinner_state, R.array.estate_state_list)
-                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sale_date, viewModel.estate.value?.saleDate)
-                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sold_out_date, viewModel.estate.value?.soldDate)
+                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sale_date, viewModel.saleDate)
+                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sold_out_date, viewModel.soldDate)
                            }
         }
     }
@@ -166,7 +167,7 @@ class ManageEstateFragment: BaseBindingFragment() {
      * @param pickerView the associated picker text view.
      * @param date the given string date, to set DatePickerDialog.
      */
-    private fun setPickerTextOnClickListener(context: Context, pickerView: TextView, date: String?) {
+    private fun setPickerTextOnClickListener(context: Context, pickerView: TextView, date: ObservableField<String>?) {
         pickerView.setOnClickListener { createDatePickerDialog(context, pickerView, date) }
     }
 

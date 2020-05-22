@@ -84,6 +84,9 @@ dependencies {
     // Swipe to refresh
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
+    // SeekBar
+    implementation 'com.crystal:crystalrangeseekbar:1.0.0'
+
     // LiveData & ViewModel
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"

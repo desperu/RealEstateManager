@@ -28,7 +28,7 @@
             android:id="@+id/fragment_estate_image_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:adapter="@{viewModel.getImageListAdapter}"
+            app:adapter="@{viewModel.getImageListAdapter.get()}"
             tools:listitem="@layout/item_manage_image"/>
 
     </LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item >
+
+        <shape android:shape="rectangle"  >
+
+            <corners android:radius="15dip" />
+
+            <stroke
+                android:width="1dip"
+                android:color="@color/selectedFilter" />
+
+            <gradient
+                android:angle="45"
+                android:startColor="@color/selectedFilter"
+                android:endColor="@color/selectedFilter" />
+
+        </shape>
+
+    </item>
+
+</selector>
