@@ -6,6 +6,7 @@
     <string name="fragment_maps_name">Estate Map</string>
     <string name="activity_manage_estate">Manage Estate</string>
     <string name="activity_show_images">Estate\'s Images</string>
+    <string name="activity_settings">Settings</string>
 
     <!-- LAYOUTS -->
     <!-- Main Activity -->
@@ -95,6 +96,28 @@
     <string name="fragment_estate_sale_text_sold_out_date">Sold Out Date</string>
     <string name="fragment_estate_sale_text_state">State</string>
     <string name="fragment_estate_sale_text_real_estate_agent">Real Estate Agent</string>
+
+    <!-- SETTINGS ACTIVITY -->
+    <string name="activity_settings_text_category_notification" translatable="false">Notifications</string>
+    <string name="activity_settings_text_notifications_state">Enable notifications</string>
+    <string name="activity_settings_text_notifications_description">Sent a notification when an estate was created.</string>
+    <string name="activity_settings_text_notifications_disable_update">Disable notification when update estate</string>
+    <string name="activity_settings_text_notifications_disable_update_description">Disable notification when an estate was updated.</string>
+    <string name="activity_settings_text_category_map">Map</string>
+    <string name="activity_settings_text_map_zoom_size">Map zoom level</string>
+    <string name="activity_settings_text_map_zoom_size_description">Set zoom level for the map, default 18, min 2, max 21.</string>
+    <string name="activity_settings_text_map_zoom_button">Enable map zoom button</string>
+    <string name="activity_settings_text_map_zoom_button_description">Show map zoom button, to control map zoom.</string>
+    <string name="activity_settings_text_category_reset_settings">Reset Settings</string>
+    <string name="activity_settings_text_reset_settings">Reset Settings</string>
+    <string name="activity_settings_text_reset_settings_description">Reset settings to original state.</string>
+    <!-- Alert Dialog -->
+    <string name="activity_settings_dialog_reset_settings_message">Are you sure you want reset settings to default?</string>
+    <string name="activity_settings_dialog_positive_button" translatable="false">OK</string>
+    <string name="activity_settings_dialog_negative_button">Cancel</string>
+    <!-- Toast -->
+    <string name="activity_settings_toast_zoom_level_wrong_value">Zoom level must be under 2 and 21 !</string>
+    <string name="activity_settings_toast_reset_settings_default">Settings Reset to default !</string>
 
     <!-- MENU -->
     <!-- Nav Drawer -->

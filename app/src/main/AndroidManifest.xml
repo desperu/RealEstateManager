@@ -47,6 +47,12 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/ShowImages"/>
 
+        <!-- SHOW IMAGES ACTIVITY -->
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:label="@string/activity_settings"
+            android:parentActivityName=".ui.main.MainActivity" />
+
+
         <!-- FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"

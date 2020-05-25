@@ -12,6 +12,14 @@ const val RC_ESTATE = 10
 const val exchangeRate = 0.812
 
 
+// FOR MAIN FRAGMENTS
+
+// Fragment identifier
+const val FRAG_ESTATE_LIST = 0
+const val FRAG_ESTATE_MAP = 1
+const val FRAG_ESTATE_DETAIL = 2
+const val FRAG_ESTATE_FILTER = 3
+
 // FOR VIEW PAGER
 
 const val numberOfPage = 4
@@ -25,7 +33,7 @@ const val ESTATE_SALE = 3
 
 // FOR GOOGLE MAPS
 
-// TO REPLACE BUTTON
+// To replace button
 
 // Map Toolbar Tag
 const val GOOGLE_MAP_TOOLBAR = "GoogleMapToolbar"
@@ -33,13 +41,11 @@ const val GOOGLE_MAP_TOOLBAR = "GoogleMapToolbar"
 // Zoom button Tag
 const val GOOGLE_MAP_ZOOM_OUT_BUTTON = "GoogleMapZoomOutButton"
 
-// FOR THE MAP MODE
-
+// For the map mode
 const val LITTLE_MODE = 0
 const val FULL_MODE = 1
 
-// FOR MAP ANIMATION MARKER
-
+// For map animation marker
 const val LITTLE_SIZE = "littleSize"
 const val FULL_SIZE = "fullSize"
 
@@ -58,13 +64,35 @@ const val PERM_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
 const val RC_PERM_LOCATION = 500
 
 
-// FOR SAVE IMAGE
+// FOR SAVE IMAGE IN STORAGE
 
 const val FOLDER_NAME = "EstateImages"
 
 
-// FOR COMPARISON RESULT
-
+// FOR MODELS COMPARISON RESULT
 
 const val EQUALS = 0
 const val NOT_EQUALS = 1
+
+
+// FOR SETTINGS ACTIVITY
+
+// For alert dialog
+const val ZOOM_DIALOG = 0
+const val RESET_DIALOG = 1
+
+
+// FOR SHARED PREFERENCES
+
+// Shared preferences keys
+const val NOTIFICATION_ENABLED = "notificationEnabled"
+const val DISABLE_UPDATE_NOTIFICATION = "disableUpdateNotification"
+const val MAP_ZOOM_LEVEL = "mapZoomLevel"
+const val MAP_ZOOM_BUTTON = "mapZoomButton"
+
+
+// Settings default value
+const val NOTIFICATION_DEFAULT = true
+const val UPDATE_NOTIFICATION_DEFAULT = true
+const val ZOOM_LEVEL_DEFAULT = 13
+const val ZOOM_BUTTON_DEFAULT = true

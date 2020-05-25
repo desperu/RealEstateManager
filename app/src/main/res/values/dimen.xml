@@ -129,6 +129,22 @@
     <dimen name="fragment_image_text_description_height">80dp</dimen>
     <dimen name="fragment_image_text_description_size">24sp</dimen>
 
+
+    <!-- Settings Activity -->
+    <dimen name="activity_settings_linear_container_padding_top">10dp</dimen>
+    <dimen name="activity_settings_text_category_and_divider_margin">10dp</dimen>
+    <dimen name="activity_settings_text_category_text_size">18sp</dimen>
+    <dimen name="activity_settings_text_category_padding_start_and_end">5dp</dimen>
+    <dimen name="activity_settings_divider_height">0.1dp</dimen>
+    <dimen name="activity_settings_constraint_container_padding">10dp</dimen>
+    <dimen name="activity_settings_constraint_container_padding_start_and_end">15dp</dimen>
+    <dimen name="activity_settings_text_setting_title_text_size">16sp</dimen>
+    <dimen name="activity_settings_text_setting_description_margin_top_and_end">10dp</dimen>
+    <dimen name="activity_settings_text_settings_description_text_size">14sp</dimen>
+    <dimen name="activity_settings_text_zoom_value_margin_end">15dp</dimen>
+    <dimen name="activity_settings_text_zoom_value_text_size">18sp</dimen>
+
+
     <!-- MENU -->
 
     <!-- Menu Drawer -->

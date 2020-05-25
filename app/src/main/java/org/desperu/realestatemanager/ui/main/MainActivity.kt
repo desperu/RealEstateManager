@@ -32,10 +32,10 @@ import org.desperu.realestatemanager.ui.main.filter.FILTER_ESTATE_LIST
 import org.desperu.realestatemanager.ui.main.filter.FilterFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
-import org.desperu.realestatemanager.utils.FULL_MODE
-import org.desperu.realestatemanager.utils.FULL_SIZE
-import org.desperu.realestatemanager.utils.RC_ESTATE
+import org.desperu.realestatemanager.ui.settings.SettingsActivity
+import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.view.MapMotionLayout
+import java.lang.IllegalArgumentException
 
 /**
  * The argument name for intent to received the new or updated estate in this Activity.
@@ -232,7 +232,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java, null)
             R.id.activity_main_menu_drawer_estate_map -> configureAndShowFragment(MapsFragment::class.java, null)
             R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity(null)
-            else -> {}
+            R.id.activity_main_menu_drawer_Search -> switchSearchViewVisibility()
+            R.id.activity_main_menu_drawer_credit -> TODO("to implement")
+            R.id.activity_main_menu_drawer_settings -> showSettingsActivity()
+            R.id.activity_main_drawer_about -> TODO("to implement")
+            R.id.activity_main_drawer_help -> TODO("to implement")
         }
         activity_main_drawer_layout.closeDrawer(GravityCompat.START)
         return true
@@ -365,9 +369,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * Start settings activity.
      */
-    private fun showSettingsActivity() {
-//        startActivity(Intent(this, SettingsActivity::class.java))
-    }
+    private fun showSettingsActivity() =
+        startActivity(Intent(this, SettingsActivity::class.java))
 
     // -----------------
     // DATA
@@ -470,4 +473,28 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @return the current fragment instance attached to frame layout 1.
      */
     override fun getCurrentFragment(): Fragment? = fm.findFragmentById(R.id.activity_main_frame_layout)
+
+    /**
+     * Get the associated fragment class with the given fragment key.
+     * @param fragmentKey the given fragment key from witch get the key.
+     */
+    private fun getFragClassFromKey(fragmentKey: Int) = when (fragmentKey) {
+        FRAG_ESTATE_LIST -> EstateListFragment::class.java
+        FRAG_ESTATE_MAP -> MapsFragment::class.java
+        FRAG_ESTATE_DETAIL -> EstateDetailFragment::class.java
+        FRAG_ESTATE_FILTER -> FilterFragment::class.java
+        else -> throw IllegalArgumentException("Fragment key not found : $fragmentKey")
+    }
+
+    /**
+     * Retrieve the associated fragment key with the fragment class.
+     * @param fragClass the given fragment class from witch retrieved the key.
+     */
+    private fun <T: Fragment> retrievedFragKeyFromClass(fragClass: Class<T>) = when (fragClass) {
+        EstateListFragment::class.java -> FRAG_ESTATE_LIST
+        MapsFragment::class.java -> FRAG_ESTATE_MAP
+        EstateDetailFragment::class.java -> FRAG_ESTATE_DETAIL
+        FilterFragment::class.java -> FRAG_ESTATE_FILTER
+        else -> throw IllegalArgumentException("Fragment class not found : ${fragClass.simpleName}")
+    }
 }

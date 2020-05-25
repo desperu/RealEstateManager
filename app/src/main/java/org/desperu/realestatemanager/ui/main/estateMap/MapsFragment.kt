@@ -189,8 +189,7 @@ class MapsFragment : BaseBindingFragment() {
      * Configure map zoom control, and reposition them.
      */
     private fun configureMapZoomButton() {
-        mGoogleMap?.uiSettings?.isZoomControlsEnabled = true
-//        mMap?.uiSettings?.isZoomControlsEnabled = Go4LunchPrefs.getBoolean(context, MAP_ZOOM_BUTTON, ZOOM_BUTTON_DEFAULT)
+        mGoogleMap?.uiSettings?.isZoomControlsEnabled = MySharedPreferences.getBoolean(context!!, MAP_ZOOM_BUTTON, ZOOM_BUTTON_DEFAULT)
         repositionMapZoom()
     }
 
