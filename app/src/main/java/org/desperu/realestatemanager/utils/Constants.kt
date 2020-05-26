@@ -12,7 +12,7 @@ const val RC_ESTATE = 10
 const val exchangeRate = 0.812
 
 
-// FOR MAIN FRAGMENTS
+// FOR MAIN
 
 // Fragment identifier
 const val FRAG_ESTATE_LIST = 0
@@ -20,7 +20,12 @@ const val FRAG_ESTATE_MAP = 1
 const val FRAG_ESTATE_DETAIL = 2
 const val FRAG_ESTATE_FILTER = 3
 
-// FOR VIEW PAGER
+// For Fab Filter State
+const val UNFILTERED = "unFiltered"
+const val FILTERED = "filtered"
+
+
+// FOR MANAGE ESTATE VIEW PAGER
 
 const val numberOfPage = 4
 

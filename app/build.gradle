@@ -20,6 +20,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testOptions {
             unitTests.returnDefaultValues = true
+            unitTests.includeAndroidResources = true
         }
 
         // Google maps api key

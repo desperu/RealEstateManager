@@ -136,8 +136,6 @@ class ManageEstateFragment: BaseBindingFragment() {
      * @param id String array id for spinner.
      */
     private fun configureSpinner(spinner: Spinner, @ArrayRes id: Int) {
-//        fragment_estate_data_spinner_type.onItemSelectedListener = this
-//        activity_manage_estate_spinner_type.startDragAndDrop() // TODO customize list ??
         val spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, resources.getStringArray(id))
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerAdapter

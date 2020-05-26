@@ -61,7 +61,8 @@ class SettingsActivity : BaseActivity() {
             zoomLevel = MySharedPreferences.getInt(baseContext, MAP_ZOOM_LEVEL, ZOOM_LEVEL_DEFAULT)
             isZoomButtonEnabled = MySharedPreferences.getBoolean(baseContext, MAP_ZOOM_BUTTON, ZOOM_BUTTON_DEFAULT)
         }
-
+// TODO disable save image in storage???
+    // TODO don't move primary image in first position
     /**
      * Save current prefs.
      */

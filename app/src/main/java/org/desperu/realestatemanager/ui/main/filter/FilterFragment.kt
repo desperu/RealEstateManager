@@ -2,6 +2,7 @@ package org.desperu.realestatemanager.ui.main.filter
 
 import android.content.Context
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,6 +15,8 @@ import org.desperu.realestatemanager.databinding.FragmentFilterBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.extension.createDatePickerDialog
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.view.NothingSelectedSpinnerAdapter
+
 
 /**
  * The argument name for bundle, to received estate list in this Fragment.
@@ -44,6 +47,7 @@ class FilterFragment: BaseBindingFragment() {
 
     override fun updateDesign() {
         configureDatePicker()
+        configureSpinner()
     }
 
     // -----------------
@@ -66,8 +70,10 @@ class FilterFragment: BaseBindingFragment() {
      * Configure begin and end date picker.
      */
     private fun configureDatePicker() {
-        setPickerTextOnClickListener(context!!, fragment_filter_begin_date, viewModel?.saleBeginObs)
-        setPickerTextOnClickListener(context!!, fragment_filter_end_date, viewModel?.saleEndObs)
+        setPickerTextOnClickListener(context!!, fragment_filter_sale_date_begin, viewModel?.saleBeginObs)
+        setPickerTextOnClickListener(context!!, fragment_filter_sale_date_end, viewModel?.saleEndObs)
+        setPickerTextOnClickListener(context!!, fragment_filter_sold_date_begin, viewModel?.soldBeginObs)
+        setPickerTextOnClickListener(context!!, fragment_filter_sold_date_end, viewModel?.soldEndObs)
     }
 
     /**
@@ -78,6 +84,18 @@ class FilterFragment: BaseBindingFragment() {
      */
     private fun setPickerTextOnClickListener(context: Context, pickerView: TextView, date: ObservableField<String>?) {
         pickerView.setOnClickListener { createDatePickerDialog(context, pickerView, date) }
+    }
+
+    /**
+     * Configure state spinner with adapter.
+     */
+    private fun configureSpinner() {
+        val spinnerAdapter = ArrayAdapter(context!!, R.layout.spinner_item, resources.getStringArray(R.array.estate_state_list))
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        fragment_filter_spinner_state.adapter = NothingSelectedSpinnerAdapter(
+                spinnerAdapter,
+                R.layout.spinner_row_nothing_selected,
+                context!!)
     }
 
     // -----------------

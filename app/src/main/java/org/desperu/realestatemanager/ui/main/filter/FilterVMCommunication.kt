@@ -20,8 +20,14 @@ interface FilterVMCommunication {
     /**
      * Used to allow view model to update estate list.
      * @param estateList the new estate list to set.
+     * @param hasFilter true if list has filter, false otherwise.
      */
-    fun updateEstateList(estateList: List<Estate>)
+    fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean)
+
+    /**
+     * Used to allow view model to close filter fragment.
+     */
+    fun closeFilterFragment()
 }
 
 /**
@@ -52,7 +58,14 @@ class FilterVMCommunicationImpl(private val activity: AppCompatActivity): Filter
     /**
      * Used to allow view model to update estate list.
      * @param estateList the new estate list to set.
+     * @param hasFilter true if list has filter, false otherwise.
      */
-    override fun updateEstateList(estateList: List<Estate>) =
-            (activity as MainCommunication).updateEstateList(estateList)
+    override fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean) =
+            (activity as MainCommunication).updateEstateList(estateList, hasFilter)
+
+    /**
+     * Used to allow view model to close filter fragment.
+     */
+    override fun closeFilterFragment() =
+            (activity as MainCommunication).closeFilterFragment()
 }

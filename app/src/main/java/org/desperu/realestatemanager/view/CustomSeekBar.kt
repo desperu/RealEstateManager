@@ -118,7 +118,6 @@ class CustomSeekBar @JvmOverloads constructor(context: Context, attrs: Attribute
      * @return Return the min text view for this seek bar.
      */
     private fun getTvMin() = when (id) {
-        R.id.fragment_filter_seekbar_distance -> parentView?.fragment_filter_seekbar_location_text_min
         R.id.fragment_filter_seekbar_price -> parentView?.fragment_filter_seekbar_price_text_min
         R.id.fragment_filter_seekbar_surface -> parentView?.fragment_filter_seekbar_surface_text_min
         R.id.fragment_filter_seekbar_rooms -> parentView?.fragment_filter_seekbar_rooms_text_min
@@ -130,7 +129,6 @@ class CustomSeekBar @JvmOverloads constructor(context: Context, attrs: Attribute
      * @return Return the max text view for this seek bar.
      */
     private fun getTvMax() = when (id) {
-        R.id.fragment_filter_seekbar_distance -> parentView?.fragment_filter_seekbar_location_text_max
         R.id.fragment_filter_seekbar_price -> parentView?.fragment_filter_seekbar_price_text_max
         R.id.fragment_filter_seekbar_surface -> parentView?.fragment_filter_seekbar_surface_text_max
         R.id.fragment_filter_seekbar_rooms -> parentView?.fragment_filter_seekbar_rooms_text_max
@@ -142,9 +140,8 @@ class CustomSeekBar @JvmOverloads constructor(context: Context, attrs: Attribute
      * @return Return the corrected value for this seek bar.
      */
     private fun getCorrectedValue(value: Int): Int = when (id) {
-        R.id.fragment_filter_seekbar_distance -> value
         R.id.fragment_filter_seekbar_price -> value * 100000
-        R.id.fragment_filter_seekbar_surface -> value * 10
+        R.id.fragment_filter_seekbar_surface -> value * 5
         R.id.fragment_filter_seekbar_rooms -> value / 2
         else -> 0
     }

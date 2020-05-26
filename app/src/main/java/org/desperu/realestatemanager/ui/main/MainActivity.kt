@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.ui.main
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -43,9 +44,14 @@ import java.lang.IllegalArgumentException
 const val NEW_ESTATE: String = "newEstate"
 
 /**
- * The argument name for intent to received the new estate list, filtered or unfiltered, in this Activity.
+ * The argument name for intent to received the full estate list in this Activity.
  */
-const val NEW_ESTATE_LIST: String = "newEstateList"
+const val FULL_ESTATE_LIST: String = "fullEstateList"
+
+/**
+ * The argument name for intent to received the filtered estate list in this Activity.
+ */
+const val FILTERED_ESTATE_LIST: String = "filteredEstateList"
 
 /**
  * Interface to allow communications with this activity.
@@ -60,8 +66,14 @@ interface MainCommunication {
     /**
      * Update estate list after filtered or unfiltered list.
      * @param estateList the new estate list to set.
+     * @param hasFilter true if list has filter, false otherwise.
      */
-    fun updateEstateList(estateList: List<Estate>)
+    fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean)
+
+    /**
+     * Close filter fragment.
+     */
+    fun closeFilterFragment()
 }
 
 /**
@@ -75,6 +87,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // FOR DATA
     private val fm = supportFragmentManager
     private var fragment: Fragment? = null
+    private val fullEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FULL_ESTATE_LIST)
+    private val filteredEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FILTERED_ESTATE_LIST)
 
     // Try to get Fragment instance from back stack, if not found value was null.
     private val estateListFragment
@@ -82,6 +96,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private val estateDetailFragment
         get() = (fm.findFragmentByTag(EstateDetailFragment::class.java.simpleName) as EstateDetailFragment?)
+
+    private val mapsFragment
+        get() = (fm.findFragmentByTag(MapsFragment::class.java.simpleName) as MapsFragment?)
 
     // Try to get MapsFragment instance child of EstateDetailFragment.
     private val mapsFragmentChildDetail
@@ -166,8 +183,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun configureAndAddFragment() {
+        activity_main_fab_filter.visibility = View.INVISIBLE
         val fragment = FilterFragment()
-        estateListFragment?.getViewModel()?.getEstateList?.get()?.let { populateEstateListToFragment(fragment, it) }
+        populateEstateListToFragment(fragment, FILTER_ESTATE_LIST)
         fm.beginTransaction()
                 .add(activity_main_frame_layout.id, fragment, fragment.javaClass.simpleName)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -187,12 +205,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * Populate estate list to fragment with bundle.
      * @param fragment the fragment instance to send estate.
-     * @param estateList the estate list to populate.
+     * @param bundleKey the bundle key to use.
      */
-    private fun populateEstateListToFragment(fragment: Fragment, estateList: List<Estate>) {
-        val bundle = Bundle() // TODO("to perfect")
-        bundle.putParcelableArrayList(FILTER_ESTATE_LIST, estateList as ArrayList)
-        fragment.arguments = bundle
+    private fun populateEstateListToFragment(fragment: Fragment, bundleKey: String) {
+        fragment.arguments = fragment.arguments ?: Bundle()
+        fragment.arguments?.putParcelableArrayList(bundleKey, (filteredEstateList ?: fullEstateList) as ArrayList)
     }
 
     /**
@@ -200,10 +217,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param fragment the fragment instance to send data.
      */
     private fun setMapsFragmentBundle(fragment: Fragment) {
-        val bundle = Bundle()
-        bundle.putParcelableArrayList(ESTATE_LIST_MAP, estateListFragment?.getViewModel()?.getEstateList?.get() as ArrayList<Estate>?)
-        bundle.putInt(MAP_MODE, FULL_MODE)
-        fragment.arguments = bundle
+        fragment.arguments = fragment.arguments ?: Bundle()
+        populateEstateListToFragment(fragment, ESTATE_LIST_MAP)
+        fragment.arguments?.putInt(MAP_MODE, FULL_MODE)
+    }
+
+    /**
+     * Close filter fragment.
+     */
+    override fun closeFilterFragment() {
+        fm.beginTransaction().remove(fm.findFragmentById(R.id.activity_main_frame_layout) as FilterFragment).commit()
+        activity_main_fab_filter.visibility = View.VISIBLE
     }
 
     // -----------------
@@ -232,7 +256,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(EstateListFragment::class.java, null)
             R.id.activity_main_menu_drawer_estate_map -> configureAndShowFragment(MapsFragment::class.java, null)
             R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity(null)
-            R.id.activity_main_menu_drawer_Search -> switchSearchViewVisibility()
+            R.id.activity_main_menu_drawer_Search -> {
+                switchSearchViewVisibility(true)
+                configureAndAddFragment()
+            }
             R.id.activity_main_menu_drawer_credit -> TODO("to implement")
             R.id.activity_main_menu_drawer_settings -> showSettingsActivity()
             R.id.activity_main_drawer_about -> TODO("to implement")
@@ -261,7 +288,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.activity_main_menu_add -> showManageEstateActivity(null)
-            R.id.activity_main_menu_search -> switchSearchViewVisibility()
+            R.id.activity_main_menu_search -> switchSearchViewVisibility(false)
         }
 
         return super.onOptionsItemSelected(item)
@@ -273,13 +300,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             activity_main_drawer_layout.closeDrawer(GravityCompat.START)
 
         // If filter fragment is shown, hide it.
-        else if (fm.findFragmentById(R.id.activity_main_frame_layout) is FilterFragment) {
-            fm.beginTransaction().remove(fm.findFragmentById(R.id.activity_main_frame_layout) as FilterFragment).commit()
-            activity_main_floating_filter.visibility = View.VISIBLE
+        else if (fm.findFragmentById(R.id.activity_main_frame_layout) is FilterFragment)
+            closeFilterFragment()
 
         // If search view is shown, hide it.
-        } else if (toolbar_search_view != null && toolbar_search_view.isShown)
-            switchSearchViewVisibility()
+        else if (toolbar_search_view != null && toolbar_search_view.isShown)
+            switchSearchViewVisibility(false)
 
         // If map is expended in estate detail fragment, collapse it.
         else if (mapsFragmentChildDetail?.view?.fragment_maps_fullscreen_button?.tag == FULL_SIZE)
@@ -318,7 +344,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * On click fab filter action.
      * @param v the clicked view (the fab).
      */
-    fun onClickFilter(v: View) { configureAndAddFragment(); v.visibility = View.INVISIBLE }
+    fun onClickFilter(v: View) {
+        if (v.tag == UNFILTERED)
+            configureAndAddFragment()
+        else {
+            fullEstateList?.let { updateEstateList(it, false) }
+            intent.removeExtra(FILTERED_ESTATE_LIST)
+        }
+    }
 
 //    /**
 //     * Manage click on Your Lunch button.
@@ -379,9 +412,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * Update estate list with new filtered or unfiltered estate list.
      * @param estateList the new estate list to set.
+     * @param hasFilter true if list has filters, false otherwise.
      */
-    override fun updateEstateList(estateList: List<Estate>) {
+    override fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean) {
+        // TODO swipe refresh when have filter don't switch fab filter state
         estateListFragment?.getViewModel()?.updateEstateList(estateList)
+        mapsFragment?.updateEstateList(estateList)
+        if (hasFilter) {
+            intent.putParcelableArrayListExtra(FILTERED_ESTATE_LIST, estateList as ArrayList)
+            closeFilterFragment()
+        }
+        switchFabFilter(hasFilter)
     }
 
     // -----------------
@@ -402,10 +443,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     /**
      * Switch search view visibility, clear query and start animations.
+     * @param fromDrawer true if called from menu drawer.
      */
-    private fun switchSearchViewVisibility() {
+    private fun switchSearchViewVisibility(fromDrawer: Boolean) {
         // Hide search view
-        if (toolbar_search_view != null && toolbar_search_view.isShown) {
+        if (toolbar_search_view != null && toolbar_search_view.isShown && !fromDrawer) {
             val animation: Animation = AnimationUtils.loadAnimation(baseContext, R.anim.search_view_anim_hide)
             (toolbar_search_view as View).startAnimation(animation)
             toolbar_search_view.visibility = View.INVISIBLE
@@ -438,6 +480,29 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         // Set animation for each menu item.
         menuItemList.forEach { it?.startAnimation(animation) }
+    }
+
+    private fun fabFilterVisibility(toHide: Boolean) {
+        TODO("to implement")
+    }
+
+    @Suppress("deprecation")
+    private fun switchFabFilter(hasFilter: Boolean) = activity_main_fab_filter.apply {
+        if (hasFilter) {
+            setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_add_white_48))
+            backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.bottomBarRed))
+            rotation = 45F
+            tag = FILTERED
+        } else {
+            setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_filter_list_black_48))
+            backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.filterBackground))
+            rotation = 0F
+            tag = UNFILTERED
+        }
+    }
+
+    private fun fabFilterPosition(position: Int) {
+        TODO("to implement")
     }
 
     // -----------------

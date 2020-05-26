@@ -2,13 +2,21 @@ package org.desperu.realestatemanager.ui.main.estateList
 
 import androidx.appcompat.app.AppCompatActivity
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.ui.main.FULL_ESTATE_LIST
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
+import java.util.ArrayList
 
 /**
  * The estate router that allows redirection of the user.
  */
 interface EstateRouter {
+
+    /**
+     * Populate full estate list to main.
+     * @param estateList the full estate list to populate.
+     */
+    fun populateEstateListToMain(estateList: List<Estate>)
 
     /**
      * Redirects the user to the EstateDetail Fragment to show estate details.
@@ -33,6 +41,14 @@ interface EstateRouter {
  * @param activity the Activity that is used to perform redirection to set.
  */
 class EstateRouterImpl(private val activity: AppCompatActivity): EstateRouter {
+
+    /**
+     * Populate full estate list to main.
+     * @param estateList the full estate list to populate.
+     */
+    override fun populateEstateListToMain(estateList: List<Estate>) {
+        (activity as MainActivity).intent.putParcelableArrayListExtra(FULL_ESTATE_LIST, estateList as ArrayList)
+    }
 
     /**
      * Redirects the user to the EstateDetail Fragment to show estate details.

@@ -261,9 +261,18 @@ class MapsFragment : BaseBindingFragment() {
     private fun onMapLongClick(latLng: LatLng) { mGoogleMap?.addMarker(MarkerOptions().position(latLng)) }
 
     /**
-     * On camera idle (camera move), update marker estates on map, only when show estate list on map.
+     * On camera idle (camera move), refresh marker estates on map, only when show estate list on map.
      */
-    private fun onCameraIdle() { viewModel?.updateEstateList() }
+    private fun onCameraIdle() { if (mapMode == FULL_MODE) viewModel?.updateEstateList(null) }
+
+    /**
+     * Update estate list.
+     * @param estateList the estate list to set.
+     */
+    internal fun updateEstateList(estateList: List<Estate>) {
+        mGoogleMap?.clear()
+        viewModel?.updateEstateList(estateList)
+    }
 
     /**
      * Method called when query text change.

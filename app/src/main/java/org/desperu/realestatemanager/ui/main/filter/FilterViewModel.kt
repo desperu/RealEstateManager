@@ -3,6 +3,7 @@ package org.desperu.realestatemanager.ui.main.filter
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
 import android.widget.TextView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.utils.Utils.stringToDate
 import org.desperu.realestatemanager.view.OnRangeChangeListener
 import java.lang.IllegalArgumentException
+import java.util.*
 
 /**
  * View Model witch register and apply filters for estate list.
@@ -35,25 +37,22 @@ class FilterViewModel(private val resource: ResourceService,
     // FOR DATA
     private var originalList = listOf<Estate>()
     private val mapFilters = sortedMapOf<String, Any>()
+    private val hasFilter: Boolean get() = mapFilters.isNotEmpty()
     private val selectedBackground = resource.getDrawable(R.drawable.text_filter_selected)
     private val unselectedBackground = resource.getDrawable(R.drawable.text_filter_unselected)
-    // Custom setter for date values, due to multiple uses, in layout, in DialogDatePicker and need to intercept when set here.
+    // Custom setter for dates values, due to multiple uses, in layout, in DialogDatePicker and need to intercept when set here.
     var saleBegin = String()
-        set(value) {
-            field = value
-            saleBeginObs.set(value)
-            if (value.isNotBlank()) addFilter("saleBegin", value)
-            else removeFilter("saleBegin", null)
-        }
-    var saleEnd = String()
-        set(value) {
-            field = value
-            saleEndObs.set(value)
-            if (value.isNotBlank()) addFilter("saleEnd", value)
-            else removeFilter("saleEnd", null)
-        }
+        set(value) { field = value; saleBeginObs.set(value); manageDateFilter("saleDate", saleBegin, saleEnd) }
     val saleBeginObs = ObservableField<String>()
+    var saleEnd = String()
+        set(value) { field = value; saleEndObs.set(value); manageDateFilter("saleDate", saleBegin, saleEnd) }
     val saleEndObs = ObservableField<String>()
+    var soldBegin = String()
+        set(value) { field = value; soldBeginObs.set(value); manageDateFilter("soldDate", soldBegin, soldEnd) }
+    val soldBeginObs = ObservableField<String>()
+    var soldEnd = String()
+        set(value) { field = value; soldEndObs.set(value); manageDateFilter("soldDate", soldBegin, soldEnd) }
+    val soldEndObs = ObservableField<String>()
 
     // -------------
     // SET ORIGINAL LIST
@@ -100,6 +99,17 @@ class FilterViewModel(private val resource: ResourceService,
         updateBottomBarColor()
     }
 
+    /**
+     * Manage dates filters.
+     * @param key the key of the date filter.
+     * @param beginDate the begin date of the filter.
+     * @param endDate the end date of the filter.
+     */
+    private fun manageDateFilter(key: String, beginDate: String, endDate: String) {
+        if (beginDate.isNotBlank() || endDate.isNotBlank()) addFilter(key, listOf(beginDate, endDate))
+        else removeFilter(key, null)
+    }
+
     // -------------
     // LISTENER
     // -------------
@@ -117,36 +127,49 @@ class FilterViewModel(private val resource: ResourceService,
             removeFilter(key, value)
             it.background = unselectedBackground
         }
-        // TODO("manage myLocation, city and seek distance")
     }
 
     /**
      * Text watcher for edit text city.
      */
-    private val onTextChanged = object: TextWatcher {
+    private val onTextCityChanged = object: TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             if (!s.isNullOrBlank()) addFilter("city", s.toString())
             else removeFilter("city", null)
         }
-
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
     }
 
     /**
-     * On range change listener for all custom seek bar. TODO("put in binding adapters and use getMapsFilter as value in xml")
+     * Text watcher for edit text minimum image number.
+     */
+    private val onTextImageChanged = object: TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            if (!s.isNullOrBlank()) addFilter("imageNumber", s.toString())
+            else removeFilter("imageNumber", null)
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    /**
+     * On range change listener for all custom seek bar.
      */
     private val onRangeChanged = object : OnRangeChangeListener {
         override fun onRangeSelected(view: View, minValue: Number, maxValue: Number) {
-            addFilter("${view.tag}Min", minValue)
-            addFilter("${view.tag}Max", maxValue)
+            addFilter("${view.tag}", listOf(minValue, maxValue))
         }
+        override fun onRangeUnselected(view: View) { removeFilter("${view.tag}", null) }
+    }
 
-        override fun onRangeUnselected(view: View) {
-            removeFilter("${view.tag}Min", null)
-            removeFilter("${view.tag}Max", null)
+    /**
+     * Spinner listener, for state spinner.
+     */
+    private val spinnerListener = object: AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if (position > 0) addFilter("${parent?.tag}", parent?.getItemAtPosition(position).toString())
         }
     }
 
@@ -154,19 +177,18 @@ class FilterViewModel(private val resource: ResourceService,
     // UTILS
     // -------------
 
+    /**
+     * Apply all filters in map filters to estate list.
+     */
     fun applyFilters() = viewModelScope.launch(Dispatchers.Default) {
         if (mapFilters.isNotEmpty()) {
-            val tempList = mutableListOf<Estate>()
             val filteredList = mutableListOf<Estate>()
-//        mapFilters.forEach {
-//            filteredList.addAll(originalList.filter { estate ->  getPredicate(estate, it.key, it.value) })
-//        }
 
-            originalList.forEach { estate ->
+            originalList.forEach estate@ { estate ->
                 var match = false
                 mapFilters.forEach {
                     match = getPredicate(estate, it.key, it.value)
-                    if (!match) return@forEach
+                    if (!match) return@estate
                 }
                 if (match) filteredList.add(estate)
             }
@@ -174,26 +196,49 @@ class FilterViewModel(private val resource: ResourceService,
         }
     }
 
-    fun removeFilters() {
-        mapFilters.clear()
-        updateEstateList(originalList)
-    }
-
+    /**
+     * Check if the estate value is under the ranges values, or equal the value.
+     * @param originalEstate the estate to test.
+     * @param key the filter key.
+     * @param value the filter value.
+     * @return true if the estate value match the filter value, false otherwise.
+     */
     private fun getPredicate(originalEstate: Estate, key: String, value: Any): Boolean = when (key) {
         "type" -> (value as List<String>).contains(originalEstate.type)
-//        "myLocation" -> // TODO("use seek distance and distanceTo function from go4lunch")
-//        "distanceMin" ->
-//        "distanceMax" ->
-        "priceMin" -> originalEstate.price >= (value as Int).toLong()
-        "priceMax" -> originalEstate.price <= (value as Int).toLong()
-        "surfaceMin" -> originalEstate.surfaceArea >= value as Int
-        "surfaceMax" -> originalEstate.surfaceArea <= value as Int
-        "roomsMin" -> originalEstate.roomNumber >= value as Int
-        "roomsMax" -> originalEstate.roomNumber <= value as Int
+        "city" -> originalEstate.address.city.toLowerCase(Locale.ROOT).contains(value.toString().toLowerCase(Locale.ROOT))
+        "imageNumber" -> originalEstate.imageList.size >= value.toString().toInt()
+        "price" -> originalEstate.price >= (value as List<Int>)[0] && originalEstate.price <= value[1]
+        "surface" -> originalEstate.surfaceArea >= (value as List<Int>)[0] && originalEstate.surfaceArea <= value[1]
+        "rooms" -> originalEstate.roomNumber >= (value as List<Int>)[0] && originalEstate.roomNumber <= value[1]
 //        "interestPlaces" -> originalEstate.interestPlaces == (value as List<String>).containsAll()
-        "saleBegin" -> stringToDate(value.toString())!! <= stringToDate(originalEstate.saleDate)
-        "saleEnd" -> stringToDate(value.toString())!! >= stringToDate(originalEstate.saleDate)
+        "saleDate" -> compareDates(stringToDate(originalEstate.saleDate), value as List<String>)
+        "soldDate" -> compareDates(stringToDate(originalEstate.soldDate), value as List<String>)
+        "state" -> originalEstate.state == value.toString()
         else -> throw IllegalArgumentException("Filter key not found: $key")
+    }
+
+    /**
+     * Compare estate date with range dates.
+     * @param estateDate the estate date to compare.
+     * @param rangeDate the range dates to compare to.
+     * @return true if the estate date is in the the ranges dates.
+     */
+    private fun compareDates(estateDate: Date?, rangeDate: List<String>): Boolean {
+        var compare1 = false
+        var compare2 = false
+        if (estateDate != null) {
+            compare1 = if (rangeDate[0].isNotBlank()) estateDate >= stringToDate(rangeDate[0]) else true
+            compare2 = if (rangeDate[1].isNotBlank()) estateDate <= stringToDate(rangeDate[1]) else true
+        }
+        return compare1 && compare2
+    }
+
+    /**
+     * Remove all filters in map filters.
+     */
+    fun removeFilters() {
+        mapFilters.clear()
+        communication.closeFilterFragment()
     }
 
     // -------------
@@ -204,7 +249,7 @@ class FilterViewModel(private val resource: ResourceService,
      * Update bottom bar color, depend if has filters set.
      */
     private fun updateBottomBarColor() = viewModelScope.launch(Dispatchers.Main) {
-        communication.updateBottomBarColor(mapFilters.isNotEmpty())
+        communication.updateBottomBarColor(hasFilter)
     }
 
     /**
@@ -212,14 +257,18 @@ class FilterViewModel(private val resource: ResourceService,
      * @param newList the new estate list to set.
      */
     private fun updateEstateList(newList: List<Estate>) = viewModelScope.launch(Dispatchers.Main) {
-        communication.updateEstateList(newList)
+        communication.updateEstateList(newList, hasFilter)
     }
 
     // --- GETTERS ---
 
     val getOnClickFilter = onClickFilter
 
-    val getOnTextChanged = onTextChanged
+    val getOnTextCityChanged = onTextCityChanged
+
+    val getOnTextImageChanged = onTextImageChanged
 
     val getOnRangeChanged = onRangeChanged
+
+    val getSpinnerListener = spinnerListener
 }

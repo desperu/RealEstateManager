@@ -1,7 +1,6 @@
 package org.desperu.realestatemanager.ui.main.estateList
 
 import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,7 +44,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // FOR DATA
     private val estateListAdapter = MutableLiveData(RecyclerViewAdapter(R.layout.item_estate_large))
     private val estateVMList = mutableListOf<EstateViewModel>()
-    private val estateList = ObservableField<List<Estate>>() // TODO remove not used
     private val refreshing = ObservableBoolean(false)
     private val showEmptyText = ObservableBoolean(false)
 
@@ -67,6 +65,8 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             estate.address = addressRepository.getAddress(estate.id)
         }
         onRetrieveEstateList(estateList)
+        // Populate to main
+        router.populateEstateListToMain(estateList)
     }
 
     /**
@@ -118,8 +118,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router) })
         estateListAdapter.value?.updateList(estateVMList as MutableList<Any>)
         estateListAdapter.value?.notifyDataSetChanged()
-        // For Map List
-        this.estateList.set(estateList)
         // For Swipe To Delete
         updateList(estateVMList as MutableList<Any>)
         // Set latitude and longitude for each estate address if not already do.
@@ -178,8 +176,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     val getEstateListAdapter: LiveData<RecyclerViewAdapter> = estateListAdapter
 
     val getEstateVMList = estateVMList
-
-    val getEstateList = estateList
 
     val getRefreshing = refreshing
 

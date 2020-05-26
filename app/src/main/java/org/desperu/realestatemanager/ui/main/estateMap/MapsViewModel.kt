@@ -41,12 +41,13 @@ class MapsViewModel(private val router: EstateRouter): ViewModel() {
     // -------------
 
     /**
-     * Update the estate list for the map.
+     * Update the estate list for the map, if new list is null, set original list..
+     * @param newEstateList the new estate list to set.
      */
-    internal fun updateEstateList() {
+    internal fun updateEstateList(newEstateList: List<Estate>?) {
         val tempEstateList = estateList.get()
-        estateList.set(null)
-        estateList.set(tempEstateList)
+        estateList.set(newEstateList)
+        newEstateList ?: estateList.set(tempEstateList)
     }
 
     // -------------
