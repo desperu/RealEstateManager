@@ -54,6 +54,11 @@ const val FULL_ESTATE_LIST: String = "fullEstateList"
 const val FILTERED_ESTATE_LIST: String = "filteredEstateList"
 
 /**
+ * The argument name for intent to received the estate from notification to this Activity.
+ */
+const val ESTATE_NOTIFICATION: String = "estateNotification"
+
+/**
  * Interface to allow communications with this activity.
  */
 interface MainCommunication {
@@ -89,6 +94,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private var fragment: Fragment? = null
     private val fullEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FULL_ESTATE_LIST)
     private val filteredEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FILTERED_ESTATE_LIST)
+    private val estateNotification get() = intent.getParcelableExtra<Estate>(ESTATE_NOTIFICATION)
 
     // Try to get Fragment instance from back stack, if not found value was null.
     private val estateListFragment
@@ -238,15 +244,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // METHODS OVERRIDE
     // -----------------
 
-    override fun onResume() {
+    override fun onResume() { // TODO restore fragment when turn phone
         super.onResume()
-//        if (this.isCurrentUserLogged()) {
-//            configureAndShowFragment(if (this.currentFragment >= 0) currentFragment else MAP_FRAGMENT)
-//            configureDataBindingForHeader()
-//            this.loadOrCreateUserInFirestore()
-//            enableNotifications()
-//            this.manageResetBookedRestaurant()
-//        } else this.startSignInActivity()
+        if (estateNotification != null) {
+            configureAndShowFragment(EstateDetailFragment::class.java, estateNotification)
+            intent.removeExtra(ESTATE_NOTIFICATION)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

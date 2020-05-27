@@ -22,13 +22,12 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.notification.Notification
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.main.NEW_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateFragment
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
-import org.desperu.realestatemanager.utils.EQUALS
-import org.desperu.realestatemanager.utils.ESTATE_IMAGE
-import org.desperu.realestatemanager.utils.RC_ESTATE
+import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.view.MyPageTransformer
 
 /**
@@ -173,16 +172,31 @@ class ManageEstateActivity: BaseActivity(), Communication {
     }
 
     /**
-     * Save managed estate in database, show toast to inform user, send manage result to main activity
-     * and hide soft keyboard if visible.
+     * Save managed estate in database, show notification and toast to inform user,
+     * send manage result to main activity and hide soft keyboard if visible, and finish this activity.
      */
     private fun saveEstateAndFinish() = lifecycleScope.launch(Dispatchers.Main) {
         viewModel?.createOrUpdateEstate()
+        val estate = viewModel?.estate?.value
+        estate?.let { showEstateNotif(it) }
         showToast(getString(R.string.activity_manage_estate_save_estate_message))
         setResult(RESULT_OK, Intent(baseContext, MainActivity::class.java)
-                .putExtra(NEW_ESTATE, viewModel?.estate?.value))
+                .putExtra(NEW_ESTATE, estate))
         hideSoftKeyBoard()
         finish()
+    }
+
+    /**
+     * Show estate notification if enabled in settings.
+     * @param estate the created or updated estate.
+     */
+    private fun showEstateNotif(estate: Estate) {
+        val isNew = estate.id == 0L
+        val notifEnabled =
+                if (isNew) MySharedPreferences.getBoolean(this, NOTIFICATION_ENABLED, NOTIFICATION_DEFAULT)
+                else !MySharedPreferences.getBoolean(this, DISABLE_UPDATE_NOTIFICATION, UPDATE_NOTIFICATION_DEFAULT)
+        if (notifEnabled)
+            Notification().createNotification(this, estate, isNew)
     }
 
     // -----------------

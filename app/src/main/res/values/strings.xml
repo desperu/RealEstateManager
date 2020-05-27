@@ -142,4 +142,9 @@
     <!-- Custom Spinner -->
     <string name="custom_spinner_select">Select…</string>
 
+    <!-- Notification -->
+    <string name="notification_title_create">Estate successfully created !</string>
+    <string name="notification_title_update">Estate successfully updated !</string>
+    <string name="notification_full_content_text">%1$s at %2$s, for %3$s</string>
+
 </resources>
