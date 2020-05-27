@@ -235,48 +235,33 @@
                 style="@style/ManageContainerTheme">
 
                 <Spinner
-                    android:id="@+id/fragment_estate_address_spinner_interest_places"
+                    android:id="@+id/fragment_estate_address_spinner_interest_places1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
-                    android:tag="spinnerInterestPlaces"
-                    app:setItem="@{viewModel.estate.interestPlaces}"
+                    android:tag="spinnerInterestPlaces1"
+                    app:setItem="@{viewModel.getInterestPlaces[0]}"
                     app:onItemSelected="@{viewModel.getSpinnerListener}"/>
 
-                <ImageView
-                    android:id="@+id/fragment_estate_address_image_interest_places_delete"
+                <Spinner
+                    android:id="@+id/fragment_estate_address_spinner_interest_places2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/fragment_estate_address_spinner_interest_places"
-                    android:layout_alignBottom="@+id/fragment_estate_address_spinner_interest_places"
-                    app:srcCompat="@drawable/ic_baseline_delete_forever_black_24"
-                    android:contentDescription="@null"
-                    android:tint="@android:color/holo_red_dark"/>
+                    android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
+                    android:layout_below="@id/fragment_estate_address_spinner_interest_places1"
+                    android:tag="spinnerInterestPlaces2"
+                    app:setItem="@{viewModel.getInterestPlaces[1]}"
+                    app:onItemSelected="@{viewModel.getSpinnerListener}"/>
 
-                <EditText
-                    android:id="@+id/fragment_estate_address_edit_text_interest_places_add"
+                <Spinner
+                    android:id="@+id/fragment_estate_address_spinner_interest_places3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/fragment_estate_address_interest_places_add"
-                    android:inputType="text"
-                    android:hint="@null"
-                    android:importantForAutofill="no"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/fragment_estate_address_interest_places_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
-                    android:layout_below="@+id/fragment_estate_address_spinner_interest_places"
-                    android:text="@string/fragment_estate_address_text_interest_places_add"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"
-                    android:drawableEnd="@drawable/ic_baseline_add_circle_black_24"
-                    android:drawablePadding="@dimen/fragments_manage_estate_interest_places_add_padding"
-                    android:drawableTint="@android:color/holo_green_dark"/>
-                <!-- TODO color and padding -->
+                    android:layout_marginTop="@dimen/fragments_manage_estate_spinner_margin_top"
+                    android:layout_below="@id/fragment_estate_address_spinner_interest_places2"
+                    android:tag="spinnerInterestPlaces3"
+                    app:setItem="@{viewModel.getInterestPlaces[2]}"
+                    app:onItemSelected="@{viewModel.getSpinnerListener}"/>
 
             </RelativeLayout>
 

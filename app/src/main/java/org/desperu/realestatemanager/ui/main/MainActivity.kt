@@ -182,7 +182,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    private fun configureAndAddFragment() {
+    /**
+     * Configure and add filter fragment.
+     */
+    private fun configureAndAddFilterFragment() {
         activity_main_fab_filter.visibility = View.INVISIBLE
         val fragment = FilterFragment()
         populateEstateListToFragment(fragment, FILTER_ESTATE_LIST)
@@ -190,6 +193,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 .add(activity_main_frame_layout.id, fragment, fragment.javaClass.simpleName)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit()
+//        fragment.filter TODO requestFocus
     }
 
     /**
@@ -258,7 +262,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity(null)
             R.id.activity_main_menu_drawer_Search -> {
                 switchSearchViewVisibility(true)
-                configureAndAddFragment()
+                configureAndAddFilterFragment()
             }
             R.id.activity_main_menu_drawer_credit -> TODO("to implement")
             R.id.activity_main_menu_drawer_settings -> showSettingsActivity()
@@ -346,7 +350,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     fun onClickFilter(v: View) {
         if (v.tag == UNFILTERED)
-            configureAndAddFragment()
+            configureAndAddFilterFragment()
         else {
             fullEstateList?.let { updateEstateList(it, false) }
             intent.removeExtra(FILTERED_ESTATE_LIST)
@@ -453,7 +457,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             toolbar_search_view.visibility = View.INVISIBLE
             toolbar_search_view.setQuery(null, true)
             animMenuItem(true)
-        } else { // Show search view
+        } else if (!toolbar_search_view.isShown){ // Show search view
             animMenuItem(false)
             toolbar_search_view.visibility = View.VISIBLE
             val animation: Animation = AnimationUtils.loadAnimation(baseContext, R.anim.search_view_anim_show)

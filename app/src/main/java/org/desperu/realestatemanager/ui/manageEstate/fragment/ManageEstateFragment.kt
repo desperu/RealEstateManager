@@ -39,6 +39,7 @@ import org.desperu.realestatemanager.utils.StorageUtils.deleteFileInStorage
 import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritable
 import org.desperu.realestatemanager.utils.StorageUtils.setBitmapInStorage
 import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContentUri
+import org.desperu.realestatemanager.view.NothingSelectedSpinnerAdapter
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 
@@ -122,11 +123,16 @@ class ManageEstateFragment: BaseBindingFragment() {
         when (fragmentKey) {
             ESTATE_DATA -> configureSpinner(fragment_estate_data_spinner_type, R.array.estate_type_list)
             ESTATE_IMAGE -> configureImageRecycler()
-            ESTATE_ADDRESS -> configureSpinner(fragment_estate_address_spinner_interest_places, R.array.estate_interest_places_list)
-            ESTATE_SALE -> { configureSpinner(fragment_estate_sale_spinner_state, R.array.estate_state_list)
-                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sale_date, viewModel.saleDate)
-                             setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sold_out_date, viewModel.soldDate)
-                           }
+            ESTATE_ADDRESS -> {
+                configureSpinner(fragment_estate_address_spinner_interest_places1, R.array.estate_interest_places_list)
+                configureSpinner(fragment_estate_address_spinner_interest_places2, R.array.estate_interest_places_list)
+                configureSpinner(fragment_estate_address_spinner_interest_places3, R.array.estate_interest_places_list)
+            }
+            ESTATE_SALE -> {
+                configureSpinner(fragment_estate_sale_spinner_state, R.array.estate_state_list)
+                setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sale_date, viewModel.saleDate)
+                setPickerTextOnClickListener(context!!, fragment_estate_sale_date_picker_sold_out_date, viewModel.soldDate)
+            }
         }
     }
 
@@ -138,7 +144,10 @@ class ManageEstateFragment: BaseBindingFragment() {
     private fun configureSpinner(spinner: Spinner, @ArrayRes id: Int) {
         val spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, resources.getStringArray(id))
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = spinnerAdapter
+        spinner.adapter = NothingSelectedSpinnerAdapter(
+                spinnerAdapter,
+                R.layout.spinner_row_nothing_selected,
+                context!!)
     }
 
     /**

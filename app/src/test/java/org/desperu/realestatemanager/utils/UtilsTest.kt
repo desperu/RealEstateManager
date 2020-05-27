@@ -161,6 +161,42 @@ class UtilsTest {
     }
 
     @Test
+    fun given_mutableList_When_concatenateStringFromMutableList_Then_checkString() {
+        val expected = "School, Shop, Park"
+
+        val interestPlaces = mutableListOf<String>()
+        interestPlaces.add("School")
+        interestPlaces.add("Shop")
+        interestPlaces.add("Park")
+        output = Utils.concatenateStringFromMutableList(interestPlaces)
+
+        assertEquals(expected, output)
+    }
+
+    @Test
+    fun given_emptyMutableList_When_concatenateStringFromMutableList_Then_checkEmptyString() {
+        val expected = ""
+
+        val interestPlaces = mutableListOf<String>()
+        output = Utils.concatenateStringFromMutableList(interestPlaces)
+
+        assertEquals(expected, output)
+    }
+
+    @Test
+    fun given_stringPlaces_When_deConcatenateStringToMutableList_Then_checkMutableList() {
+        val expected = mutableListOf<String>()
+        expected.add("School")
+        expected.add("Shop")
+        expected.add("Park")
+
+        val interestPlaces = "School, Shop, Park"
+        val output: List<String> = Utils.deConcatenateStringToMutableList(interestPlaces)
+
+        assertEquals(expected, output)
+    }
+
+    @Test
     @Suppress("deprecation")
     fun given_availableNetwork_When_isInternetAvailableSdk19_20_Then_checkResult() {
         val mockConnectivityManager = mockk<ConnectivityManager>()
@@ -187,40 +223,7 @@ class UtilsTest {
         assertTrue(output)
     }
 
-//    @Test // TODO remove if unused
-//    fun Given_sectionsArrayList_When_askConcatenateStringSectionsFromArrayList_Then_checkString() {
-//        val expected = "news_desk.contains:(\"Politics\" \"Business\" \"Entrepreneurs\")"
-//        val sections: ArrayList<String> = ArrayList()
-//        sections.add("Politics")
-//        sections.add("Business")
-//        sections.add("Entrepreneurs")
-//        output = MyNewsUtils.concatenateStringSectionsFromArrayList(sections)
-
-//        assertEquals(expected, output)
-//    }
-//
-//    @Test
-//    fun Given_emptySectionsArrayList_When_askConcatenateStringSectionsFromArrayList_Then_checkEmptyString() {
-//        val expected = ""
-//        val sections: ArrayList<String> = ArrayList()
-//        output = MyNewsUtils.concatenateStringSectionsFromArrayList(sections)
-
-//        assertEquals(expected, output)
-//    }
-//
-//    @Test
-//    fun Given_stringSection_When_askDeConcatenateStringSectionsToArrayList_Then_checkArrayList() {
-//        val expected: ArrayList<String> = ArrayList()
-//        expected.add("Politics")
-//        expected.add("Business")
-//        expected.add("Entrepreneurs")
-//        expected.add("Arts")
-//        val sections = "news_desk.contains:(\"Politics\" \"Business\" \"Entrepreneurs\" \"Arts\")"
-//        val output: List<String> = MyNewsUtils.deConcatenateStringSectionToArrayList(sections)
-
-//        assertEquals(expected, output)
-//    }
-//
+// // TODO remove if unused
 //    @Mock
 //    var mockContext: Context? = null
 //

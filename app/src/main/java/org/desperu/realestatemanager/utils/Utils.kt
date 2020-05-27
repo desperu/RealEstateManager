@@ -137,6 +137,31 @@ internal object Utils {
         return mapOf(Pair("folderName", tempList[listSize - 2]), Pair("fileName", tempList[listSize - 1]))
     }
 
+    /**
+     * Concatenate mutable list of string to simple string.
+     * @param mutableList the given mutable list of string.
+     * @return the simple string concatenated.
+     */
+    internal fun concatenateStringFromMutableList(mutableList: MutableList<String>): String {
+        val stringBuilder = StringBuilder()
+        mutableList.forEachIndexed { index, s ->
+            stringBuilder.append(s)
+            if (index + 1 < mutableList.size) stringBuilder.append(", ")
+        }
+        return stringBuilder.toString()
+    }
+
+    /**
+     * DeConcatenate string to mutable list of string.
+     * @param string the concatenated string.
+     * @return the mutable list of string.
+     */
+    internal fun deConcatenateStringToMutableList(string: String): MutableList<String> {
+        val list = string.split(", ").toTypedArray().toMutableList()
+        list.forEach { it.replace(", ", "") }
+        return list
+    }
+
     // -----------------
     // WEB CONNECTION
     // -----------------

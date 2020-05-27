@@ -140,6 +140,6 @@
     <string name="activity_main_search_edit_text_hint">Search estate</string>
     
     <!-- Custom Spinner -->
-    <string name="custom_spinner_select">Select an entry…</string>
+    <string name="custom_spinner_select">Select…</string>
 
 </resources>

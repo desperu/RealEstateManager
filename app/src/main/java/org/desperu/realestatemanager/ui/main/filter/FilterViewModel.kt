@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.service.ResourceService
+import org.desperu.realestatemanager.utils.Utils.deConcatenateStringToMutableList
 import org.desperu.realestatemanager.utils.Utils.stringToDate
 import org.desperu.realestatemanager.view.OnRangeChangeListener
 import java.lang.IllegalArgumentException
@@ -210,7 +211,7 @@ class FilterViewModel(private val resource: ResourceService,
         "price" -> originalEstate.price >= (value as List<Int>)[0] && originalEstate.price <= value[1]
         "surface" -> originalEstate.surfaceArea >= (value as List<Int>)[0] && originalEstate.surfaceArea <= value[1]
         "rooms" -> originalEstate.roomNumber >= (value as List<Int>)[0] && originalEstate.roomNumber <= value[1]
-//        "interestPlaces" -> originalEstate.interestPlaces == (value as List<String>).containsAll()
+        "interestPlaces" -> deConcatenateStringToMutableList(originalEstate.interestPlaces).containsAll(value as List<String>)
         "saleDate" -> compareDates(stringToDate(originalEstate.saleDate), value as List<String>)
         "soldDate" -> compareDates(stringToDate(originalEstate.soldDate), value as List<String>)
         "state" -> originalEstate.state == value.toString()

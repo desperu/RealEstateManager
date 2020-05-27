@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +18,9 @@ import org.desperu.realestatemanager.repositories.AddressRepository
 import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.ResourceService
+import org.desperu.realestatemanager.utils.Utils.concatenateStringFromMutableList
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
+import org.desperu.realestatemanager.utils.Utils.deConcatenateStringToMutableList
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
 import java.lang.ref.WeakReference
 
@@ -47,11 +50,12 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     // FOR DATA
     private val imageListAdapter = WeakReference(RecyclerViewAdapter(R.layout.item_manage_image))
     private lateinit var manageImageVMList: MutableList<ManageImageViewModel>
+    private var oldImageList = listOf<Image>()
     val estate = MutableLiveData<Estate>()
     var price = ObservableField<String>()
+    private var interestPlaces = MutableLiveData<MutableList<String>>()
     val saleDate = ObservableField<String>()
     val soldDate = ObservableField<String>()
-    private var oldImageList = listOf<Image>()
 
     // -------------
     // SET ESTATE
@@ -71,22 +75,14 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     }
 
     /**
-     * Set specific values, always needed for price. For others, only if they're blank or null.
+     * Set specific values, for price, dates and interest places.
      */
     private fun setSpecificValues() {
         price.set(estate.value?.price.toString())
         saleDate.set(estate.value?.saleDate)
         soldDate.set(estate.value?.soldDate)
-
-//        if (estate.value?.type.isNullOrBlank()) // TODO is it requested by client? but it is show in ui... and create mistake when compare estates
-//            estate.value?.type = resourceService.getStringArray(R.array.estate_type_list)[0]
-//        if (estate.value?.interestPlaces.isNullOrBlank())
-//            estate.value?.interestPlaces = resourceService.getStringArray(R.array.estate_interest_places_list)[0]
-//        if (estate.value?.state.isNullOrBlank())
-//            estate.value?.state = resourceService.getStringArray(R.array.estate_state_list)[0]
-//
-//        if (estate.value?.saleDate.isNullOrBlank())
-//            estate.value?.saleDate = todayDate()
+        interestPlaces.value = estate.value?.interestPlaces?.let { deConcatenateStringToMutableList(it) }
+//        if (estate.value?.id == 0L) estate.value?.createdTime = System.currentTimeMillis() TODO to implement and sort list with
     }
 
     // -------------
@@ -125,23 +121,31 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      * Spinner listener, for type, interest places and state spinners.
      */
     private val spinnerListener = object: AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-            setSpinnerValue(parent, 0)
-        }
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            setSpinnerValue(parent, position)
+            if (position > 0) {
+                val value = parent?.getItemAtPosition(position).toString()
+                when (parent?.tag) {
+                    "spinnerType" -> estate.value?.type = value
+                    "spinnerInterestPlaces1" -> setInterestPlace(0, value)
+                    "spinnerInterestPlaces2" -> setInterestPlace(1, value)
+                    "spinnerInterestPlaces3" -> setInterestPlace(2, value)
+                    "spinnerState" -> estate.value?.state = value
+                }
+            }
         }
     }
 
-    // TODO can be perfect, use Observable in layout
-    private fun setSpinnerValue(parent: AdapterView<*>?, position: Int) {
-        val value = parent?.getItemAtPosition(position).toString()
-        when (parent?.tag) {
-            "spinnerType" -> estate.value?.type = value
-            "spinnerInterestPlaces" -> estate.value?.interestPlaces = value
-            "spinnerState" -> estate.value?.state = value
-        }
+    /**
+     * Set interest places value, add new if needed.
+     * @param index the index to set the value.
+     * @param value the value to set.
+     */
+    private fun setInterestPlace(index: Int, value: String) {
+        val size = interestPlaces.value?.size
+        if (size != null && size > index) interestPlaces.value?.set(index, value)
+        else interestPlaces.value?.add(index, value)
     }
 
     /**
@@ -171,10 +175,12 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
 
     /**
      * Bind data in estate object, set price, sale date and sold date from ui to estate object.
+     * For interest places, concatenate list to simple string to save in database.
      * Set updated image list in estate object to properly update ui after estate management.
      */
     internal fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
+        estate.value?.interestPlaces = interestPlaces.value?.let { concatenateStringFromMutableList(it) }.toString()
         estate.value?.saleDate = saleDate.get().toString()
         estate.value?.soldDate = soldDate.get().toString()
         estate.value?.imageList = manageImageVMList.map { it.image.value!! } as MutableList<Image>
@@ -258,11 +264,13 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
         }
     }
 
-    internal fun deleteImage(imageId: Long) = viewModelScope.launch(Dispatchers.Main) { imageRepository.deleteImage(imageId) }
+    private fun deleteImage(imageId: Long) = viewModelScope.launch(Dispatchers.Main) { imageRepository.deleteImage(imageId) }
 
     // --- GETTERS ---
 
     val getImageListAdapter = imageListAdapter
+
+    val getInterestPlaces: LiveData<MutableList<String>> = interestPlaces
 
     val getSpinnerListener = spinnerListener
 

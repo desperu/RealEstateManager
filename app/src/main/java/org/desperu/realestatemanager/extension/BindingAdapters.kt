@@ -65,7 +65,7 @@ fun ImageView.setImageUri(imageUri: String?) { // TODO use glide if error persis
  */
 @BindingAdapter("setItem")
 fun Spinner.setItem(string: String?) {
-    for(position in 0 until adapter.count) {
+    for(position in 1 until adapter.count) {
         if (getItemAtPosition(position).toString() == string)
             setSelection(position)
     }

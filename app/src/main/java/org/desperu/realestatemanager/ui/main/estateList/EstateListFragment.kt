@@ -6,14 +6,12 @@ import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_estate_list.*
 import kotlinx.android.synthetic.main.fragment_estate_list.view.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.ui.main.MainActivity
-import org.desperu.realestatemanager.view.enableSwipe
 
 /**
  * Fragment to show estate list.
@@ -35,7 +33,6 @@ class EstateListFragment: BaseBindingFragment() {
 
     override fun updateDesign() {
         configureRecyclerView()
-        configureSwipeToDeleteForRecycler()
     }
 
     // --------------
@@ -73,17 +70,6 @@ class EstateListFragment: BaseBindingFragment() {
             Configuration.ORIENTATION_LANDSCAPE -> 3
             else -> 2
         }
-
-    /**
-     * Configure swipe to delete gesture for recycler view.
-     */
-    private fun configureSwipeToDeleteForRecycler() {
-        @Suppress("UNCHECKED_CAST")
-        viewModel?.getEstateListAdapter?.value?.let {
-            enableSwipe(this, it, viewModel?.getEstateVMList as MutableList<Any>)
-                    .attachToRecyclerView(fragment_estate_list_recycler_view)
-        }
-    }
 
     // --------------
     // UI

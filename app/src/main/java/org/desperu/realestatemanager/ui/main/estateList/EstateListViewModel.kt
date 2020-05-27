@@ -15,7 +15,6 @@ import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.GeocoderService
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
-import org.desperu.realestatemanager.view.updateList
 
 /**
  * View Model witch provide data for estate list.
@@ -118,8 +117,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router) })
         estateListAdapter.value?.updateList(estateVMList as MutableList<Any>)
         estateListAdapter.value?.notifyDataSetChanged()
-        // For Swipe To Delete
-        updateList(estateVMList as MutableList<Any>)
         // Set latitude and longitude for each estate address if not already do.
         estateList.forEach { setLatLngInAddress(it.address) }
         updateUi()
@@ -159,23 +156,9 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         }
     }
 
-    // --- MANAGE ---
-
-    /**
-     * Delete full estate in database.
-     * @param estateId the id of the estate to delete.
-     */
-    internal fun deleteFullEstate(estateId: Long)  = viewModelScope.launch(Dispatchers.Main) {
-        addressRepository.deleteAddress(estateId)
-        imageRepository.deleteEstateImages(estateId)
-        estateRepository.deleteEstate(estateId)
-    }
-
     // --- GETTERS ---
 
     val getEstateListAdapter: LiveData<RecyclerViewAdapter> = estateListAdapter
-
-    val getEstateVMList = estateVMList
 
     val getRefreshing = refreshing
 
