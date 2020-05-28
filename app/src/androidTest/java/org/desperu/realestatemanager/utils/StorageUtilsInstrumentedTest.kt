@@ -34,6 +34,7 @@ class StorageUtilsInstrumentedTest {
     @Before
     fun before() {
         context = InstrumentationRegistry.getInstrumentation().context
+        // Need read and write external storage access granted
         rootDestination = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
     }
 

@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.model
 
+import android.content.ContentValues
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -24,8 +25,8 @@ import org.desperu.realestatemanager.utils.NOT_EQUALS
         childColumns = ["estateId"])],
         indices = [Index(name = "estateId_index", value = ["estateId"])])
 data class Image(@PrimaryKey(autoGenerate = true)
-                 val id: Long = 0,
-                 var estateId: Long = 0,
+                 val id: Long = 0L,
+                 var estateId: Long = 0L,
                  var imageUri: String = "",
                  var isPrimary: Boolean = false,
                  var description: String = "",
@@ -51,5 +52,22 @@ data class Image(@PrimaryKey(autoGenerate = true)
         rotation != other.rotation -> NOT_EQUALS
 
         else -> EQUALS
+    }
+
+    /**
+     * Get image data from content values.
+     * @param values the content value to get data from.
+     * @return the Image object created from content values.
+     */
+    fun fromContentValues(values: ContentValues?): Image {
+        val image = values?.getAsLong("id")?.let { Image(id = it) } ?: Image()
+        if (values != null) {
+            if (values.containsKey("estateId")) image.estateId = values.getAsLong("estateId")
+            if (values.containsKey("imageUri")) image.imageUri = values.getAsString("imageUri")
+            if (values.containsKey("isPrimary")) image.isPrimary = values.getAsBoolean("isPrimary")
+            if (values.containsKey("description")) image.description = values.getAsString("description")
+            if (values.containsKey("rotation")) image.rotation = values.getAsFloat("rotation")
+        }
+        return image
     }
 }

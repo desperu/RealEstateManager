@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.model
 
+import android.content.ContentValues
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -58,5 +59,26 @@ data class Address(@PrimaryKey(autoGenerate = false)
         longitude != other.longitude -> NOT_EQUALS
 
         else -> EQUALS
+    }
+
+    /**
+     * Get address data from content values.
+     * @param values the content value to get data from.
+     * @return the Address object created from content values.
+     */
+    fun fromContentValues(values: ContentValues?): Address {
+        val address = Address()
+        if (values != null) {
+            if (values.containsKey("estateId")) address.estateId = values.getAsLong("estateId")
+            if (values.containsKey("streetNumber")) address.streetNumber = values.getAsInteger("streetNumber")
+            if (values.containsKey("streetName")) address.streetName = values.getAsString("streetName")
+            if (values.containsKey("flatBuilding")) address.flatBuilding = values.getAsString("flatBuilding")
+            if (values.containsKey("postalCode")) address.postalCode = values.getAsInteger("postalCode")
+            if (values.containsKey("city")) address.city = values.getAsString("city")
+            if (values.containsKey("country")) address.country = values.getAsString("country")
+            if (values.containsKey("latitude")) address.latitude = values.getAsDouble("latitude")
+            if (values.containsKey("longitude")) address.longitude = values.getAsDouble("longitude")
+        }
+        return address
     }
 }

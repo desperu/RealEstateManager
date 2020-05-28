@@ -82,7 +82,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
         saleDate.set(estate.value?.saleDate)
         soldDate.set(estate.value?.soldDate)
         interestPlaces.value = estate.value?.interestPlaces?.let { deConcatenateStringToMutableList(it) }
-//        if (estate.value?.id == 0L) estate.value?.createdTime = System.currentTimeMillis() TODO to implement and sort list with
+        if (estate.value?.id == 0L) estate.value?.createdTime = System.currentTimeMillis()
     }
 
     // -------------

@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.repositories
 
+import android.database.Cursor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.desperu.realestatemanager.database.dao.EstateDao
@@ -9,6 +10,14 @@ import org.desperu.realestatemanager.model.Estate
  * Repository interface to get estate data from database.
  */
 interface EstateRepository {
+
+    /**
+     * Returns the estate from database ordered for given estate id.
+     * @param estateId the estate id to get the corresponding estate from database.
+     * @return the cursor access for the corresponding estate.
+     */
+    // --- GET WITH CURSOR ---
+    fun getEstateWithCursor(estateId: Long): Cursor?
 
     /**
      * Returns the estate for the given estate id.
@@ -60,6 +69,15 @@ interface EstateRepository {
  * @param estateDao the database access object for estate to set.
  */
 class EstateRepositoryImpl(private val estateDao: EstateDao): EstateRepository {
+
+    /**
+     * Returns the estate from database ordered for given estate id.
+     * @param estateId the estate id to get the corresponding estate from database.
+     * @return the cursor access for the corresponding estate.
+     */
+    // --- GET WITH CURSOR ---
+    override fun getEstateWithCursor(estateId: Long): Cursor? =
+        estateDao.getEstateWithCursor(estateId)
 
     /**
      * Returns the estate for the given estate id from database.

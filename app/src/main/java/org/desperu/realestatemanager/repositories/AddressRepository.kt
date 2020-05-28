@@ -1,5 +1,7 @@
 package org.desperu.realestatemanager.repositories
 
+import android.database.Cursor
+import androidx.room.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.desperu.realestatemanager.database.dao.AddressDao
@@ -9,6 +11,14 @@ import org.desperu.realestatemanager.model.Address
  * Repository interface to get address data from database.
  */
 interface AddressRepository {
+
+    /**
+     * Returns the address from database ordered for given estate id.
+     * @param estateId the estate id to get the corresponding address from database.
+     * @return the cursor access for the corresponding address.
+     */
+    @Query("SELECT * FROM Address WHERE estateId = :estateId")
+    fun getAddressWithCursor(estateId: Long): Cursor?
 
     /**
      * Returns the address for the given estate id.
@@ -53,6 +63,14 @@ interface AddressRepository {
  * @param addressDao the database access object for address to set.
  */
 class AddressRepositoryImpl(private val addressDao: AddressDao): AddressRepository {
+
+    /**
+     * Returns the address from database ordered for given estate id.
+     * @param estateId the estate id to get the corresponding address from database.
+     * @return the cursor access for the corresponding address.
+     */
+    @Query("SELECT * FROM Address WHERE estateId = :estateId")
+    override fun getAddressWithCursor(estateId: Long): Cursor? = addressDao.getAddressWithCursor(estateId)
 
     /**
      * Returns the address from the database.

@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.model
 
+import android.content.ContentValues
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -8,9 +9,12 @@ import kotlinx.android.parcel.Parcelize
 import org.desperu.realestatemanager.utils.EQUALS
 import org.desperu.realestatemanager.utils.NOT_EQUALS
 
+
 /**
  * Class witch provides a model for estate.
+ *
  * @constructor Sets all properties of the estate.
+ *
  * @param id Unique identifier of the estate.
  * @param type Type of the estate.
  * @param price Price of the estate.
@@ -22,15 +26,16 @@ import org.desperu.realestatemanager.utils.NOT_EQUALS
  * @param saleDate Sale date of the estate.
  * @param soldDate Sold date of the estate.
  * @param realEstateAgent Real Estate Agent witch manage estate sale.
+ * @param createdTime the time in millis at witch the estate was created.
  * @param imageList the list of images associates with this estate.
  * @param address the address of this estate.
  */
 @Parcelize
 @Entity
 data class Estate(@PrimaryKey(autoGenerate = true)
-                  var id: Long = 0,
+                  var id: Long = 0L,
                   var type: String = "",
-                  var price: Long = 0,
+                  var price: Long = 0L,
                   var surfaceArea: Int = 0,
                   var roomNumber: Int = 0,
                   var description: String = "",
@@ -39,6 +44,7 @@ data class Estate(@PrimaryKey(autoGenerate = true)
                   var saleDate: String = "",
                   var soldDate: String = "",
                   var realEstateAgent: String = "",
+                  var createdTime: Long = 0L,
                   @Ignore
                   var imageList: MutableList<Image> = mutableListOf(),
                   @Ignore
@@ -75,5 +81,29 @@ data class Estate(@PrimaryKey(autoGenerate = true)
         address.compareTo(other.address) != EQUALS -> NOT_EQUALS
 
         else -> EQUALS
+    }
+
+    /**
+     * Get estate data from content values.
+     * @param values the content value to get data from.
+     * @return the Estate object created from content values.
+     */
+    fun fromContentValues(values: ContentValues?): Estate {
+        val estate = Estate()
+        if (values != null) {
+            if (values.containsKey("id")) estate.id = values.getAsLong("id")
+            if (values.containsKey("type")) estate.type = values.getAsString("type")
+            if (values.containsKey("price")) estate.price = values.getAsLong("price")
+            if (values.containsKey("surfaceArea")) estate.surfaceArea = values.getAsInteger("surfaceArea")
+            if (values.containsKey("roomNumber")) estate.roomNumber = values.getAsInteger("roomNumber")
+            if (values.containsKey("description")) estate.description = values.getAsString("description")
+            if (values.containsKey("interestPlaces")) estate.interestPlaces = values.getAsString("interestPlaces")
+            if (values.containsKey("state")) estate.state = values.getAsString("state")
+            if (values.containsKey("saleDate")) estate.saleDate = values.getAsString("saleDate")
+            if (values.containsKey("soldDate")) estate.soldDate = values.getAsString("soldDate")
+            if (values.containsKey("realEstateAgent")) estate.realEstateAgent = values.getAsString("realEstateAgent")
+            if (values.containsKey("createdTime")) estate.createdTime = values.getAsLong("createdTime")
+        }
+        return estate
     }
 }

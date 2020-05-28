@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.database.dao
 
+import android.database.Cursor
 import androidx.room.*
 import org.desperu.realestatemanager.model.Estate
 
@@ -11,7 +12,15 @@ interface EstateDao {
 
     /**
      * Returns the estate from database ordered for given estate id.
-     * @param estateId the estate to get the corresponding estate from database.
+     * @param estateId the estate id to get the corresponding estate from database.
+     * @return the cursor access for the corresponding estate.
+     */
+    @Query("SELECT * FROM Estate WHERE id = :estateId")
+    fun getEstateWithCursor(estateId: Long): Cursor
+
+    /**
+     * Returns the estate from database ordered for given estate id.
+     * @param estateId the estate id to get the corresponding estate from database.
      * @return the corresponding estate.
      */
     @Query("SELECT * FROM Estate WHERE id = :estateId")
@@ -22,7 +31,7 @@ interface EstateDao {
      * @return the estate list from database ordered from the most recent to the oldest.
      */
     @Transaction
-    @Query("SELECT * FROM Estate ORDER BY saleDate DESC")
+    @Query("SELECT * FROM Estate ORDER BY createdTime DESC")
     suspend fun getAll(): List<Estate>
 
     /**

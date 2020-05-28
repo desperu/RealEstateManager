@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.database.dao
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -11,6 +12,14 @@ import org.desperu.realestatemanager.model.Image
  */
 @Dao
 interface ImageDao {
+
+    /**
+     * Returns the image from database ordered for given image id.
+     * @param id the id to get the corresponding image from database.
+     * @return the cursor access for the corresponding image.
+     */
+    @Query("SELECT * FROM Image WHERE id = :id")
+    fun getImageWithCursor(id: Long): Cursor?
 
     /**
      * Returns the image from database ordered for given image id.

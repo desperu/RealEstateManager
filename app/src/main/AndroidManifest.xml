@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.desperu.realestatemanager" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -53,7 +54,7 @@
             android:parentActivityName=".ui.main.MainActivity" />
 
 
-        <!-- FileProvider -->
+        <!-- File Provider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="org.desperu.realestatemanager.fileprovider"
@@ -63,6 +64,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <!-- Exported Content Provider -->
+        <provider
+            android:name=".provider.RealEstateContentProvider"
+            android:authorities="org.desperu.realestatemanager.provider"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
+
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.database.dao
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -11,6 +12,14 @@ import org.desperu.realestatemanager.model.Address
  */
 @Dao
 interface AddressDao {
+
+    /**
+     * Returns the address from database ordered for given estate id.
+     * @param estateId the estate id to get the corresponding address from database.
+     * @return the cursor access for the corresponding address.
+     */
+    @Query("SELECT * FROM Address WHERE estateId = :estateId")
+    fun getAddressWithCursor(estateId: Long): Cursor?
 
     /**
      * Returns the address from database ordered for the given estate id.

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "163ca4d13fee02e913455f30bc903338",
+    "identityHash": "303a796af6c01ad85bb3c740c43ca587",
     "entities": [
       {
         "tableName": "Estate",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `price` INTEGER NOT NULL, `surfaceArea` INTEGER NOT NULL, `roomNumber` INTEGER NOT NULL, `description` TEXT NOT NULL, `interestPlaces` TEXT NOT NULL, `state` TEXT NOT NULL, `saleDate` TEXT NOT NULL, `soldDate` TEXT NOT NULL, `realEstateAgent` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `price` INTEGER NOT NULL, `surfaceArea` INTEGER NOT NULL, `roomNumber` INTEGER NOT NULL, `description` TEXT NOT NULL, `interestPlaces` TEXT NOT NULL, `state` TEXT NOT NULL, `saleDate` TEXT NOT NULL, `soldDate` TEXT NOT NULL, `realEstateAgent` TEXT NOT NULL, `createdTime` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -72,6 +72,12 @@
             "fieldPath": "realEstateAgent",
             "columnName": "realEstateAgent",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdTime",
+            "columnName": "createdTime",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -239,7 +245,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '163ca4d13fee02e913455f30bc903338')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '303a796af6c01ad85bb3c740c43ca587')"
     ]
   }
 }
