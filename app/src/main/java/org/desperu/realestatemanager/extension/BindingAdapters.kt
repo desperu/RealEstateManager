@@ -1,15 +1,12 @@
 package org.desperu.realestatemanager.extension
 
 import android.net.Uri
-import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import org.desperu.realestatemanager.R
@@ -17,7 +14,6 @@ import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 import org.desperu.realestatemanager.view.CustomSeekBar
 import org.desperu.realestatemanager.view.OnRangeChangeListener
-import java.lang.ref.WeakReference
 
 /**
  * Set visibility for the associated view.
@@ -52,7 +48,7 @@ fun View.onLongClick(listener: View.OnLongClickListener) {
  */
 @Suppress("deprecation")
 @BindingAdapter("imageUri")
-fun ImageView.setImageUri(imageUri: String?) { // TODO use glide if error persist
+fun ImageView.setImageUri(imageUri: String?) {
     if (!imageUri.isNullOrBlank())
         setImageURI(Uri.parse(imageUri))
     else
@@ -78,62 +74,6 @@ fun Spinner.setItem(string: String?) {
 @BindingAdapter("onItemSelected")
 fun Spinner.setOnItemSelected(listener: OnItemSelectedListener) {
     onItemSelectedListener = listener
-}
-
-/**
- * Save Listener for price in manage estate, needed for custom setter,
- * use weak reference to prevent memory leak.
- */
-private lateinit var listenerSave: WeakReference<TextWatcher>
-
-/**
- * Set listener for edit text price.
- * @param listener the listener to set.
- */
-@BindingAdapter("onTextChanged")
-fun EditText.setOnTextChanged(listener: TextWatcher) {
-    listenerSave = WeakReference(listener)
-    addTextChangedListener(listener)
-}
-
-/**
- * Custom setter for price in manage estate.
- * @param str the string to convert and set.
- */
-@BindingAdapter("priceText")
-fun EditText.setPriceText(str: String?) {
-    // Remove listener to prevent infinite loop
-    removeTextChangedListener(listenerSave.get())
-    if (str != null) {
-        val cursorPosition = selectionStart
-        // Convert price to pattern price
-        val str1 = convertPriceToPatternPrice(str, false)
-        // Set pattern price to edit text, cursor with corrected position if needed
-        setText(str1)
-        val newCursorPosition = cursorPosition + str1.length - str.length
-        setSelection(if (cursorPosition > 0 && newCursorPosition <= str1.length) newCursorPosition else cursorPosition)
-    }
-    // Set listener
-    addTextChangedListener(listenerSave.get())
-}
-
-/**
- * Custom setter for number (Int), in Edit Text.
- * @param number the number to set.
- */
-@BindingAdapter("android:text")
-fun EditText.setNumber(number: Int) {
-    setText(if (number == 0) "" else number.toString())
-}
-
-/**
- * Custom getter for number (Int), in Edit Text.
- * @return the integer value of the inserted text, 0 if blank.
- */
-@InverseBindingAdapter(attribute = "android:text")
-fun EditText.getNumber(): Int {
-    val str = text.toString()
-    return if (str.isBlank()) 0 else str.toInt()
 }
 
 /**

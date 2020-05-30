@@ -10,6 +10,7 @@ import org.desperu.realestatemanager.service.GeocoderService
 import org.desperu.realestatemanager.service.GeocoderServiceImpl
 import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.service.ResourceServiceImpl
+import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorViewModel
 import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailViewModel
 import org.desperu.realestatemanager.ui.main.estateDetail.ImagesRouterImpl
 import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
@@ -88,6 +89,11 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
                 val resourceService = ResourceServiceImpl(activity)
                 val communication = FilterVMCommunicationImpl(activity)
                 return FilterViewModel(resourceService, communication) as T
+            }
+
+            // Return a CreditSimulatorViewModel instance.
+            modelClass.isAssignableFrom(CreditSimulatorViewModel::class.java) -> {
+                return CreditSimulatorViewModel() as T
             }
 
             // Asked View Model Class Not Found.

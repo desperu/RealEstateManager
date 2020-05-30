@@ -96,8 +96,8 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
                 estateListAdapter.value?.notifyItemChanged(position)
             }
             updateUi()
-            // Set latitude and longitude for the address if not already do.
-            setLatLngInAddress(estate.address)
+            // Set latitude and longitude for the address.
+            setLatLngInAddress(estate.address, true)
         }
         return position
     }
@@ -118,7 +118,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         estateListAdapter.value?.updateList(estateVMList as MutableList<Any>)
         estateListAdapter.value?.notifyDataSetChanged()
         // Set latitude and longitude for each estate address if not already do.
-        estateList.forEach { setLatLngInAddress(it.address) }
+        estateList.forEach { setLatLngInAddress(it.address, false) }
         updateUi()
     }
 
@@ -142,11 +142,15 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // -------------
 
     /**
-     * Set latitude and longitude for the given address in database if not already do.
+     * Set latitude and longitude for the given address in database. Only if has address data,
+     * city or country, and it's not already do or data were updated.
      * @param address the given address from witch retrieved latitude and longitude.
+     * @param isUpdated true if data were updated, false otherwise
      */
-    private fun setLatLngInAddress(address: Address) = viewModelScope.launch(Dispatchers.Main) {
-        if (address.latitude == 0.0 && address.longitude == 0.0) {
+    private fun setLatLngInAddress(address: Address, isUpdated: Boolean) = viewModelScope.launch(Dispatchers.Main) {
+        val hasAddressData = address.city.isNotBlank() && address.country.isNotBlank()
+        val isEmptyLatLng = address.latitude == 0.0 && address.longitude == 0.0
+        if (hasAddressData && (isEmptyLatLng || isUpdated)) {
             val latLng = geocoder.getLatLngFromAddress(address)
             if (latLng.isNotEmpty()) {
                 address.latitude = latLng[0]

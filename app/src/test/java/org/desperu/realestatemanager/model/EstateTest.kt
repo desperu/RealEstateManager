@@ -1,13 +1,20 @@
 package org.desperu.realestatemanager.model
 
+import android.content.ContentValues
 import org.desperu.realestatemanager.utils.EQUALS
 import org.desperu.realestatemanager.utils.NOT_EQUALS
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Simple model class test, for Estate data class that's check setter, getter and default parameters.
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28], manifest= Config.NONE)
 class EstateTest {
 
     private val id = 1L
@@ -21,6 +28,7 @@ class EstateTest {
     private val saleDate = "15/04/2020"
     private val soldDate = ""
     private val realEstateAgent = "Desperu"
+    private val createdTime = 1246464684L
     private val imageList = mutableListOf(Image(), Image())
     private val address = Address()
 
@@ -28,7 +36,7 @@ class EstateTest {
     fun given_emptyEstate_When_createEstate_Then_checkDefaultValues() {
         val estate = Estate()
 
-        assertEquals(estate.id, 0)
+        assertEquals(estate.id, 0L)
         assertEquals(estate.type, "")
         assertEquals(estate.price, 0L)
         assertEquals(estate.surfaceArea, 0)
@@ -39,14 +47,15 @@ class EstateTest {
         assertEquals(estate.saleDate, "")
         assertEquals(estate.soldDate, "")
         assertEquals(estate.realEstateAgent, "")
+        assertEquals(estate.createdTime, 0L)
         assertEquals(estate.imageList, mutableListOf<Image>())
         assertEquals(estate.address, Address())
     }
 
     @Test
     fun given_estate_When_createEstate_Then_checkValues() {
-        val estate = Estate(id, type, price, surfaceArea, roomNumber, description,
-                interestPlace, state, saleDate, soldDate, realEstateAgent, imageList, address)
+        val estate = Estate(id, type, price, surfaceArea, roomNumber, description, interestPlace,
+                state, saleDate, soldDate, realEstateAgent, createdTime, imageList, address)
 
         assertEquals(estate.id, id)
         assertEquals(estate.type, type)
@@ -59,6 +68,7 @@ class EstateTest {
         assertEquals(estate.saleDate, saleDate)
         assertEquals(estate.soldDate, soldDate)
         assertEquals(estate.realEstateAgent, realEstateAgent)
+        assertEquals(estate.createdTime, createdTime)
         assertEquals(estate.imageList, imageList)
         assertEquals(estate.address, address)
     }
@@ -78,6 +88,7 @@ class EstateTest {
         estate.saleDate = saleDate
         estate.soldDate = soldDate
         estate.realEstateAgent = realEstateAgent
+        estate.createdTime = createdTime
         estate.imageList = imageList
         estate.address = address
 
@@ -92,6 +103,7 @@ class EstateTest {
         assertEquals(estate.saleDate, saleDate)
         assertEquals(estate.soldDate, soldDate)
         assertEquals(estate.realEstateAgent, realEstateAgent)
+        assertEquals(estate.createdTime, createdTime)
         assertEquals(estate.imageList, imageList)
         assertEquals(estate.address, address)
     }
@@ -130,5 +142,32 @@ class EstateTest {
         finalEstate3.address.streetNumber = 23
 
         assertEquals(NOT_EQUALS, originalEstate.compareTo(finalEstate3))
+    }
+
+    @Test
+    fun given_contentValues_When_fromContentValues_Then_checkEstateFields() {
+        val estate = Estate(id, type, price, surfaceArea, roomNumber, description, interestPlace,
+                state, saleDate, soldDate, realEstateAgent, createdTime, mutableListOf(), address)
+
+        val contentValues = ContentValues()
+
+        assertNotNull(contentValues)
+
+        contentValues.put("id", id)
+        contentValues.put("type", type)
+        contentValues.put("price", price)
+        contentValues.put("surfaceArea", surfaceArea)
+        contentValues.put("roomNumber", roomNumber)
+        contentValues.put("description", description)
+        contentValues.put("interestPlaces", interestPlace)
+        contentValues.put("state", state)
+        contentValues.put("saleDate", saleDate)
+        contentValues.put("soldDate", soldDate)
+        contentValues.put("realEstateAgent", realEstateAgent)
+        contentValues.put("createdTime", createdTime)
+
+        val output = Estate().fromContentValues(contentValues)
+
+        assertEquals(estate, output)
     }
 }

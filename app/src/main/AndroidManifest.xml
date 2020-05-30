@@ -53,6 +53,11 @@
             android:label="@string/activity_settings"
             android:parentActivityName=".ui.main.MainActivity" />
 
+        <!-- CREDIT SIMULATOR ACTIVITY -->
+        <activity android:name=".ui.creditSimulator.CreditSimulatorActivity"
+            android:label="@string/activity_credit_simulator"
+            android:parentActivityName=".ui.main.MainActivity" />
+
 
         <!-- File Provider -->
         <provider

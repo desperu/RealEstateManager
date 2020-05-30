@@ -9,15 +9,18 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import junit.framework.TestCase.*
+import kotlinx.coroutines.runBlocking
 import org.desperu.realestatemanager.utils.Utils.convertDollarToEuro
 import org.desperu.realestatemanager.utils.Utils.convertEuroToDollar
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
+import org.desperu.realestatemanager.utils.Utils.creditCalculus
 import org.desperu.realestatemanager.utils.Utils.dateToString
 import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContentUri
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import org.desperu.realestatemanager.utils.Utils.isInternetAvailable
+import org.desperu.realestatemanager.utils.Utils.realCreditRate
 import org.desperu.realestatemanager.utils.Utils.stringToDate
 import org.desperu.realestatemanager.utils.Utils.todayDate
 import org.junit.Test
@@ -67,10 +70,40 @@ class UtilsTest {
     }
 
     @Test
-    fun given_patternPrice_When_convertEuroToDollar_Then_checkDollarValue() {
+    fun given_patternPrice_When_convertPatternPriceToString_Then_checkValue() {
         val patternPrice = "17,000,000"
         val expected = "17000000"
         val output = convertPatternPriceToString(patternPrice)
+
+        assertEquals(expected, output)
+    }
+
+    @Test
+    fun given_creditData_When_creditCalculus_Then_monthlyPayment() = runBlocking {
+        val monthlyPayment = 2971
+        val creditCost = 112488
+
+        val output = creditCalculus(20, 700000.0, 1.7, 100000)
+
+        assertEquals(monthlyPayment, output["monthlyPayment"])
+        assertEquals(creditCost, output["creditCost"])
+    }
+
+    @Test
+    fun given_wrongCreditData_When_creditCalculus_Then_monthlyPayment() = runBlocking {
+        val monthlyPayment = 1
+        val creditCost = 0
+
+        val output = creditCalculus(10, 20.0, 1.7, 0)
+
+        assertEquals(monthlyPayment, output["monthlyPayment"])
+        assertEquals(creditCost, output["creditCost"])
+    }
+
+    @Test
+    fun given_creditData_When_realCreditRate_Then_realRate() {
+        val expected = "18,75"
+        val output = realCreditRate(600000.0, 112488.0).replace(".", ",")
 
         assertEquals(expected, output)
     }

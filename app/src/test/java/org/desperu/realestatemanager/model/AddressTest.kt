@@ -1,13 +1,21 @@
 package org.desperu.realestatemanager.model
 
+import android.content.ContentValues
+import android.os.Build
 import org.desperu.realestatemanager.utils.EQUALS
 import org.desperu.realestatemanager.utils.NOT_EQUALS
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Simple model class test, for Address data class that's check setter, getter and default parameters.
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.O])
 class AddressTest {
 
     private val estateId = 0L
@@ -37,7 +45,8 @@ class AddressTest {
 
     @Test
     fun given_address_When_createAddress_Then_checkValues() {
-        val address = Address(estateId, streetNumber, streetName, flatBuilding, postalCode, city, country, latitude, longitude)
+        val address = Address(estateId, streetNumber, streetName, flatBuilding,
+                postalCode, city, country, latitude, longitude)
 
         assertEquals(address.estateId, estateId)
         assertEquals(address.streetNumber, streetNumber)
@@ -90,5 +99,28 @@ class AddressTest {
         finalAddress.streetNumber = 23
 
         assertEquals(NOT_EQUALS, originalAddress.compareTo(finalAddress))
+    }
+
+    @Test
+    fun given_contentValues_When_fromContentValues_Then_checkAddressFields() {
+        val address = Address(estateId, streetNumber, streetName, flatBuilding,
+                postalCode, city, country, latitude, longitude)
+
+        val contentValues = ContentValues()
+        Assert.assertNotNull(contentValues)
+
+        contentValues.put("estateId", estateId)
+        contentValues.put("streetNumber", streetNumber)
+        contentValues.put("streetName", streetName)
+        contentValues.put("flatBuilding", flatBuilding)
+        contentValues.put("postalCode", postalCode)
+        contentValues.put("city", city)
+        contentValues.put("country", country)
+        contentValues.put("latitude", latitude)
+        contentValues.put("longitude", longitude)
+
+        val output = Address().fromContentValues(contentValues)
+
+        assertEquals(address, output)
     }
 }

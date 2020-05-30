@@ -1,13 +1,20 @@
 package org.desperu.realestatemanager.model
 
+import android.content.ContentValues
 import org.desperu.realestatemanager.utils.EQUALS
 import org.desperu.realestatemanager.utils.NOT_EQUALS
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Simple model class test, for Image data class that's check setter, getter and default parameters.
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28], manifest=Config.NONE)
 class ImageTest {
 
     private val id = 1L
@@ -73,5 +80,23 @@ class ImageTest {
         finalImage.estateId = 2L
 
         assertEquals(NOT_EQUALS, originalImage.compareTo(finalImage))
+    }
+
+    @Test
+    fun given_contentValues_When_fromContentValues_Then_checkAddressFields() {
+        val expected = Image(0, estateId, imageUri, isPrimary, description, rotation)
+
+        val contentValues = ContentValues()
+        Assert.assertNotNull(contentValues)
+
+        contentValues.put("estateId", estateId)
+        contentValues.put("imageUri", imageUri)
+        contentValues.put("isPrimary", isPrimary)
+        contentValues.put("description", description)
+        contentValues.put("rotation", rotation)
+
+        val output = Image().fromContentValues(contentValues)
+
+        assertEquals(expected, output)
     }
 }

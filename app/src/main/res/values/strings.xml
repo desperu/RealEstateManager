@@ -6,6 +6,7 @@
     <string name="fragment_maps_name">Estate Map</string>
     <string name="activity_manage_estate">Manage Estate</string>
     <string name="activity_show_images">Estate\'s Images</string>
+    <string name="activity_credit_simulator">Credit Simulator</string>
     <string name="activity_settings">Settings</string>
 
     <!-- LAYOUTS -->
@@ -95,6 +96,22 @@
     <string name="fragment_estate_sale_text_sold_out_date">Sold Out Date</string>
     <string name="fragment_estate_sale_text_state">State</string>
     <string name="fragment_estate_sale_text_real_estate_agent">Real Estate Agent</string>
+
+    <!-- Credit Simulation -->
+    <string name="activity_credit_simulator_credit_amount">Credit Amount</string>
+    <string name="activity_credit_simulator_credit_contribution">Credit Contribution</string>
+    <string name="activity_credit_simulator_interest_rate">Interest Rate (in %)</string>
+    <string name="activity_credit_simulator_credit_duration">Credit Duration (in year)</string>
+    <string name="activity_credit_simulator_monthly_payment">Monthly Payment</string>
+    <string name="activity_credit_simulator_credit_cost">Credit Cost</string>
+    <string name="activity_credit_simulator_real_rate">Real Interest Rate (in %)</string>
+    <string name="activity_credit_simulation_real_rate_explication">The real interest rate is : Credit Cost / Credit Amount (in percent)</string>
+    <string name="activity_credit_simulator_warning">This credit simulator is only for estimation,\nnot a real credit contract !</string>
+    <!-- Alert Dialog -->
+    <string name="activity_credit_simulator_dialog_title">Error !!</string>
+    <string name="activity_credit_simulator_dialog_message">The credit contribution is over the credit amount !!</string>
+    <string name="activity_credit_simulator_dialog_positive_button">Clear Contribution</string>
+    <string name="activity_credit_simulator_dialog_negative_button">Reset all data</string>
 
     <!-- SETTINGS ACTIVITY -->
     <string name="activity_settings_text_category_notification" translatable="false">Notifications</string>

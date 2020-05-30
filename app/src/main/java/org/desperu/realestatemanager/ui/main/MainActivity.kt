@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorActivity
 import org.desperu.realestatemanager.ui.main.estateDetail.ESTATE_DETAIL
 import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailFragment
 import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
@@ -267,7 +268,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 switchSearchViewVisibility(true)
                 configureAndAddFilterFragment()
             }
-            R.id.activity_main_menu_drawer_credit -> TODO("to implement")
+            R.id.activity_main_menu_drawer_credit -> showCreditSimulation()
             R.id.activity_main_menu_drawer_settings -> showSettingsActivity()
             R.id.activity_main_drawer_about -> TODO("to implement")
             R.id.activity_main_drawer_help -> TODO("to implement")
@@ -407,10 +408,16 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     /**
-     * Start settings activity.
+     * Start Settings activity.
      */
     private fun showSettingsActivity() =
         startActivity(Intent(this, SettingsActivity::class.java))
+
+    /**
+     * Start Credit Simulation activity.
+     */
+    private fun showCreditSimulation() =
+            startActivity(Intent(this, CreditSimulatorActivity::class.java))
 
     // -----------------
     // DATA

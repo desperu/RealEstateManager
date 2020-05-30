@@ -130,6 +130,15 @@
     <dimen name="fragment_image_text_description_size">24sp</dimen>
 
 
+    <!-- Credit Simulator Activity -->
+    <dimen name="activity_credit_simulator_constraint_padding">20dp</dimen>
+    <dimen name="activity_credit_simulator_text_category_size">18sp</dimen>
+    <dimen name="activity_credit_simulator_edit_margin_top">5dp</dimen>
+    <dimen name="activity_credit_simulator_edit_width">50dp</dimen>
+    <dimen name="activity_credit_simulator_button_margin">10dp</dimen>
+    <dimen name="activity_credit_simulator_big_margin_top">50dp</dimen>
+
+
     <!-- Settings Activity -->
     <dimen name="activity_settings_linear_container_padding_top">10dp</dimen>
     <dimen name="activity_settings_text_category_and_divider_margin">10dp</dimen>

@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
@@ -71,6 +73,69 @@ internal object Utils {
      * @return Converted string price.
      */
     internal fun convertPatternPriceToString(str: String): String = str.replace(",","", false)
+
+    // -----------------
+    // CREDIT CALCULATION
+    // -----------------
+
+    /**
+     * Credit calculus, with given data.
+     * @param duration the credit duration in years.
+     * @param amount the amount of the credit.
+     * @param rate the rate of the credit.
+     * @param contribution the contribution of the credit.
+     * @return the monthly payments value and the credit cost.
+     */
+    internal suspend fun creditCalculus(duration: Int,
+                                        amount: Double,
+                                        rate: Double,
+                                        contribution: Int
+    ): Map<String, Int> = withContext(Dispatchers.Default) {
+
+        // Get the real credit amount.
+        val realAmount = amount - contribution
+        // Approximate monthly payment to start calculus, without interest.
+        var monthlyPayment = realAmount / (duration * 12)
+
+        var amountRest = realAmount
+        var creditCost = 0.0
+
+        // Search appropriate monthly payment value.
+        while (amountRest > 0) {
+            // Reset value for new global credit round.
+            amountRest = realAmount
+            creditCost = 0.0
+            // Up the monthly payment by one each credit simulation search.
+            monthlyPayment += 1
+            for (year in 1..duration) {
+                // Calculus interest for each year.
+                val interest = amountRest * rate / 100
+                // Add interest of the year to the actual amount rest.
+                amountRest += interest
+                // Add interest of the year to the global credit cost.
+                creditCost += interest
+                // Minus all year monthly payment of the actual amount rest.
+                amountRest -= monthlyPayment * 12
+            }
+        }
+
+        // Remove surplus of payment to credit cost, if don't given negative result.
+        if (creditCost + amountRest > 0) creditCost += amountRest
+        // Prevent negative values
+        else if (creditCost < 0) creditCost = 0.0
+        if (monthlyPayment < 0) monthlyPayment = 0.0
+
+        return@withContext mapOf(Pair("monthlyPayment", monthlyPayment.toInt()), Pair("creditCost", creditCost.toInt()))
+    }
+
+    /**
+     * Calculus the real credit rate.
+     * @param amount the credit amount.
+     * @param creditCost the total interest of the credit, the credit cost.
+     * @return the real global credit rate.
+     */
+    internal fun realCreditRate(amount: Double, creditCost: Double): String =
+            String.format("%.2f", creditCost / amount * 100)
 
     // -----------------
     // CONVERT DATE

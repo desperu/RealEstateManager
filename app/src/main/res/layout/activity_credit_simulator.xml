@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_credit_simulator_constraint_padding">
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_category_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_credit_simulator_credit_amount"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_amount_unity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/fragments_manage_estate_text_unity_margin_bottom"
+                    android:text="@string/fragment_estate_data_text_price_unity"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/fragments_manage_estate_text_unity_size"
+                    android:textColor="@android:color/holo_green_dark"
+                    app:layout_constraintStart_toStartOf="@id/activity_credit_simulator_category_amount"
+                    app:layout_constraintBottom_toBottomOf="@id/activity_credit_simulator_edit_amount"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/activity_credit_simulator_edit_amount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_edit_margin_top"
+                    android:gravity="center_horizontal"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:inputType="number"
+                    android:digits="0123456789"
+                    app:layout_constraintStart_toEndOf="@id/activity_credit_simulator_amount_unity"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_credit_simulator_category_amount"
+                    app:layout_constraintEnd_toEndOf="@+id/activity_credit_simulator_category_amount"
+                    app:onTextChanged="@{viewModel.getEditAmountListener}"
+                    app:priceText="@{viewModel.getAmount}"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_category_contribution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_credit_simulator_credit_contribution"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_contribution_unity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/fragments_manage_estate_text_unity_margin_bottom"
+                    android:text="@string/fragment_estate_data_text_price_unity"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/fragments_manage_estate_text_unity_size"
+                    android:textColor="@android:color/holo_green_dark"
+                    app:layout_constraintStart_toStartOf="@id/activity_credit_simulator_category_contribution"
+                    app:layout_constraintBottom_toBottomOf="@id/activity_credit_simulator_edit_contribution"
+                    app:layout_constraintEnd_toStartOf="@id/activity_credit_simulator_edit_contribution"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/activity_credit_simulator_edit_contribution"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_edit_margin_top"
+                    android:gravity="center_horizontal"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:inputType="number"
+                    android:digits="0123456789"
+                    android:maxLength="9"
+                    app:layout_constraintStart_toEndOf="@id/activity_credit_simulator_contribution_unity"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_credit_simulator_category_contribution"
+                    app:layout_constraintEnd_toEndOf="@+id/activity_credit_simulator_category_contribution"
+                    app:onTextChanged2="@{viewModel.getEditContributionListener}"
+                    app:priceText2="@{viewModel.getContribution}"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_category_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_large_margin"
+                    android:text="@string/activity_credit_simulator_interest_rate"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_credit_simulator_edit_amount"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/activity_credit_simulator_edit_rate"
+                    android:layout_width="@dimen/activity_credit_simulator_edit_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_edit_margin_top"
+                    android:gravity="center_horizontal"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789."
+                    android:maxLength="4"
+                    app:layout_constraintStart_toStartOf="@+id/activity_credit_simulator_category_rate"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_credit_simulator_category_rate"
+                    app:layout_constraintEnd_toEndOf="@+id/activity_credit_simulator_category_rate"
+                    android:text="@={viewModel.rate}"
+                    app:onTextChanged3="@{viewModel.getEdiTextListener}"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_category_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_large_margin"
+                    android:text="@string/activity_credit_simulator_credit_duration"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_credit_simulator_edit_rate"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_credit_simulator_button_margin"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_baseline_remove_circle_black_36"
+                    android:tint="@android:color/holo_orange_dark"
+                    android:background="@android:color/transparent"
+                    android:tag="minusYear"
+                    app:layout_constraintEnd_toStartOf="@id/activity_credit_simulator_edit_duration"
+                    app:layout_constraintTop_toTopOf="@id/activity_credit_simulator_edit_duration"
+                    app:layout_constraintBottom_toBottomOf="@id/activity_credit_simulator_edit_duration"
+                    app:onClick="@{viewModel.getButtonListener}" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/activity_credit_simulator_edit_duration"
+                    android:layout_width="@dimen/activity_credit_simulator_edit_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_edit_margin_top"
+                    android:gravity="center_horizontal"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:inputType="number"
+                    android:digits="0123456789"
+                    android:maxLength="2"
+                    app:layout_constraintStart_toStartOf="@+id/activity_credit_simulator_category_duration"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_credit_simulator_category_duration"
+                    app:layout_constraintEnd_toEndOf="@+id/activity_credit_simulator_category_duration"
+                    android:text="@={`` + viewModel.duration}"
+                    app:onTextChanged3="@{viewModel.getEdiTextListener}"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_credit_simulator_button_margin"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_baseline_add_circle_black_36"
+                    android:tint="@android:color/holo_orange_dark"
+                    android:background="@android:color/transparent"
+                    android:tag="addYear"
+                    app:layout_constraintStart_toEndOf="@id/activity_credit_simulator_edit_duration"
+                    app:layout_constraintTop_toTopOf="@id/activity_credit_simulator_edit_duration"
+                    app:layout_constraintBottom_toBottomOf="@id/activity_credit_simulator_edit_duration"
+                    app:onClick="@{viewModel.getButtonListener}"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_category_monthly_payment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_big_margin_top"
+                    android:text="@string/activity_credit_simulator_monthly_payment"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_credit_simulator_edit_duration"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_text_monthly_payment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:gravity="center_horizontal"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    app:layout_constraintStart_toStartOf="@+id/activity_credit_simulator_category_monthly_payment"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_credit_simulator_category_monthly_payment"
+                    app:layout_constraintEnd_toEndOf="@+id/activity_credit_simulator_category_monthly_payment"
+                    app:setPrice="@{viewModel.getMonthlyPayment}"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_category_credit_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_big_margin_top"
+                    android:text="@string/activity_credit_simulator_credit_cost"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_credit_simulator_edit_duration"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_text_credit_cost"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:gravity="center_horizontal"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    app:layout_constraintStart_toStartOf="@+id/activity_credit_simulator_category_credit_cost"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_credit_simulator_category_credit_cost"
+                    app:layout_constraintEnd_toEndOf="@+id/activity_credit_simulator_category_credit_cost"
+                    app:setPrice="@{viewModel.getCreditCost}"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_category_real_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_big_margin_top"
+                    android:text="@string/activity_credit_simulator_real_rate"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_credit_simulator_text_monthly_payment"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_text_real_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorPurple"
+                    android:textSize="@dimen/activity_credit_simulator_text_category_size"
+                    app:layout_constraintStart_toStartOf="@+id/activity_credit_simulator_category_real_rate"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_credit_simulator_category_real_rate"
+                    app:layout_constraintEnd_toEndOf="@+id/activity_credit_simulator_category_real_rate"
+                    android:text="@{viewModel.getRealRate}"/>
+
+                <TextView
+                    android:id="@+id/activity_credit_simulator_real_rate_explication"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_edit_margin_top"
+                    android:gravity="center_horizontal"
+                    android:text="@string/activity_credit_simulation_real_rate_explication"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="@id/activity_credit_simulator_text_real_rate"
+                    app:layout_constraintEnd_toEndOf="@id/activity_credit_simulator_text_real_rate"
+                    app:layout_constraintTop_toBottomOf="@id/activity_credit_simulator_text_real_rate"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_credit_simulator_big_margin_top"
+                    android:gravity="center_horizontal"
+                    android:text="@string/activity_credit_simulator_warning"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_credit_simulator_real_rate_explication"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>
