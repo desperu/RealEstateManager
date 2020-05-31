@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.ui.main.filter
 
 import android.content.Context
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
@@ -48,6 +49,7 @@ class FilterFragment: BaseBindingFragment() {
     override fun updateDesign() {
         configureDatePicker()
         configureSpinner()
+        configureInterceptTouchEvent()
     }
 
     // -----------------
@@ -98,6 +100,30 @@ class FilterFragment: BaseBindingFragment() {
                 context!!)
     }
 
+    /**
+     * Configure on touch listener on scroll root, to intercept touch event.
+     * It's needed to properly dispatch toutch event between bottom sheet and scroll view.
+     */
+    private fun configureInterceptTouchEvent() = fragment_filter_scroll.setOnTouchListener { v, event ->
+        val isOnTop = fragment_filter_scroll.scrollY == 0
+        when (event.action) {
+
+            MotionEvent.ACTION_DOWN -> {
+                v.parent.requestDisallowInterceptTouchEvent(!isOnTop)
+                return@setOnTouchListener !isOnTop
+            }
+
+            MotionEvent.ACTION_UP -> {
+                v.parent.requestDisallowInterceptTouchEvent(false)
+                return@setOnTouchListener false
+            }
+
+            else -> {
+                return@setOnTouchListener false
+            }
+        }
+    }
+
     // -----------------
     // UI
     // -----------------
@@ -112,5 +138,13 @@ class FilterFragment: BaseBindingFragment() {
                 if (hasFilters) R.color.bottomBarRed
                 else R.color.colorPrimaryDark
         ))
+    }
+
+    /**
+     * Scroll the scroll view to the top.
+     */
+    internal fun scrollToTop() {
+        if (fragment_filter_scroll != null)
+            fragment_filter_scroll.scrollY = 0
     }
 }

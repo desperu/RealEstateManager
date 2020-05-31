@@ -10,12 +10,9 @@
     </data>
 
     <ScrollView
+        android:id="@+id/fragment_filter_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorTransGrey"
-        android:paddingTop="@dimen/fragment_filter_scroll_padding_top"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -43,7 +40,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_filter_category_type">
 
-                <TextView
+                <org.desperu.realestatemanager.view.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/fragment_filter_item_margin"
@@ -51,12 +48,10 @@
                     android:tag="type"
                     android:text="@string/fragment_filter_text_flat"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/text_filter_unselected"
-                    android:clickable="true"
-                    android:focusable="true"
+                    app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
-                <TextView
+                <org.desperu.realestatemanager.view.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/fragment_filter_item_margin"
@@ -64,12 +59,10 @@
                     android:tag="type"
                     android:text="@string/fragment_filter_text_duplex"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/text_filter_unselected"
-                    android:clickable="true"
-                    android:focusable="true"
+                    app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
-                <TextView
+                <org.desperu.realestatemanager.view.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/fragment_filter_item_margin"
@@ -77,12 +70,10 @@
                     android:tag="type"
                     android:text="@string/fragment_filter_text_house"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/text_filter_unselected"
-                    android:clickable="true"
-                    android:focusable="true"
+                    app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
-                <TextView
+                <org.desperu.realestatemanager.view.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/fragment_filter_item_margin"
@@ -90,9 +81,7 @@
                     android:tag="type"
                     android:text="@string/fragment_filter_text_penthouse"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/text_filter_unselected"
-                    android:clickable="true"
-                    android:focusable="true"
+                    app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
             </LinearLayout>
@@ -338,7 +327,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_filter_category_interest_places">
 
-                <TextView
+                <org.desperu.realestatemanager.view.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/fragment_filter_item_margin"
@@ -346,10 +335,10 @@
                     android:tag="interestPlaces"
                     android:text="@string/fragment_filter_text_school"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/text_filter_unselected"
+                    app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
-                <TextView
+                <org.desperu.realestatemanager.view.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/fragment_filter_item_margin"
@@ -357,10 +346,10 @@
                     android:tag="interestPlaces"
                     android:text="@string/fragment_filter_text_shop"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/text_filter_unselected"
+                    app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
-                <TextView
+                <org.desperu.realestatemanager.view.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/fragment_filter_item_margin"
@@ -368,7 +357,7 @@
                     android:tag="interestPlaces"
                     android:text="@string/fragment_filter_text_park"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/text_filter_unselected"
+                    app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
             </LinearLayout>
@@ -567,7 +556,7 @@
                     android:layout_margin="@dimen/fragment_filter_button_margin"
                     android:contentDescription="@null"
                     android:rotation="45"
-                    app:srcCompat="@drawable/ic_baseline_add_white_48"
+                    app:srcCompat="@drawable/ic_baseline_add_white_36"
                     android:onClick="@{() -> viewModel.removeFilters()}"/>
 
                 <ImageView
@@ -577,7 +566,7 @@
                     android:layout_margin="@dimen/fragment_filter_button_margin"
                     android:contentDescription="@null"
                     android:tint="@android:color/white"
-                    app:srcCompat="@drawable/ic_baseline_filter_list_black_48"
+                    app:srcCompat="@drawable/ic_baseline_filter_list_black_36"
                     android:onClick="@{() -> viewModel.applyFilters()}"/>
 
             </LinearLayout>

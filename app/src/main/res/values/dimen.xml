@@ -80,7 +80,7 @@
     <dimen name="fragment_filter_item_filter_padding">10dp</dimen>
     <dimen name="thumb_size">40dp</dimen>
     <dimen name="fragment_filter_text_date_width">100dp</dimen>
-    <dimen name="fragment_filter_button_margin">5dp</dimen>
+    <dimen name="fragment_filter_button_margin">10dp</dimen>
 
     
     <!-- Manage Estate Activity -->

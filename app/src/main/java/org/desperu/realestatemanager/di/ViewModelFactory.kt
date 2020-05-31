@@ -86,9 +86,8 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
 
             // Return a FilterViewModel instance.
             modelClass.isAssignableFrom(FilterViewModel::class.java) -> {
-                val resourceService = ResourceServiceImpl(activity)
                 val communication = FilterVMCommunicationImpl(activity)
-                return FilterViewModel(resourceService, communication) as T
+                return FilterViewModel(communication) as T
             }
 
             // Return a CreditSimulatorViewModel instance.

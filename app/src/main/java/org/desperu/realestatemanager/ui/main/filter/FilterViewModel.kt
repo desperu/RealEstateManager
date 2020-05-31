@@ -4,7 +4,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
-import android.widget.TextView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,35 +11,31 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.utils.Utils.deConcatenateStringToMutableList
 import org.desperu.realestatemanager.utils.Utils.stringToDate
+import org.desperu.realestatemanager.view.CustomTextView
 import org.desperu.realestatemanager.view.OnRangeChangeListener
-import java.lang.IllegalArgumentException
 import java.util.*
 
 /**
  * View Model witch register and apply filters for estate list.
  *
- * @param resource the resource service interface witch provide application resources access.
  * @param communication the filter view model communication interface witch provide view model communication.
  *
  * @constructor Instantiates a new FilterViewModel.
  *
- * @property resource the resource service interface witch provide application resources access to set.
  * @property communication the filter view model communication interface witch provide view model communication to set.
  */
 @Suppress("unchecked_cast")
-class FilterViewModel(private val resource: ResourceService,
-                      private val communication: FilterVMCommunication
+class FilterViewModel(private val communication: FilterVMCommunication
 ): ViewModel() {
 
     // FOR DATA
     private var originalList = listOf<Estate>()
     private val mapFilters = sortedMapOf<String, Any>()
     private val hasFilter: Boolean get() = mapFilters.isNotEmpty()
-    private val selectedBackground = resource.getDrawable(R.drawable.text_filter_selected)
-    private val unselectedBackground = resource.getDrawable(R.drawable.text_filter_unselected)
+    private val selectedBackground = R.drawable.text_filter_selected
+    private val unselectedBackground = R.drawable.text_filter_unselected
     // Custom setter for dates values, due to multiple uses, in layout, in DialogDatePicker and need to intercept when set here.
     var saleBegin = String()
         set(value) { field = value; saleBeginObs.set(value); manageDateFilter("saleDate", saleBegin, saleEnd) }
@@ -119,14 +114,15 @@ class FilterViewModel(private val resource: ResourceService,
      * Filter on click listener, add or remove filter from map filter, depends of filter state.
      */
     private val onClickFilter = View.OnClickListener {
-        val key = it.tag.toString()
-        val value = (it as? TextView)?.text
-        if (it.background == unselectedBackground) {
+        val v = it as CustomTextView
+        val key = v.tag.toString()
+        val value = v.text
+        if (v.compareDrawableTo(unselectedBackground)) {
             value?.let { it1 -> addFilter(key, it1) }
-            it.background = selectedBackground
+            v.setBackgroundResource(selectedBackground)
         } else {
             removeFilter(key, value)
-            it.background = unselectedBackground
+            v.setBackgroundResource(unselectedBackground)
         }
     }
 
@@ -239,7 +235,7 @@ class FilterViewModel(private val resource: ResourceService,
      */
     fun removeFilters() {
         mapFilters.clear()
-        communication.closeFilterFragment()
+        communication.closeFilterFragment(true)
     }
 
     // -------------

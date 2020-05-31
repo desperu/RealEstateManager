@@ -26,8 +26,9 @@ interface FilterVMCommunication {
 
     /**
      * Used to allow view model to close filter fragment.
+     * @param toRemove true if remove fragment.
      */
-    fun closeFilterFragment()
+    fun closeFilterFragment(toRemove: Boolean)
 }
 
 /**
@@ -45,7 +46,7 @@ class FilterVMCommunicationImpl(private val activity: AppCompatActivity): Filter
      * Get the current fragment of the activity from the view pager.
      */
     private fun getCurrentFragment() =
-            (activity as MainCommunication).getCurrentFragment()
+            (activity as MainCommunication).getFilterFragment()
 
     /**
      * Used to allow view model to update bottom bar color. If hasFilters, set background red,
@@ -65,7 +66,8 @@ class FilterVMCommunicationImpl(private val activity: AppCompatActivity): Filter
 
     /**
      * Used to allow view model to close filter fragment.
+     * @param toRemove true if remove fragment.
      */
-    override fun closeFilterFragment() =
-            (activity as MainCommunication).closeFilterFragment()
+    override fun closeFilterFragment(toRemove: Boolean) =
+            (activity as MainCommunication).closeFilterFragment(toRemove)
 }

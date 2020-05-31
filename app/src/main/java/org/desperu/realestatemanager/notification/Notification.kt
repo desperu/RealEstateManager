@@ -52,7 +52,7 @@ class Notification {
 
         // Create intent for notification click.
         val resultIntent: Intent = Intent(context, MainActivity::class.java)
-                .putExtra(ESTATE_NOTIFICATION, true)
+                .putExtra(ESTATE_NOTIFICATION, estate)
 
         // Add activity to the top of stack.
         val stackBuilder: TaskStackBuilder = TaskStackBuilder.create(context)

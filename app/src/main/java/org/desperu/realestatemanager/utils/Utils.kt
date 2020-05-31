@@ -199,7 +199,11 @@ internal object Utils {
     internal fun getFolderAndFileNameFromContentUri(stringUri: String): Map<String, String> {
         val tempList = stringUri.split("/")
         val listSize = tempList.size
-        return mapOf(Pair("folderName", tempList[listSize - 2]), Pair("fileName", tempList[listSize - 1]))
+
+        return if (listSize > 2)
+                    mapOf(Pair("folderName", tempList[listSize - 2]), Pair("fileName", tempList[listSize - 1]))
+               else
+                    mapOf()
     }
 
     /**

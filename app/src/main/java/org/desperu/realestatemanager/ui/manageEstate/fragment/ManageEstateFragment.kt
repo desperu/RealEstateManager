@@ -286,9 +286,11 @@ class ManageEstateFragment: BaseBindingFragment() {
     internal fun deleteImageInStorage(imageUri: String) = storageAction {
         val fileData = getFolderAndFileNameFromContentUri(imageUri)
         val messageError = "Can't retrieved folder name and file name from content uri"
-        activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let {
-            deleteFileInStorage(it, fileData["folderName"] ?: error(messageError), fileData["fileName"] ?: error(messageError))
-        }
+        if (fileData.isNotEmpty())
+            activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let {
+                deleteFileInStorage(it, fileData["folderName"] ?: error(messageError),
+                        fileData["fileName"] ?: error(messageError))
+            }
     }
 
     /**
