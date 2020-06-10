@@ -10,12 +10,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
+import org.desperu.realestatemanager.filter.FilterHelper
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.utils.Utils.deConcatenateStringToMutableList
-import org.desperu.realestatemanager.utils.Utils.stringToDate
 import org.desperu.realestatemanager.view.CustomTextView
 import org.desperu.realestatemanager.view.OnRangeChangeListener
-import java.util.*
 
 /**
  * View Model witch register and apply filters for estate list.
@@ -32,8 +30,8 @@ class FilterViewModel(private val communication: FilterVMCommunication
 
     // FOR DATA
     private var originalList = listOf<Estate>()
-    private val mapFilters = sortedMapOf<String, Any>()
-    private val hasFilter: Boolean get() = mapFilters.isNotEmpty()
+    private val filtersMap = sortedMapOf<String, Any>()
+    private val hasFilter: Boolean get() = filtersMap.isNotEmpty()
     private val selectedBackground = R.drawable.text_filter_selected
     private val unselectedBackground = R.drawable.text_filter_unselected
     // Custom setter for dates values, due to multiple uses, in layout, in DialogDatePicker and need to intercept when set here.
@@ -72,9 +70,9 @@ class FilterViewModel(private val communication: FilterVMCommunication
      */
     private fun addFilter(key: String, value: Any) = viewModelScope.launch(Dispatchers.Default) {
         if (key == "type" || key == "interestPlaces")
-            if (mapFilters[key] != null) (mapFilters[key] as MutableList<String>).add(value.toString())
-            else mapFilters[key] = mutableListOf(value.toString())
-        else mapFilters[key] = value
+            if (filtersMap[key] != null) (filtersMap[key] as MutableList<String>).add(value.toString())
+            else filtersMap[key] = mutableListOf(value.toString())
+        else filtersMap[key] = value
         updateBottomBarColor()
     }
 
@@ -87,11 +85,11 @@ class FilterViewModel(private val communication: FilterVMCommunication
      */
     private fun removeFilter(key: String, value: Any?) = viewModelScope.launch(Dispatchers.Default) {
         if (key == "type" || key == "interestPlaces") {
-            val valueList = (mapFilters[key] as MutableList<String>?)
+            val valueList = (filtersMap[key] as MutableList<String>?)
             if (valueList != null && valueList.size > 1) valueList.remove(value.toString())
-            else mapFilters.remove(key)
-        } else if (value != null) mapFilters.remove(key, value)
-        else mapFilters.remove(key)
+            else filtersMap.remove(key)
+        } else if (value != null) filtersMap.remove(key, value)
+        else filtersMap.remove(key)
         updateBottomBarColor()
     }
 
@@ -171,70 +169,32 @@ class FilterViewModel(private val communication: FilterVMCommunication
     }
 
     // -------------
-    // UTILS
+    // ACTION
     // -------------
 
     /**
      * Apply all filters in map filters to estate list.
      */
     fun applyFilters() = viewModelScope.launch(Dispatchers.Default) {
-        if (mapFilters.isNotEmpty()) {
-            val filteredList = mutableListOf<Estate>()
-
-            originalList.forEach estate@ { estate ->
-                var match = false
-                mapFilters.forEach {
-                    match = getPredicate(estate, it.key, it.value)
-                    if (!match) return@estate
-                }
-                if (match) filteredList.add(estate)
-            }
-            updateEstateList(filteredList)
-        }
+        val filteredList = FilterHelper().applyFilters(originalList, filtersMap)
+        updateEstateList(filteredList)
     }
 
     /**
-     * Check if the estate value is under the ranges values, or equal the value.
-     * @param originalEstate the estate to test.
-     * @param key the filter key.
-     * @param value the filter value.
-     * @return true if the estate value match the filter value, false otherwise.
+     * Apply all filters in map filters to searched estate list.
+     * @param searchedList the searched estate list to filter.
      */
-    private fun getPredicate(originalEstate: Estate, key: String, value: Any): Boolean = when (key) {
-        "type" -> (value as List<String>).contains(originalEstate.type)
-        "city" -> originalEstate.address.city.toLowerCase(Locale.ROOT).contains(value.toString().toLowerCase(Locale.ROOT))
-        "imageNumber" -> originalEstate.imageList.size >= value.toString().toInt()
-        "price" -> originalEstate.price >= (value as List<Int>)[0] && originalEstate.price <= value[1]
-        "surface" -> originalEstate.surfaceArea >= (value as List<Int>)[0] && originalEstate.surfaceArea <= value[1]
-        "rooms" -> originalEstate.roomNumber >= (value as List<Int>)[0] && originalEstate.roomNumber <= value[1]
-        "interestPlaces" -> deConcatenateStringToMutableList(originalEstate.interestPlaces).containsAll(value as List<String>)
-        "saleDate" -> compareDates(stringToDate(originalEstate.saleDate), value as List<String>)
-        "soldDate" -> compareDates(stringToDate(originalEstate.soldDate), value as List<String>)
-        "state" -> originalEstate.state == value.toString()
-        else -> throw IllegalArgumentException("Filter key not found: $key")
-    }
-
-    /**
-     * Compare estate date with range dates.
-     * @param estateDate the estate date to compare.
-     * @param rangeDate the range dates to compare to.
-     * @return true if the estate date is in the the ranges dates.
-     */
-    private fun compareDates(estateDate: Date?, rangeDate: List<String>): Boolean {
-        var compare1 = false
-        var compare2 = false
-        if (estateDate != null) {
-            compare1 = if (rangeDate[0].isNotBlank()) estateDate >= stringToDate(rangeDate[0]) else true
-            compare2 = if (rangeDate[1].isNotBlank()) estateDate <= stringToDate(rangeDate[1]) else true
-        }
-        return compare1 && compare2
+    internal fun applyFilters(searchedList: List<Estate>?) = viewModelScope.launch(Dispatchers.Default) {
+        val listToFilter = searchedList ?: originalList
+        val filteredList = FilterHelper().applyFilters(listToFilter, filtersMap)
+        updateEstateList(filteredList)
     }
 
     /**
      * Remove all filters in map filters.
      */
     fun removeFilters() {
-        mapFilters.clear()
+        filtersMap.clear()
         communication.closeFilterFragment(true)
     }
 

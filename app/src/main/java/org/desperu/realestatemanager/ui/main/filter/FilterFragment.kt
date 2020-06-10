@@ -102,7 +102,7 @@ class FilterFragment: BaseBindingFragment() {
 
     /**
      * Configure on touch listener on scroll root, to intercept touch event.
-     * It's needed to properly dispatch toutch event between bottom sheet and scroll view.
+     * It's needed to properly dispatch touch event between bottom sheet and scroll view.
      */
     private fun configureInterceptTouchEvent() = fragment_filter_scroll.setOnTouchListener { v, event ->
         val isOnTop = fragment_filter_scroll.scrollY == 0
@@ -123,6 +123,16 @@ class FilterFragment: BaseBindingFragment() {
             }
         }
     }
+
+    // -----------------
+    // ACTION
+    // -----------------
+
+    /**
+     * Apply filters with view model and helper support.
+     * @param searchedList the searched estate list to apply filters.
+     */
+    internal fun applyFilters(searchedList: List<Estate>?) = viewModel?.applyFilters(searchedList)
 
     // -----------------
     // UI

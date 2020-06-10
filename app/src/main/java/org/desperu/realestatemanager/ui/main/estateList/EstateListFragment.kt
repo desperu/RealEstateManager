@@ -11,10 +11,12 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
+import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
 
 /**
  * Fragment to show estate list.
+ *
  * @constructor Instantiates a new EstateListFragment.
  */
 class EstateListFragment: BaseBindingFragment() {
@@ -72,6 +74,23 @@ class EstateListFragment: BaseBindingFragment() {
         }
 
     // --------------
+    // DATA
+    // --------------
+
+    /**
+     * Add or update the new managed estate.
+     * @param newEstate the new estate to show in the list.
+     * @return the position of the affected item in the recycler view.
+     */
+    internal fun addOrUpdateEstate(newEstate: Estate): Int? = viewModel?.addOrUpdateEstate(newEstate)
+
+    /**
+     * Update Estate List in view model.
+     * @param newEstateList the new estate list to show.
+     */
+    internal fun updateEstateList(newEstateList: List<Estate>) = viewModel?.updateEstateList(newEstateList)
+
+    // --------------
     // UI
     // --------------
 
@@ -82,8 +101,4 @@ class EstateListFragment: BaseBindingFragment() {
     internal fun scrollToNewItem(position: Int) {
         view?.rootView?.fragment_estate_list_recycler_view?.layoutManager?.scrollToPosition(position)
     }
-
-    // --- GETTERS ---
-
-    internal fun getViewModel(): EstateListViewModel = viewModel as EstateListViewModel
 }

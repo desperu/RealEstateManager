@@ -17,6 +17,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import com.facebook.stetho.Stetho
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
@@ -25,8 +26,11 @@ import icepick.State
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_maps.view.*
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
+import org.desperu.realestatemanager.filter.SearchHelper
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorActivity
 import org.desperu.realestatemanager.ui.main.estateDetail.ESTATE_DETAIL
@@ -42,7 +46,7 @@ import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.ui.settings.SettingsActivity
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.view.MapMotionLayout
-import java.lang.IllegalArgumentException
+import kotlin.IllegalArgumentException
 
 /**
  * The argument name for intent to received the new or updated estate in this Activity.
@@ -101,6 +105,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private val fm = supportFragmentManager
     private lateinit var bottomSheet: BottomSheetBehavior<View>
     private val isExpanded get() = bottomSheet.state == STATE_HALF_EXPANDED || bottomSheet.state == STATE_EXPANDED
+    private var hasFilter = false
+    private var query = ""
 
     // FOR INTENT
     private val fullEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FULL_ESTATE_LIST)
@@ -131,6 +137,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun configureDesign() {
         Stetho.initializeWithDefaults(this) // TODO For test only, to remove
         configureToolBar()
+        configureSearchView()
         configureDrawerLayout()
         configureNavigationView()
         configureAndShowFragment(FRAG_ESTATE_LIST, null)
@@ -158,6 +165,23 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
             activity_main_nav_view.setPadding(0, 0, 0, 0)
         activity_main_nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    /**
+     * Configure Search View Listener in toolbar.
+     */
+    private fun configureSearchView() {
+        toolbar_search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                onSearchTextChange(query)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                onSearchTextChange(s)
+                return false
+            }
+        })
     }
 
     // --------------
@@ -235,8 +259,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     /**
      * Configure and show bottom sheet filter fragment.
+     * @param state the state to open the bottom sheet.
      */
-    private fun configureAndShowBottomSheetFilterFragment() {
+    private fun configureAndShowBottomSheetFilterFragment(state: Int) {
         fabFilterVisibility(true)
         var fragment: Fragment? = getFilterFragment()
         if (fragment == null) {
@@ -248,7 +273,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     .commit()
         }
         bottomSheet = from(activity_main_bottom_sheet)
-        bottomSheet.state = STATE_HALF_EXPANDED
+        bottomSheet.state = state
         val callback = object : BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
@@ -299,7 +324,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity(null)
             R.id.activity_main_menu_drawer_Search -> {
                 switchSearchViewVisibility(true)
-                configureAndShowBottomSheetFilterFragment()
+                configureAndShowBottomSheetFilterFragment(STATE_EXPANDED)
             }
             R.id.activity_main_menu_drawer_credit -> showCreditSimulation()
             R.id.activity_main_menu_drawer_settings -> showSettingsActivity()
@@ -312,17 +337,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_main_menu, menu)
-        toolbar_search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-//                onSearchTextChange(query)
-                return false
-            }
-
-            override fun onQueryTextChange(s: String): Boolean {
-//                onSearchTextChange(s)
-                return false
-            }
-        })
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -371,9 +385,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             activity_main_nav_view.menu.getItem(fragmentKey).isChecked = true
         else
             activity_main_nav_view.checkedItem?.isChecked = false
-        // To show fab filter when hide bottom sheet
-//        if (::bottomSheet.isInitialized && bottomSheet.state == STATE_HIDDEN)
-//            fabFilterVisibility(false)
     }
 
     // --------------------
@@ -393,46 +404,27 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     fun onClickFilter(v: View) {
         if (v.tag == UNFILTERED)
-            configureAndShowBottomSheetFilterFragment()
+            configureAndShowBottomSheetFilterFragment(STATE_HALF_EXPANDED)
         else {
             fullEstateList?.let { updateEstateList(it, false) }
             intent.removeExtra(FILTERED_ESTATE_LIST)
         }
     }
 
-//    /**
-//     * Manage click on Your Lunch button.
-//     */
-//    private fun onClickYourLunch() {
-//        if (userDBViewModel.getUser().get() != null
-//                && Objects.requireNonNull(userDBViewModel.getUser().get()).getBookedRestaurantId() != null)
-//            showRestaurantDetailActivity(Objects.requireNonNull(userDBViewModel.getUser().get()).getBookedRestaurantId())
-//        else Snackbar.make(drawerLayout, R.string.activity_main_message_no_booked_restaurant, Snackbar.LENGTH_SHORT).show()
-//    }
-//
-//    /**
-//     * Fetch restaurant on search text change, and send query term to corresponding fragment.
-//     * @param query Query term to search.
-//     */
-//    private fun onSearchTextChange(query: String) {
-//        this.queryTerm = query
-//        when (fragment) {
-//            is MapsFragment -> { isQueryForRestaurant = true
-//                val mapsFragment: MapsFragment = this.fragment as MapsFragment
-//                mapsFragment.onSearchQueryTextChange(query)
-//            }
-//            fragment.getClass() === RestaurantListFragment::class.java -> {
-//                isQueryForRestaurant = true
-//                val restaurantListFragment: RestaurantListFragment = this.fragment as RestaurantListFragment
-//                restaurantListFragment.onSearchQueryTextChange(query)
-//            }
-//            fragment.getClass() === WorkmatesFragment::class.java -> {
-//                isQueryForRestaurant = false
-//                val workmatesFragment: WorkmatesFragment = this.fragment as WorkmatesFragment
-//                workmatesFragment.onSearchQueryTextChange(query)
-//            }
-//        }
-//    }
+    /**
+     * Apply the searched query term to filter the estate list, and send query term to corresponding fragment.
+     * @param query the query term to search.
+     */
+    private fun onSearchTextChange(query: String) = lifecycleScope.launch(Dispatchers.Main) {
+        this@MainActivity.query = query
+        var searchedList = fullEstateList
+        if (hasFilter) getFilterFragment()?.applyFilters(searchedList)
+        else if (query.isNotBlank()) {
+            searchedList = fullEstateList?.let { SearchHelper().applySearch(it, query) }
+            searchedList?.let { updateEstateList(it); saveFilteredList(searchedList) }
+        } else if (!hasFilter)
+            fullEstateList?.let { estateListFragment?.updateEstateList(it) }
+    }
 
     // -----------------
     // ACTIVITY
@@ -468,14 +460,62 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param hasFilter true if list has filters, false otherwise.
      */
     override fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean) {
-        // TODO swipe refresh when have filter don't switch fab filter state
-        estateListFragment?.getViewModel()?.updateEstateList(estateList)
-        mapsFragment?.updateEstateList(estateList)
-        if (hasFilter) {
-            intent.putParcelableArrayListExtra(FILTERED_ESTATE_LIST, estateList as ArrayList)
-            closeFilterFragment(false)
+        lifecycleScope.launch(Dispatchers.Main) {
+            this@MainActivity.hasFilter = hasFilter
+            var filteredList = estateList
+            if (query.isNotBlank())
+                filteredList = SearchHelper().applySearch(estateList, query)
+            // TODO swipe refresh when have filter don't switch fab filter state
+            if (hasFilter) {
+                saveFilteredList(filteredList)
+                closeFilterFragment(false)
+            }
+            switchFabFilter(hasFilter)
+            dispatchDataToFragment(filteredList)
         }
-        switchFabFilter(hasFilter)
+    }
+
+    @Suppress("unchecked_cast")
+    private fun dispatchDataToFragment(value: Any) = when (value) {
+        is Estate -> updateEstate(value)
+        is List<*> -> updateEstateList(value as List<Estate>)
+        else -> throw IllegalArgumentException("Can't retrieve the data type !")
+    }
+
+    private fun updateEstate(estate: Estate) {
+        TODO("To implement or not LOL")
+    }
+
+    /**
+     * Try to update estate list in all fragments lists.
+     * @param estateList the estate list to set.
+     */
+    private fun updateEstateList(estateList: List<Estate>) {
+        estateListFragment?.updateEstateList(estateList)
+        mapsFragment?.updateEstateList(estateList)
+    }
+
+    /**
+     * Save the filtered list in intent data.
+     * @param filteredList the filtered list to save.
+     */
+    private fun saveFilteredList(filteredList: List<Estate>) =
+            intent.putParcelableArrayListExtra(FILTERED_ESTATE_LIST, filteredList as ArrayList)
+
+    // -----------------
+    // FILTERS
+    // -----------------
+
+    /**
+     * Apply search and filters to the estate list, and show result.
+     */
+    private fun applyFilters() = lifecycleScope.launch(Dispatchers.Main) {
+        var filteredList: List<Estate>? = null
+        if (hasFilter)
+            getFilterFragment()?.applyFilters(filteredList)
+        if (query.isNotBlank())
+            filteredList = fullEstateList?.let { SearchHelper().applySearch(it, query) }
+        // updateEstateList()
     }
 
     // -----------------
@@ -569,7 +609,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         activity_main_fab_filter.updateLayoutParams {
             this as RelativeLayout.LayoutParams
             addRule(if (toEnd) RelativeLayout.ALIGN_PARENT_END
-            else RelativeLayout.ALIGN_PARENT_START)
+                    else RelativeLayout.ALIGN_PARENT_START)
         }
     }
 
@@ -590,7 +630,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             val newEstate: Estate? = data?.getParcelableExtra(NEW_ESTATE)
 
             // Add or update estate in list of view model and recycler view, if an instance was found.
-            val position = estateListFragment?.getViewModel()?.addOrUpdateEstate(newEstate)
+            val position = newEstate?.let { estateListFragment?.addOrUpdateEstate(it) }
             // If an estate was added or updated, position is not null, scroll the recycler to the estate position.
             position?.let { estateListFragment?.scrollToNewItem(it) }
 
@@ -609,8 +649,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     /**
      * Get Filter Fragment instance.
+     * @return the current filter fragment instance.
      */
-    override fun getFilterFragment(): Fragment? = fm.findFragmentById(R.id.activity_main_bottom_sheet)
+    override fun getFilterFragment(): FilterFragment? = fm.findFragmentById(R.id.activity_main_bottom_sheet) as FilterFragment?
 
     /**
      * Get the associated fragment class with the given fragment key.
