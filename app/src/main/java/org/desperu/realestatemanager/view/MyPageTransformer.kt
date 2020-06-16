@@ -21,10 +21,10 @@ class MyPageTransformer(private val viewPager: ViewPager): ViewPager.PageTransfo
                 page.alpha = 1F
 
                 if (!addEstate.isShown) addEstate.show()
-                addEstate.rotation = (1 - position) * page.width
+                addEstate.rotation = (1 - position) * 1080
 
                 if (!addImage.isShown) addImage.show()
-                addImage.rotation = (1 - position) * page.width
+                addImage.rotation = (1 - position) * 1080
                 addImage.visibility = if (viewPager.currentItem == ESTATE_IMAGE) View.VISIBLE else View.GONE
             }
 

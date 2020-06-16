@@ -41,6 +41,15 @@ class MapsViewModel(private val router: EstateRouter): ViewModel() {
     // -------------
 
     /**
+     * Update the estate for the map, in estate, if new estate is null, set original estate..
+     * @param newEstate the new estate to set.
+     */
+    internal fun updateEstate(newEstate: Estate?) {
+        estate.set(null)
+        estate.set(newEstate)
+    }
+
+    /**
      * Update the estate list for the map, if new list is null, set original list..
      * @param newEstateList the new estate list to set.
      */
@@ -58,7 +67,12 @@ class MapsViewModel(private val router: EstateRouter): ViewModel() {
      * Redirect the user to estate detail fragment.
      * @param estate the estate associated with the marker.
      */
-    internal fun onInfoClick(estate: Estate?) = estate?.let { router.openEstateDetail(it) }
+    internal fun onInfoClick(estate: Estate?) = estate?.let {
+        if (router.isFrame2Visible())
+            router.showDetailForTablet(it, false)
+        else
+            router.openEstateDetail(it)
+    }
 
     // --- GETTERS ---
 

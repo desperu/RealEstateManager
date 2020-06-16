@@ -7,10 +7,10 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
+import kotlinx.android.synthetic.main.activity_main.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateDetailBinding
@@ -41,7 +41,7 @@ class EstateDetailFragment: BaseBindingFragment() {
     // FOR DATA
     private lateinit var binding: FragmentEstateDetailBinding
     private var viewModel: EstateDetailViewModel? = null
-    private var mapsFragment: Fragment? = null
+    private var mapsFragment: MapsFragment? = null
 
     // --------------
     // BASE METHODS
@@ -88,7 +88,7 @@ class EstateDetailFragment: BaseBindingFragment() {
      * Configure and show maps fragment if google play services are available.
      */
     private fun configureAndShowMapFragment() {
-        mapsFragment = childFragmentManager.findFragmentById(R.id.fragment_estate_detail_container_map)
+        mapsFragment = childFragmentManager.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?
         if (mapsFragment == null) {
             mapsFragment = MapsFragment()
             setMapsFragmentBundle()
@@ -102,10 +102,9 @@ class EstateDetailFragment: BaseBindingFragment() {
      * Set Maps Fragment Bundle to send data, populate estate and set the map mode.
      */
     private fun setMapsFragmentBundle() {
-        val bundle = Bundle()
-        bundle.putParcelable(ESTATE_MAP, estate)
-        bundle.putInt(MAP_MODE, LITTLE_MODE)
-        mapsFragment?.arguments = bundle
+        mapsFragment?.arguments = mapsFragment?.arguments ?: Bundle()
+        mapsFragment?.arguments?.putParcelable(ESTATE_MAP, estate)
+        mapsFragment?.arguments?.putInt(MAP_MODE, LITTLE_MODE)
     }
 
     // -----------------
@@ -114,7 +113,8 @@ class EstateDetailFragment: BaseBindingFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.activity_main_menu_update).isVisible = true
-        menu.findItem(R.id.activity_main_menu_search).isVisible = false
+        if(activity?.activity_main_frame_layout2 == null)
+            menu.findItem(R.id.activity_main_menu_search).isVisible = false
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -126,10 +126,17 @@ class EstateDetailFragment: BaseBindingFragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    // --- GETTERS ---
+    // -----------------
+    // DATA
+    // -----------------
 
     /**
-     * Get the estate detail view model instance.
+     * Update estate data in view model, bundle and child maps fragment.
+     * @param estate the estate to show.
      */
-    internal val getViewModel: EstateDetailViewModel by lazy { viewModel as EstateDetailViewModel }
+    internal fun updateEstate(estate: Estate) {
+        viewModel?.setEstate(estate)
+        arguments?.putParcelable(ESTATE_DETAIL, estate)
+        mapsFragment?.updateEstate(estate)
+    }
 }

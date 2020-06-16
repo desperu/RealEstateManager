@@ -43,18 +43,12 @@ interface FilterVMCommunication {
 class FilterVMCommunicationImpl(private val activity: AppCompatActivity): FilterVMCommunication {
 
     /**
-     * Get the current fragment of the activity from the view pager.
-     */
-    private fun getCurrentFragment() =
-            (activity as MainCommunication).getFilterFragment()
-
-    /**
      * Used to allow view model to update bottom bar color. If hasFilters, set background red,
      * else use original color.
      * @param hasFilters true if has one filter or more set, false otherwise.
      */
     override fun updateBottomBarColor(hasFilters: Boolean): Unit? =
-            (getCurrentFragment() as FilterFragment?)?.setBottomBarColor(hasFilters)
+            (activity as MainCommunication).getFilterFragment()?.setBottomBarColor(hasFilters)
 
     /**
      * Used to allow view model to update estate list.

@@ -127,7 +127,10 @@ fun TextView.setStreet(estate: Estate?) {
 @BindingAdapter("setAddress")
 fun TextView.setAddress(value: String?) {
     value?.let {
-        if (value.isNotBlank() && value != "0") text = value
+        if (value.isNotBlank() && value != "0") {
+            visibility = View.VISIBLE
+            text = value
+        }
         else visibility = View.GONE
     }
 }
@@ -190,6 +193,28 @@ fun View.setBackgroundColor(type: String?) {
                 else -> R.color.colorNoType
             }
     ))
+}
+
+/**
+ * Set the background color of the selected item estate for tablet mode.
+ * @param isSelected true if this estate item is the selected item, false otherwise.
+ */
+@Suppress("deprecation")
+@BindingAdapter("selectedColor")
+fun View.setSelectedColor(isSelected: Boolean?) {
+    if (isSelected != null)
+        setBackgroundColor(resources.getColor(if (!isSelected) android.R.color.white else R.color.colorPink))
+}
+
+/**
+ * Set the price text color of the selected item estate for tablet mode.
+ * @param isSelected true if this estate item is the selected item, false otherwise.
+ */
+@Suppress("deprecation")
+@BindingAdapter("selectedTextColor")
+fun TextView.setSelectedTextColor(isSelected: Boolean?) {
+    if (isSelected != null)
+        setTextColor(resources.getColor(if (!isSelected) R.color.colorPink else android.R.color.white))
 }
 
 /**

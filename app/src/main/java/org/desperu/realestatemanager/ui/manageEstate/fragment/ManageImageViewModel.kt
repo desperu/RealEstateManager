@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.item_manage_image.view.*
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
 
 /**
  * View Model witch provide data for image item.

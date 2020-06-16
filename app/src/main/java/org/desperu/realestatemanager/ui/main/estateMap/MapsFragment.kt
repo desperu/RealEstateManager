@@ -266,6 +266,15 @@ class MapsFragment : BaseBindingFragment() {
     private fun onCameraIdle() { if (mapMode == FULL_MODE) viewModel?.updateEstateList(null) }
 
     /**
+     * Update estate.
+     * @param estate the estate to set.
+     */
+    internal fun updateEstate(estate: Estate) {
+        mGoogleMap?.clear()
+        viewModel?.updateEstate(estate)
+    }
+
+    /**
      * Update estate list.
      * @param estateList the estate list to set.
      */
@@ -273,15 +282,6 @@ class MapsFragment : BaseBindingFragment() {
         mGoogleMap?.clear()
         viewModel?.updateEstateList(estateList)
     }
-
-    /**
-     * Method called when query text change.
-     * @param query Query term.
-     */
-//    fun onSearchQueryTextChange(query: String) {
-//        this.queryTerm = query
-//        this.startNewRequest(query)
-//    }
 
     // --------------
     // UI
@@ -294,21 +294,6 @@ class MapsFragment : BaseBindingFragment() {
     private fun updateMapWithLocation(userLocation: Location?) {
         userLocation?.let { mMapView?.animateCamera(LatLng(it.latitude, it.longitude)) }
     }
-//
-//    /**
-//     * Add a new marker for an estate on the map.
-//     * @param estate the estate to set on the map
-//     */
-//    internal fun addMarker(estate: Estate) {
-//        val estateLatLng = LatLng(estate.address.latitude, estate.address.longitude)
-//        mMap?.addMarker(MarkerOptions()
-//                .position(estateLatLng)
-//                .title("${estate.type} ${estate.address.city}")
-////                .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant)))
-//                .snippet(convertPriceToPatternPrice(estate.price.toString(), true))
-//        )
-//        updateMapWithLocation(estateLatLng)
-//    }
 
     /**
      * Reposition MapToolbar (toolbar shown when click on a marker), it's needed to correct position

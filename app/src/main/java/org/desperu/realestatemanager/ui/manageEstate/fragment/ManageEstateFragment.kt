@@ -156,6 +156,7 @@ class ManageEstateFragment: BaseBindingFragment() {
      * and update image list.
      */
     private fun configureImageRecycler() {
+        // TODO add onMove listener to show fab buttons.
         recyclerView = (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView
         recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

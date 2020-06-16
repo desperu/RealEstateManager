@@ -15,10 +15,10 @@ const val exchangeRate = 0.812
 // FOR MAIN
 
 // Fragment identifier
+const val NO_FRAG = -1
 const val FRAG_ESTATE_LIST = 0
 const val FRAG_ESTATE_MAP = 1
 const val FRAG_ESTATE_DETAIL = 2
-const val FRAG_ESTATE_FILTER = 3
 
 // For Fab Filter State
 const val UNFILTERED = "unFiltered"

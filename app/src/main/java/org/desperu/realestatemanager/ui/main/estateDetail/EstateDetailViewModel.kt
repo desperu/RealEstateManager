@@ -35,17 +35,6 @@ class EstateDetailViewModel(private val router: ImagesRouter): ViewModel() {
         setImageList(givenEstate)
     }
 
-    /**
-     * Update estate data.
-     * @param newEstate the new estate to set.
-     */
-    internal fun updateEstate(newEstate: Estate?) {
-        if (newEstate?.id == estate.get()?.id) {
-            estate.set(newEstate)
-            newEstate?.let { setImageList(it) }
-        }
-    }
-
     // -------------
     // UPDATE UI
     // -------------

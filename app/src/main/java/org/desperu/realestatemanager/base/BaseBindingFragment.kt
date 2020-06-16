@@ -36,6 +36,8 @@ abstract class BaseBindingFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         updateDesign()
+        // keep the fragment and all its data across screen rotation
+        retainInstance = true
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

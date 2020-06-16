@@ -6,6 +6,7 @@ import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
 import org.koin.ext.isInt
+import java.util.*
 
 /**
  * Class to apply query search to the estate list.
@@ -24,11 +25,12 @@ class SearchHelper {
         val filteredList = mutableListOf<Estate>()
         if (query.isNotBlank()) {
             originalList.forEach { estate ->
-                if (getPredicate(estate, query) || getPredicate(estate.address, query))
+                if (getPredicate(estate, query.toLowerCase(Locale.ROOT))
+                        || getPredicate(estate.address, query.toLowerCase(Locale.ROOT)))
                     filteredList.add(estate)
                 else
                     estate.imageList.forEach { image ->
-                        if (getPredicate(image, query))
+                        if (getPredicate(image, query.toLowerCase(Locale.ROOT)))
                             filteredList.add(estate)
                 }
             }
@@ -44,16 +46,15 @@ class SearchHelper {
      */
     private suspend fun getPredicate(originalEstate: Estate, query: String): Boolean = withContext(Dispatchers.Default) {
         when {
-            originalEstate.type.contains(query) -> true
+            originalEstate.type.toLowerCase(Locale.ROOT).contains(query) -> true
             query.isInt() && originalEstate.price == query.toLong() -> true
             query.isInt() && originalEstate.surfaceArea == query.toInt() -> true
             query.isInt() && originalEstate.roomNumber == query.toInt() -> true
-            originalEstate.description.contains(query) -> true
-            originalEstate.interestPlaces.contains(query) -> true
-//        originalEstate.state.contains(query) -> true
+            originalEstate.description.toLowerCase(Locale.ROOT).contains(query) -> true
+            originalEstate.interestPlaces.toLowerCase(Locale.ROOT).contains(query) -> true
             originalEstate.saleDate == query -> true
             originalEstate.soldDate == query -> true
-            originalEstate.realEstateAgent.contains(query) -> true
+            originalEstate.realEstateAgent.toLowerCase(Locale.ROOT).contains(query) -> true
             else -> false
         }
     }
@@ -67,11 +68,11 @@ class SearchHelper {
     private suspend fun getPredicate(originalAddress: Address, query: String): Boolean = withContext(Dispatchers.Default) {
         when {
             query.isInt() && originalAddress.streetNumber == query.toInt() -> true
-            originalAddress.streetName.contains(query) -> true
-            originalAddress.flatBuilding.contains(query) -> true
+            originalAddress.streetName.toLowerCase(Locale.ROOT).contains(query) -> true
+            originalAddress.flatBuilding.toLowerCase(Locale.ROOT).contains(query) -> true
             query.isInt() && originalAddress.postalCode == query.toInt() -> true
-            originalAddress.city.contains(query) -> true
-            originalAddress.country.contains(query) -> true
+            originalAddress.city.toLowerCase(Locale.ROOT).contains(query) -> true
+            originalAddress.country.toLowerCase(Locale.ROOT).contains(query) -> true
             else -> false
         }
     }
@@ -84,7 +85,7 @@ class SearchHelper {
      */
     private suspend fun getPredicate(originalImage: Image, query: String): Boolean = withContext(Dispatchers.Default) {
         when {
-            originalImage.description.contains(query) -> true
+            originalImage.description.toLowerCase(Locale.ROOT).contains(query) -> true
             else -> false
         }
     }

@@ -90,7 +90,7 @@ dependencies {
     // SeekBar
     implementation 'com.crystal:crystalrangeseekbar:1.0.0'
 
-    // LiveData & ViewModel
+    // Lifecycle & ViewModel
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 // TODO to clean unused library

@@ -1,12 +1,11 @@
 package org.desperu.realestatemanager.ui.main.estateList
 
 import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Address
 import org.desperu.realestatemanager.model.Estate
@@ -15,6 +14,7 @@ import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.GeocoderService
 import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import java.lang.ref.WeakReference
 
 /**
  * View Model witch provide data for estate list.
@@ -41,17 +41,22 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 ): ViewModel() {
 
     // FOR DATA
-    private val estateListAdapter = MutableLiveData(RecyclerViewAdapter(R.layout.item_estate_large))
+    private var estateListAdapter = WeakReference(RecyclerViewAdapter(
+            if (router.isFrame2Visible()) R.layout.item_estate
+            else R.layout.item_estate_large))
     private val estateVMList = mutableListOf<EstateViewModel>()
     private val refreshing = ObservableBoolean(false)
     private val showEmptyText = ObservableBoolean(false)
+    // For tablet (two frame)
+    private var selectedItem: Estate? = null
+    private var estateNotification: Estate? = null
 
     init {
         loadEstateList()
     }
 
     // -------------
-    // LOAD ESTATE LIST
+    // ESTATE LIST
     // -------------
 
     /**
@@ -63,7 +68,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
             estate.address = addressRepository.getAddress(estate.id)
         }
-        onRetrieveEstateList(estateList)
+        onRetrieveEstateList(estateList, false)
         // Populate to main
         router.populateEstateListToMain(estateList)
     }
@@ -71,7 +76,35 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     /**
      * Reload estate list from database.
      */
-    fun reloadEstateList() { refreshing.set(true); loadEstateList() }
+    @Suppress("unchecked_cast")
+    fun reloadEstateList() {
+        refreshing.set(true)
+        loadEstateList()
+        estateVMList.map { it.getEstate.value }.let { router.updateEstateList(it as List<Estate>) }
+    }
+
+    /**
+     * Push data to recycler view when retrieve estate list.
+     * @param estateList the list of estates retrieved from database.
+     * @param isUpdate true if is call for an update, false for first launching data.
+     */
+    @Suppress("unchecked_cast")
+    private fun onRetrieveEstateList(estateList: List<Estate>, isUpdate: Boolean) {
+        // For Recycler adapter
+        estateVMList.clear()
+        estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router, this) })
+        estateListAdapter.get()?.updateList(estateVMList as MutableList<Any>)
+        estateListAdapter.get()?.notifyDataSetChanged()
+        // Set latitude and longitude for each estate address if not already do.
+        estateList.forEach { setLatLngInAddress(it.address, false) }
+        updateUi(null, isUpdate)
+    }
+
+    /**
+     * Update estate list with filtered or unfiltered estate list.
+     * @param estateList the new estate list to set.
+     */
+    internal fun updateEstateList(estateList: List<Estate>) = onRetrieveEstateList(estateList, true)
 
     // -------------
     // ADD ESTATE
@@ -88,14 +121,14 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             val oldEstateVM = estateVMList.find { it.getEstate.value?.id == estate.id }
             if (oldEstateVM == null) { // Add new element in first position
                 position = 0
-                estateVMList.add(position, EstateViewModel(estate, router))
-                estateListAdapter.value?.notifyItemInserted(position)
+                estateVMList.add(position, EstateViewModel(estate, router, this))
+                estateListAdapter.get()?.notifyItemInserted(position)
             } else { // Update existing element at his position
                 position = estateVMList.indexOf(oldEstateVM)
-                estateVMList[position] = EstateViewModel(estate, router)
-                estateListAdapter.value?.notifyItemChanged(position)
+                estateVMList[position] = EstateViewModel(estate, router, this)
+                estateListAdapter.get()?.notifyItemChanged(position)
             }
-            updateUi()
+            updateUi(estate, true)
             // Set latitude and longitude for the address.
             setLatLngInAddress(estate.address, true)
         }
@@ -107,35 +140,46 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // -------------
 
     /**
-     * Push data to recycler view when retrieve estate list.
-     * @param estateList the list of estates retrieved from database.
-     */
-    @Suppress("unchecked_cast")
-    private fun onRetrieveEstateList(estateList: List<Estate>) {
-        // For Recycler adapter
-        estateVMList.clear()
-        estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router) })
-        estateListAdapter.value?.updateList(estateVMList as MutableList<Any>)
-        estateListAdapter.value?.notifyDataSetChanged()
-        // Set latitude and longitude for each estate address if not already do.
-        estateList.forEach { setLatLngInAddress(it.address, false) }
-        updateUi()
-    }
-
-    /**
      * Update Ui when received database request response, stop refreshing animation
      * and show text empty if list is empty.
+     * @param estate the updated estate to show.
+     * @param isUpdate true if is call for an update, false for first launching data.
      */
-    private fun updateUi() {
+    private fun updateUi(estate: Estate?, isUpdate: Boolean) {
         refreshing.set(false)
         showEmptyText.set(estateVMList.isEmpty())
+        if (router.isFrame2Visible()) showDetailForTablet(estate, isUpdate)
     }
 
     /**
-     * Update estate list with filtered or unfiltered estate list.
-     * @param estateList the new estate list to set.
+     * If the device is a tablet, show details of the given estate if not null,
+     * else show first estate of the list.
+     * @param estate the estate to show detail.
+     * @param isUpdate true if is call for an update, false for first launching data.
      */
-    internal fun updateEstateList(estateList: List<Estate>) = onRetrieveEstateList(estateList)
+    private fun showDetailForTablet(estate: Estate?, isUpdate: Boolean) {
+        if (estateVMList.isNotEmpty()) {
+            val estateToShow = estateNotification ?: estate ?: estateVMList[0].getEstate.value
+            estateToShow?.let { switchSelectedItem(it); router.showDetailForTablet(it, isUpdate) }
+        }
+    }
+
+    /**
+     * Restore the estate detail in tablet mode (two frames).
+     */
+    internal fun restoreDetailForTablet() = showDetailForTablet(selectedItem, false)
+
+    /**
+     * Switch the selected item in the list only for tablet mode.
+     * @param estate the selected estate item.
+     */
+    internal fun switchSelectedItem(estate: Estate) = viewModelScope.launch(Dispatchers.Default) {
+        if (router.isFrame2Visible()) {
+            estateVMList.find { it.getEstate.value?.id == selectedItem?.id }?.setIsSelected(false)
+            estateVMList.find { it.getEstate.value?.id == estate.id }?.setIsSelected(true)
+            selectedItem = estate
+        }
+    }
 
     // -------------
     // ADDRESS
@@ -160,9 +204,26 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         }
     }
 
+    // -------------
+    // UTILS
+    // -------------
+
+    /**
+     * Return the position of the given estate in the list.
+     * @param estate the given estate to get it's position.
+     * @return the position of the given estate in the list.
+     */
+    internal fun getItemPosition(estate: Estate): Int = runBlocking {
+        estateVMList.indexOf(estateVMList.find { it.getEstate.value == estate })
+    }
+
+    // --- SETTERS ---
+
+    internal fun setEstateNotification(estate: Estate) { estateNotification = estate }
+
     // --- GETTERS ---
 
-    val getEstateListAdapter: LiveData<RecyclerViewAdapter> = estateListAdapter
+    val getEstateListAdapter = estateListAdapter
 
     val getRefreshing = refreshing
 
