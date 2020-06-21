@@ -34,7 +34,7 @@ import java.lang.ref.WeakReference
  * @param resourceService the resource service interface witch provide application resources access.
  *
  * @constructor Instantiates a new ManageEstateViewModel.
- *
+ * TODO Réorganize repository !!
  * @property estateRepository the estate repository interface witch provide database access to set.
  * @property imageRepository the image repository interface witch provide database access to set.
  * @property addressRepository the address repository interface witch provide database access to set.
@@ -63,7 +63,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
 
     /**
      * Set estate data with images and address.
-     * @param givenEstate the given estate to manage.
+     * @param givenEstate the given estate to manage, null for new estate.
      */
     internal fun setEstate(givenEstate: Estate?) {
         if (givenEstate != null) {
@@ -192,7 +192,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     private fun createEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Default) {
         val estateId = estateRepository.createEstate(estate)
-        setEstateIdInOtherTables(estateId)
+        setEstateId(estateId)
         manageImageVMList.map { it.image.value!! }.let { imageRepository.createImage(*it.toTypedArray()) }
         addressRepository.createAddress(estate.address)
     }
@@ -203,7 +203,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     private fun updateEstate(estate: Estate) = viewModelScope.launch(Dispatchers.Default) {
         estateRepository.updateEstate(estate)
-        setEstateIdInOtherTables(estate.id)
+        setEstateId(estate.id)
         // Sort image view model list, images to update/images to create
         val imageListPair = manageImageVMList.partition { oldImageList.contains(it.image.value) }
         imageRepository.updateImage(*imageListPair.first.map { it.image.value!! }.toTypedArray())
@@ -212,10 +212,11 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     }
 
     /**
-     * Set the estate id in it's address and image objects for database.
+     * Set the estate id in itself, it's address and image objects for database.
      * @param estateId the id of this estate.
      */
-    private fun setEstateIdInOtherTables(estateId: Long) {
+    private fun setEstateId(estateId: Long) {
+        estate.value?.id = estateId
         // Other tables
         manageImageVMList.forEach { it.image.value?.estateId = estateId }
         estate.value?.address?.estateId = estateId
@@ -246,6 +247,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
             manageImageVMList.removeAt(position)
             manageImageVMList.add(0, manageImageVM)
             communication.scrollToNewItem(0)
+            communication.floatingVisibility(false)
             imageListAdapter.get()?.notifyItemMoved(position, 0)
         }
     }

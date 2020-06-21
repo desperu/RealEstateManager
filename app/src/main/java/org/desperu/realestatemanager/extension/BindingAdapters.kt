@@ -48,7 +48,7 @@ fun View.onLongClick(listener: View.OnLongClickListener) {
  */
 @Suppress("deprecation")
 @BindingAdapter("imageUri")
-fun ImageView.setImageUri(imageUri: String?) {
+fun ImageView.setImageUri(imageUri: String?) { // TODO create bug on real phone
     if (!imageUri.isNullOrBlank())
         setImageURI(Uri.parse(imageUri))
     else

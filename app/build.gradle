@@ -120,10 +120,10 @@ dependencies {
     kapt "frankiesardo:icepick-processor:$icepick_version"
 
     // Stetho to check DataBase // TODO for test only, to remove
-    implementation 'com.facebook.stetho:stetho:1.5.1'
+//    implementation 'com.facebook.stetho:stetho:1.5.1'
 
     // Leak Canary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
 }
 repositories {
     mavenCentral()

@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.OrientationEventListener
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -19,7 +20,6 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
-import com.facebook.stetho.Stetho
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.navigation.NavigationView
@@ -48,6 +48,7 @@ import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.ui.settings.SettingsActivity
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.view.MapMotionLayout
+import java.lang.ref.WeakReference
 import kotlin.IllegalArgumentException
 
 /**
@@ -69,6 +70,11 @@ const val FILTERED_ESTATE_LIST: String = "filteredEstateList"
  * The argument name for intent to received the estate from notification to this Activity.
  */
 const val ESTATE_NOTIFICATION: String = "estateNotification"
+
+/**
+ * The argument name for intent to received the estate from notification to this Activity.
+ */
+const val SCREEN_ORIENTATION: String = "screenOrientation"
 
 /**
  * Interface to allow communications with this activity.
@@ -110,13 +116,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private val isFrame2Visible get() = activity_main_frame_layout2 != null
 
     // FOR DATA
-    private var hasFilter = false
-    private var query = ""
+    @JvmField @State var hasFilter = false
+    @JvmField @State var query = ""
 
     // FOR INTENT
     private val fullEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FULL_ESTATE_LIST)
     private val filteredEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FILTERED_ESTATE_LIST)
     private val estateNotification get() = intent.getParcelableExtra<Estate>(ESTATE_NOTIFICATION)
+//    private val screenOrientation get() = intent.getIntExtra(SCREEN_ORIENTATION, 0)
 
     // Try to get Fragment instance from current and back stack, if not found value was null.
     private val estateListFragment
@@ -140,11 +147,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun getActivityLayout(): Int = R.layout.activity_main
 
     override fun configureDesign() {
-        Stetho.initializeWithDefaults(this) // TODO For test only, to remove
+        //Stetho.initializeWithDefaults(this) // TODO For test only, to remove
         configureToolBar()
-        configureSearchView()
+        configureSearchViewListener()
         configureDrawerLayout()
         configureNavigationView()
+//        configureScreenOrientationListener()
     }
 
     // -----------------
@@ -174,7 +182,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * Configure Search View Listener in toolbar.
      */
-    private fun configureSearchView() {
+    private fun configureSearchViewListener() {
         toolbar_search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 onSearchTextChange(query)
@@ -188,6 +196,27 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         })
     }
 
+//    /**
+//     * Configure screen orientation listener, to support recall frag from back stack after turn device error.
+//     * TODO Error : FragmentManager has been destroyed.
+//     * TODO use supportFragmentManager instead of fm and this function ...
+//     */
+//    private fun configureScreenOrientationListener() { // TODO Weak reference or remove listener in on Pause
+//        val orientationEventListener = WeakReference(object : OrientationEventListener(this) {
+//            override fun onOrientationChanged(orientation: Int) {
+//                manageScreenOrientation(orientation)
+//            }
+//        })
+//        orientationEventListener.get()?.enable()
+//    }
+//
+//    private fun manageScreenOrientation(orientation: Int) {
+//        if (screenOrientation != orientation) {
+//            estateListFragment?.setScreenOrientation(true)
+//            intent.putExtra(SCREEN_ORIENTATION, 0)
+//        }
+//    }
+
     // --------------
     // FRAGMENT
     // --------------
@@ -197,7 +226,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param fragmentKey the fragment key to show corresponding fragment.
      * @param estate the estate to show in estate detail or maps.
      */
-    private fun configureAndShowFragment(fragmentKey: Int, estate: Estate?) {
+    private fun configureAndShowFragment(fragmentKey: Int, estate: Estate?) { // TODO Bug when click on estate in list after turn tablet need to clear back stack to force recreate
         if (this.fragmentKey != fragmentKey || estate != null) {
             this.fragmentKey = fragmentKey
 
@@ -248,12 +277,43 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     /**
+     * Show fragment in corresponding container, add to back stack and set transition.
+     * @param fragment the fragment to show in the frame layout.
+     * @param frame the unique identifier of the frame layout to set the fragment.
+     */
+    private fun fragmentTransaction(fragment: Fragment, frame: Int) {
+        if (!fm.isDestroyed) {
+            fm.beginTransaction()
+                    .replace(frame, fragment, fragment.javaClass.simpleName)
+                    .addToBackStack(fragment.javaClass.simpleName)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+//                .commitAllowingStateLoss()
+        }
+    }
+
+    /**
+     * Remove all fragments from the back stack.
+     */
+    private fun clearAllBackStack() { while (fm.backStackEntryCount > 0) fm.popBackStackImmediate() }
+
+    // --------------
+    // BUNDLE
+    // --------------
+
+    /**
+     * Set bundle instance only if given is null.
+     * @param bundle the bundle to set.
+     */
+    private fun setBundle(bundle: Bundle?): Bundle = bundle ?: Bundle()
+
+    /**
      * Populate estate to fragment with bundle.
      * @param fragment the fragment instance to send estate.
      * @param estate the estate to populate.
      */
     private fun populateEstateToFragment(fragment: Fragment, estate: Estate) {
-        fragment.arguments = fragment.arguments ?: Bundle()
+        fragment.arguments = setBundle(fragment.arguments)
         val bundleKey = if (fragment is EstateDetailFragment) ESTATE_DETAIL else ESTATE_NOTIFICATION_FOR_LIST
         fragment.arguments?.putParcelable(bundleKey, estate)
     }
@@ -264,8 +324,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param bundleKey the bundle key to use.
      */
     private fun populateEstateListToFragment(fragment: Fragment, bundleKey: String) {
-        fragment.arguments = fragment.arguments ?: Bundle()
-        fragment.arguments?.putParcelableArrayList(bundleKey, (filteredEstateList ?: fullEstateList) as ArrayList)
+        fragment.arguments = setBundle(fragment.arguments)
+        fragment.arguments?.putParcelableArrayList(bundleKey, (filteredEstateList ?: fullEstateList) as ArrayList?)
     }
 
     /**
@@ -273,30 +333,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param fragment the fragment instance to send data.
      */
     private fun setMapsFragmentBundle(fragment: Fragment) {
-        fragment.arguments = fragment.arguments ?: Bundle()
+        fragment.arguments = setBundle(fragment.arguments)
         populateEstateListToFragment(fragment, ESTATE_LIST_MAP)
         fragment.arguments?.putInt(MAP_MODE, FULL_MODE)
     }
 
-    /**
-     * Show fragment in corresponding container, add to back stack and set transition.
-     * @param fragment the fragment to show in the frame layout.
-     * @param frame the unique identifier of the frame layout to set the fragment.
-     */
-    private fun fragmentTransaction(fragment: Fragment, frame: Int) {
-        fm.beginTransaction()
-                .replace(frame, fragment, fragment.javaClass.simpleName)
-                .addToBackStack(fragment.javaClass.simpleName)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit()
-    }
-
-    /**
-     * Remove all fragments from the back stack.
-     */
-    private fun clearAllBackStack() { while (fm.backStackEntryCount > 0) fm.popBackStackImmediate() }
-
-    // --- BOTTOM SHEET FILTER FRAGMENT ---
+    // ----------------------------
+    // BOTTOM SHEET FILTER FRAGMENT
+    // ----------------------------
 
     /**
      * Configure and show bottom sheet filter fragment.
@@ -345,7 +389,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onResume() { // TODO restore fragment when turn phone
         super.onResume()
         if (::bottomSheet.isInitialized) closeFilterFragment(false)
-        if (estateNotification != null) {
+        if (estateNotification != null) {//            clearAllBackStack()
+//            configureAndShowFragment(FRAG_ESTATE_LIST, null)
             if (isFrame2Visible) configureAndShowFragment(FRAG_ESTATE_LIST, estateNotification)
             else configureAndShowFragment(FRAG_ESTATE_DETAIL, estateNotification)
             intent.removeExtra(ESTATE_NOTIFICATION)
@@ -354,6 +399,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     if (fragmentKey != NO_FRAG) fragmentKey
                     else FRAG_ESTATE_LIST,
                     null)
+        // TODO restore search view state
+        // TODO mistake with filter frag, it is state half expanded when turn phone if it is not null.
+        // TODO show list when turn from map and fab filter position
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -427,6 +475,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             getCurrentFragment()?.let { fragmentKey = retrievedFragKeyFromClass(it::class.java) }
             setTitleActivity(fragmentKey)
             switchFrameSizeForTablet()
+            adaptFabFilter(fragmentKey)
         }
     }
 
@@ -479,7 +528,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             configureAndShowBottomSheetFilterFragment(STATE_HALF_EXPANDED)
         else
             fullEstateList?.let { updateEstateList(it, false) }
-
     }
 
     /**
@@ -499,15 +547,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param query the query term to search.
      */
     private fun onSearchTextChange(query: String) = lifecycleScope.launch(Dispatchers.Main) {
-        this@MainActivity.query = query
-        var searchedList = fullEstateList
-        when {
-            hasFilter -> getFilterFragment()?.applyFilters(searchedList)
-            query.isNotBlank() -> {
-                searchedList = fullEstateList?.let { SearchHelper().applySearch(it, query) }
-                searchedList?.let { updateEstateList(it) }
+        if (this@MainActivity.query != query) {
+            this@MainActivity.query = query
+            var searchedList = fullEstateList
+            when {
+                hasFilter -> getFilterFragment()?.applyFilters(searchedList)
+                query.isNotBlank() -> {
+                    searchedList = fullEstateList?.let { SearchHelper().applySearch(it, query) }
+                    searchedList?.let { updateEstateList(it) }
+                }
+                else -> fullEstateList?.let { updateEstateList(it) }
             }
-            else -> fullEstateList?.let { updateEstateList(it) }
         }
     }
 
@@ -620,10 +670,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun switchSearchViewVisibility(fromDrawer: Boolean) {
         // Hide search view
         if (toolbar_search_view != null && toolbar_search_view.isShown && !fromDrawer) {
+            toolbar_search_view.setQuery(null, true)
             val animation: Animation = AnimationUtils.loadAnimation(baseContext, R.anim.search_view_anim_hide)
             (toolbar_search_view as View).startAnimation(animation)
             toolbar_search_view.visibility = View.INVISIBLE
-            toolbar_search_view.setQuery(null, true)
             animMenuItem(true)
         } else if (!toolbar_search_view.isShown){ // Show search view
             animMenuItem(false)
@@ -680,6 +730,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
+    // TODO Create view !!!
+
     /**
      * Properly position fab filter, depends of the current fragment.
      * @param toEnd true to align with parent end; false to align with parent start.
@@ -702,7 +754,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     private fun adaptFabFilter(fragmentKey: Int) = when {
         !isFrame2Visible && fragmentKey == FRAG_ESTATE_DETAIL -> fabFilterVisibility(true)
-        !isFrame2Visible && fragmentKey == FRAG_ESTATE_MAP -> fabFilterPosition(false)
+        !isFrame2Visible && fragmentKey == FRAG_ESTATE_MAP -> { fabFilterVisibility(false); fabFilterPosition(false) }
         isFrame2Visible -> fabFilterPosition(false)
         else -> { fabFilterVisibility(false); fabFilterPosition(true) }
     }

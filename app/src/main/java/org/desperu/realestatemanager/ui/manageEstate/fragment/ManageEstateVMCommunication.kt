@@ -21,6 +21,12 @@ interface ManageEstateVMCommunication {
      * @param imageUri the uri of the image to delete in storage.
      */
     fun deleteImageInStorage(imageUri: String)
+
+    /**
+     * Manage floating buttons visibility, setup with recycler scrolling.
+     * @param toHide if true hide buttons, else show.
+     */
+    fun floatingVisibility(toHide: Boolean)
 }
 
 /**
@@ -55,4 +61,10 @@ class ManageEstateVMCommunicationImpl(private val activity: AppCompatActivity): 
      */
     override fun deleteImageInStorage(imageUri: String) =
             getCurrentFragment().deleteImageInStorage(imageUri)
+
+    /**
+     * Manage floating buttons visibility, setup with recycler scrolling.
+     * @param toHide if true hide buttons, else show.
+     */
+    override fun floatingVisibility(toHide: Boolean) = (activity as Communication).floatingVisibility(toHide)
 }

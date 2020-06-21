@@ -50,6 +50,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // For tablet (two frame)
     private var selectedItem: Estate? = null
     private var estateNotification: Estate? = null
+//    private var screenOrientationChanged = false
 
     init {
         loadEstateList()
@@ -63,14 +64,18 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * Load estate list with images and address for each, from database.
      */
     private fun loadEstateList() = viewModelScope.launch(Dispatchers.Main) {
-        val estateList = estateRepository.getAll().toMutableList()
-        estateList.forEach { estate ->
-            estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
-            estate.address = addressRepository.getAddress(estate.id)
-        }
-        onRetrieveEstateList(estateList, false)
+//        var estateList: List<Estate>? = null
+//        if (!screenOrientationChanged) {
+            val estateList = estateRepository.getAll().toMutableList()
+            estateList.forEach { estate ->
+                estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
+                estate.address = addressRepository.getAddress(estate.id)
+            }
+            onRetrieveEstateList(estateList, false)
+//        }
         // Populate to main
-        router.populateEstateListToMain(estateList)
+        estateList.let { router.populateEstateListToMain(it) }
+//        screenOrientationChanged = false
     }
 
     /**
@@ -220,6 +225,8 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // --- SETTERS ---
 
     internal fun setEstateNotification(estate: Estate) { estateNotification = estate }
+
+//    internal fun setScreenOrientationChanged(hasChanged: Boolean) { screenOrientationChanged = hasChanged }
 
     // --- GETTERS ---
 

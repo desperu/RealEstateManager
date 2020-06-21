@@ -126,6 +126,25 @@ class EstateDetailFragment: BaseBindingFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        mapsFragment = null
+    }
+
+//    override fun onDetach() {
+//        super.onDetach()
+//        // Support for apk crash when recall a frag after screen rotation.
+//        try {
+//            val childFragmentManager = EstateDetailFragment::class.java.getDeclaredField("mChildFragmentManager")
+//            childFragmentManager.isAccessible = true
+//            childFragmentManager.set(this, null)
+//        } catch (e: NoSuchFieldException) {
+//            throw RuntimeException(e)
+//        } catch (e: IllegalAccessException) {
+//            throw RuntimeException(e)
+//        }
+//    }
+
     // -----------------
     // DATA
     // -----------------

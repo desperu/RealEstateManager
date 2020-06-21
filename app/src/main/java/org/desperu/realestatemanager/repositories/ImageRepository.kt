@@ -1,7 +1,6 @@
 package org.desperu.realestatemanager.repositories
 
 import android.database.Cursor
-import androidx.room.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.desperu.realestatemanager.database.dao.ImageDao
@@ -17,7 +16,6 @@ interface ImageRepository {
      * @param id the id to get the corresponding image from database.
      * @return the cursor access for the corresponding image.
      */
-    @Query("SELECT * FROM Image WHERE id = :id")
     fun getImageWithCursor(id: Long): Cursor?
 
     /**
@@ -85,8 +83,8 @@ class ImageRepositoryImpl(private val imageDao: ImageDao): ImageRepository {
      * @param id the id to get the corresponding image from database.
      * @return the cursor access for the corresponding image.
      */
-    @Query("SELECT * FROM Image WHERE id = :id")
-    override fun getImageWithCursor(id: Long): Cursor? = imageDao.getImageWithCursor(id)
+    override fun getImageWithCursor(id: Long): Cursor? =
+        imageDao.getImageWithCursor(id)
 
     /**
      * Returns the image from the database.

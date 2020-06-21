@@ -44,7 +44,7 @@ class GeocoderServiceImpl(private val context: Context) : GeocoderService {
      */
     override suspend fun getLatLngFromAddress(address: Address): List<Double> = withContext(Dispatchers.IO) {
         var latLng = emptyList<Double>()
-
+// TODO not work dispatcher ??
         if (isInternetAvailable(context)) {
             val geocoder = Geocoder(context, Locale.getDefault())
             try {

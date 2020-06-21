@@ -156,14 +156,13 @@ class ManageEstateFragment: BaseBindingFragment() {
      * and update image list.
      */
     private fun configureImageRecycler() {
-        // TODO add onMove listener to show fab buttons.
         recyclerView = (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView
         recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerView.addOnScrollListener( object: OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                (activity as Communication).floatingVisibility(isLastVisible && recyclerView.adapter?.itemCount!! > 1)
+                switchFabVisibility()
             }
         })
         viewModel.updateRecyclerImageList()
@@ -227,6 +226,13 @@ class ManageEstateFragment: BaseBindingFragment() {
     }
 
     /**
+     * Switch floating action buttons visibility, depend of recycler position and item list size.
+     */
+    private fun switchFabVisibility() =
+            (activity as Communication)
+                    .floatingVisibility(isLastVisible && recyclerView.adapter?.itemCount!! > 1)
+
+    /**
      * Return if the last completely visible item is the last recycler item.
      */
     private val isLastVisible: Boolean
@@ -247,7 +253,7 @@ class ManageEstateFragment: BaseBindingFragment() {
         if (!EasyPermissions.hasPermissions(activity!!, READ_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(this, getString(R.string.fragment_estate_image_popup_title_permission_files_access),
                     RC_PERMS_STORAGE, READ_EXTERNAL_STORAGE)
-            return
+            return // TODO mistake when valid permission, close activity...!
         }
         // Launch an "Selection Image" Activity
         startActivityForResult(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RC_CHOOSE_PHOTO)
@@ -367,6 +373,6 @@ class ManageEstateFragment: BaseBindingFragment() {
             showToast(getString(R.string.fragment_estate_image_toast_saved_photo))
             viewModel.addImageToImageList(result)
         } else
-            showToast(getString(R.string.fragment_estate_image_toast_error_happened))
+            showToast(getString(R.string.fragment_estate_image_toast_error_happened)) // TODO error when delete image, perhaps with simulator
     }
 }

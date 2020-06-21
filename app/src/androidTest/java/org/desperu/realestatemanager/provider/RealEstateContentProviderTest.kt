@@ -65,15 +65,21 @@ class RealEstateContentProviderTest {
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("soldDate")), `is` (""))
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("realEstateAgent")), `is` (""))
         assertThat(cursor?.getLong(cursor.getColumnIndexOrThrow("createdTime")), `is` (123415312L))
+
+        // Delete created estate after test
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
     fun getEstateType() {
         val estateUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_ESTATE, generateEstate())
 
-        val output = mContentResolver.getType(estateUri!!)
+        val output = estateUri?.let { mContentResolver.getType(it) }
 
         assertThat(output, `is`("vnd.android.cursor.item/org.desperu.realestatemanager.provider.Estate"))
+
+        // Delete created estate after test
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
@@ -116,6 +122,9 @@ class RealEstateContentProviderTest {
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("type")), `is`("House"))
         assertThat(cursor?.getLong(cursor.getColumnIndexOrThrow("price")), `is`(1000000L))
         assertThat(cursor?.getInt(cursor.getColumnIndexOrThrow("surfaceArea")), `is` (100))
+
+        // Delete created estate after test
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     private fun generateEstate(): ContentValues? {
@@ -150,8 +159,12 @@ class RealEstateContentProviderTest {
 
     @Test
     fun insertAndGetImage() {
+        // BEFORE : For Foreign key
+        val estateUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_ESTATE, generateEstate())
+        val estateId = estateUri?.let { ContentUris.parseId(it) }
+
         // BEFORE : Adding demo item
-        val imageUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_IMAGE, generateImage())
+        val imageUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_IMAGE, generateImage(estateId))
 
         // TEST
         val cursor: Cursor? = imageUri?.let { mContentResolver.query(it, null, null, null, null) }
@@ -160,31 +173,50 @@ class RealEstateContentProviderTest {
         assertThat(cursor?.count, `is`(1))
         assertThat(cursor?.moveToFirst(), `is`(true))
 
-        assertThat(cursor?.getLong(cursor.getColumnIndexOrThrow("estateId")), `is`(1L))
+        assertThat(cursor?.getLong(cursor.getColumnIndexOrThrow("estateId")), `is`(estateId))
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("imageUri")), `is`("an uri"))
         assertThat(cursor?.getInt(cursor.getColumnIndexOrThrow("isPrimary")), `is`(1))
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("description")), `is`("Bathroom"))
         assertThat(cursor?.getFloat(cursor.getColumnIndexOrThrow("rotation")), `is`(90F))
+
+        // Delete created image and estate after test
+        imageUri?.let { mContentResolver.delete(it, null, null) }
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
     fun getImageType() {
-        val imageUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_IMAGE, generateImage())
+        // BEFORE : For Foreign key
+        val estateUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_ESTATE, generateEstate())
+        val estateId = estateUri?.let { ContentUris.parseId(it) }
 
-        val output = mContentResolver.getType(imageUri!!)
+        val imageUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_IMAGE, generateImage(estateId))
+
+        val output = imageUri?.let { mContentResolver.getType(it) }
 
         assertThat(output, `is`("vnd.android.cursor.item/org.desperu.realestatemanager.provider.Image"))
+
+        // Delete created image and estate after test
+        imageUri?.let { mContentResolver.delete(it, null, null) }
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
     fun insertAndDeleteImage() {
+        // BEFORE : For Foreign key
+        val estateUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_ESTATE, generateEstate())
+        val estateId = estateUri?.let { ContentUris.parseId(it) }
+
         // BEFORE : Adding demo item
-        val imageUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_IMAGE, generateImage())
+        val imageUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_IMAGE, generateImage(estateId))
 
         // TEST
         val deleted: Int? = imageUri?.let { mContentResolver.delete(it, null, null) }
 
         assertThat(deleted, `is`(1))
+
+        // Delete created estate after test
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
@@ -194,7 +226,7 @@ class RealEstateContentProviderTest {
         val estateId = estateUri?.let { ContentUris.parseId(it) }
 
         // BEFORE : Adding demo item
-        val contentValues = generateImage()
+        val contentValues = generateImage(estateId)
         val imageUri: Uri? = mContentResolver.insert(RealEstateContentProvider.URI_IMAGE, contentValues)
         val imageId = imageUri?.let { ContentUris.parseId(it) }
 
@@ -220,12 +252,16 @@ class RealEstateContentProviderTest {
         assertThat(cursor?.getLong(cursor.getColumnIndexOrThrow("estateId")), `is`(estateId))
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("imageUri")), `is`("another uri"))
         assertThat(cursor?.getInt(cursor.getColumnIndexOrThrow("isPrimary")), `is`(0))
+
+        // Delete created image and estate after test
+        imageUri?.let { mContentResolver.delete(it, null, null) }
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
-    private fun generateImage(): ContentValues? {
+    private fun generateImage(estateId: Long?): ContentValues? {
         val contentValues = ContentValues()
 
-        contentValues.put("estateId", 1L)
+        contentValues.put("estateId", estateId)
         contentValues.put("imageUri", "an uri")
         contentValues.put("isPrimary", true)
         contentValues.put("description", "Bathroom")
@@ -271,6 +307,10 @@ class RealEstateContentProviderTest {
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("country")), `is`("United States"))
         assertThat(cursor?.getDouble(cursor.getColumnIndexOrThrow("latitude")), `is`(45.235689))
         assertThat(cursor?.getDouble(cursor.getColumnIndexOrThrow("longitude")), `is`(102.255478))
+
+        // Delete created address and estate after test
+        addressUri?.let { mContentResolver.delete(it, null, null) }
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
@@ -283,6 +323,10 @@ class RealEstateContentProviderTest {
         val output = addressUri?.let { mContentResolver.getType(it) }
 
         assertThat(output, `is`("vnd.android.cursor.item/org.desperu.realestatemanager.provider.Address"))
+
+        // Delete created address and estate after test
+        addressUri?.let { mContentResolver.delete(it, null, null) }
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
@@ -298,6 +342,9 @@ class RealEstateContentProviderTest {
         val deleted: Int? = addressUri?.let { mContentResolver.delete(it, null, null) }
 
         assertThat(deleted, `is`(1))
+
+        // Delete created estate after test
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     @Test
@@ -331,6 +378,10 @@ class RealEstateContentProviderTest {
         assertThat(cursor?.getInt(cursor.getColumnIndexOrThrow("streetNumber")), `is`(23))
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("streetName")), `is`("another street name"))
         assertThat(cursor?.getString(cursor.getColumnIndexOrThrow("flatBuilding")), `is`("some other info"))
+
+        // Delete created address and estate after test
+        addressUri?.let { mContentResolver.delete(it, null, null) }
+        estateUri?.let { mContentResolver.delete(it, null, null) }
     }
 
     private fun generateAddress(estateId: Long?): ContentValues? {

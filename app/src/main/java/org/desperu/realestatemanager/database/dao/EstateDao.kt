@@ -16,7 +16,7 @@ interface EstateDao {
      * @return the cursor access for the corresponding estate.
      */
     @Query("SELECT * FROM Estate WHERE id = :estateId")
-    fun getEstateWithCursor(estateId: Long): Cursor
+    fun getEstateWithCursor(estateId: Long): Cursor?
 
     /**
      * Returns the estate from database ordered for given estate id.

@@ -37,7 +37,8 @@ class DaoTestHelper {
             "For Sale",
             "15/04/2020",
             "",
-            "Desperu")
+            "Desperu",
+            1246464684L)
 
     /**
      * Set and return image list data fo Db test.
@@ -59,7 +60,8 @@ class DaoTestHelper {
             estateId,
             "uri",
             false,
-            "kitchen"
+            "kitchen",
+            90F
     )
 
     /**
@@ -74,5 +76,7 @@ class DaoTestHelper {
             "flat 45",
             11204,
             "New York",
-            "United States")
+            "United States",
+            25.148569,
+            102.659874)
 }
