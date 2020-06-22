@@ -39,7 +39,7 @@ import org.desperu.realestatemanager.utils.StorageUtils.deleteFileInStorage
 import org.desperu.realestatemanager.utils.StorageUtils.isExternalStorageWritable
 import org.desperu.realestatemanager.utils.StorageUtils.setBitmapInStorage
 import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContentUri
-import org.desperu.realestatemanager.view.NothingSelectedSpinnerAdapter
+import org.desperu.realestatemanager.view.adapter.NothingSelectedSpinnerAdapter
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 

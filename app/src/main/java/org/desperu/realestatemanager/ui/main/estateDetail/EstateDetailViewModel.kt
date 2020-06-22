@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
 
 /**
  * View Model witch provide data for estate detail.

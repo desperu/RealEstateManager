@@ -28,7 +28,7 @@ import org.desperu.realestatemanager.ui.main.NEW_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateFragment
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
 import org.desperu.realestatemanager.utils.*
-import org.desperu.realestatemanager.view.MyPageTransformer
+import org.desperu.realestatemanager.view.pageTransformer.MyPageTransformer
 
 /**
  * The name of the argument for passing estate to this Activity.
@@ -226,9 +226,8 @@ class ManageEstateActivity: BaseActivity(), Communication {
      */
     private fun hideSoftKeyBoard() {
         val inputMethodManager: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (inputMethodManager.isActive)
-            if (currentFocus != null)
-                inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, HIDE_NOT_ALWAYS)
+        if (inputMethodManager.isActive && currentFocus != null)
+            inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, HIDE_NOT_ALWAYS)
     }
 
     /**

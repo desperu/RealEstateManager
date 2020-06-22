@@ -96,11 +96,6 @@ class EstateListFragment: BaseBindingFragment() {
         if (isFrame2Visible) viewModel?.restoreDetailForTablet() // TODO mistake when turn tab
     }
 
-//    override fun onConfigurationChanged(newConfig: Configuration) {
-//        super.onConfigurationChanged(newConfig)
-//        viewModel?.setScreenOrientationChanged(true)
-//    }
-
     // --------------
     // DATA
     // --------------
@@ -126,12 +121,6 @@ class EstateListFragment: BaseBindingFragment() {
         viewModel?.setEstateNotification(estate)
         arguments?.remove(ESTATE_NOTIFICATION_FOR_LIST)
     }
-
-//    /**
-//     * Set has screen orientation changed in estate list view model.
-//     * @param hasChanged true the screen orientation has changed from last saved, false otherwise.
-//     */
-//    internal fun setScreenOrientation(hasChanged: Boolean) = viewModel?.setScreenOrientationChanged(hasChanged)
 
     // --------------
     // UI

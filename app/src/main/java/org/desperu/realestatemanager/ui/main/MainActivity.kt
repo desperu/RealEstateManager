@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.OrientationEventListener
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -48,7 +47,6 @@ import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.ui.settings.SettingsActivity
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.view.MapMotionLayout
-import java.lang.ref.WeakReference
 import kotlin.IllegalArgumentException
 
 /**
@@ -70,11 +68,6 @@ const val FILTERED_ESTATE_LIST: String = "filteredEstateList"
  * The argument name for intent to received the estate from notification to this Activity.
  */
 const val ESTATE_NOTIFICATION: String = "estateNotification"
-
-/**
- * The argument name for intent to received the estate from notification to this Activity.
- */
-const val SCREEN_ORIENTATION: String = "screenOrientation"
 
 /**
  * Interface to allow communications with this activity.
@@ -120,10 +113,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     @JvmField @State var query = ""
 
     // FOR INTENT
+    // TODO get from view model list for better update and communication, for map !! but here for turn phone restore data view model not kill for that ??
     private val fullEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FULL_ESTATE_LIST)
     private val filteredEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FILTERED_ESTATE_LIST)
     private val estateNotification get() = intent.getParcelableExtra<Estate>(ESTATE_NOTIFICATION)
-//    private val screenOrientation get() = intent.getIntExtra(SCREEN_ORIENTATION, 0)
 
     // Try to get Fragment instance from current and back stack, if not found value was null.
     private val estateListFragment
@@ -152,7 +145,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         configureSearchViewListener()
         configureDrawerLayout()
         configureNavigationView()
-//        configureScreenOrientationListener()
     }
 
     // -----------------
@@ -196,27 +188,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         })
     }
 
-//    /**
-//     * Configure screen orientation listener, to support recall frag from back stack after turn device error.
-//     * TODO Error : FragmentManager has been destroyed.
-//     * TODO use supportFragmentManager instead of fm and this function ...
-//     */
-//    private fun configureScreenOrientationListener() { // TODO Weak reference or remove listener in on Pause
-//        val orientationEventListener = WeakReference(object : OrientationEventListener(this) {
-//            override fun onOrientationChanged(orientation: Int) {
-//                manageScreenOrientation(orientation)
-//            }
-//        })
-//        orientationEventListener.get()?.enable()
-//    }
-//
-//    private fun manageScreenOrientation(orientation: Int) {
-//        if (screenOrientation != orientation) {
-//            estateListFragment?.setScreenOrientation(true)
-//            intent.putExtra(SCREEN_ORIENTATION, 0)
-//        }
-//    }
-
     // --------------
     // FRAGMENT
     // --------------
@@ -226,7 +197,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param fragmentKey the fragment key to show corresponding fragment.
      * @param estate the estate to show in estate detail or maps.
      */
-    private fun configureAndShowFragment(fragmentKey: Int, estate: Estate?) { // TODO Bug when click on estate in list after turn tablet need to clear back stack to force recreate
+    private fun configureAndShowFragment(fragmentKey: Int, estate: Estate?) {
         if (this.fragmentKey != fragmentKey || estate != null) {
             this.fragmentKey = fragmentKey
 
@@ -288,7 +259,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     .addToBackStack(fragment.javaClass.simpleName)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
-//                .commitAllowingStateLoss()
         }
     }
 
@@ -471,7 +441,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         // Else show previous fragment in back stack, and set fragment field with restored fragment.
         else -> {
-            super.onBackPressed()
+            super.onBackPressed() // TODO create specific function ??
             getCurrentFragment()?.let { fragmentKey = retrievedFragKeyFromClass(it::class.java) }
             setTitleActivity(fragmentKey)
             switchFrameSizeForTablet()
@@ -487,11 +457,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         else
             activity_main_nav_view.checkedItem?.isChecked = false
     }
-
-//    override fun onPause() {
-//        super.onPause()
-//        val savedState = getCurrentFragment()?.let { fm.saveFragmentInstanceState(it) }
-//    }
 
     // --------------------
     // ACTION
@@ -600,7 +565,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             var filteredList = estateList
             if (query.isNotBlank())
                 filteredList = SearchHelper().applySearch(estateList, query)
-            // TODO swipe refresh when have filter don't switch fab filter state
             if (hasFilter) closeFilterFragment(false)
             switchFabFilter(hasFilter)
             updateEstateList(filteredList)

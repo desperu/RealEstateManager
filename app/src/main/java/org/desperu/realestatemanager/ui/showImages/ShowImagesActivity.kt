@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_show_images.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.model.Image
-import org.desperu.realestatemanager.view.DepthPageTransformer
+import org.desperu.realestatemanager.view.pageTransformer.DepthPageTransformer
 
 
 /**

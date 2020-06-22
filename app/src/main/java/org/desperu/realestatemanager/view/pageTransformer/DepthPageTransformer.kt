@@ -1,11 +1,19 @@
-package org.desperu.realestatemanager.view
+package org.desperu.realestatemanager.view.pageTransformer
 
 import android.view.View
 import androidx.viewpager.widget.ViewPager
 import kotlin.math.abs
 
+/**
+ * Min scale constant used to perform animation.
+ */
 private const val MIN_SCALE = 0.75f
 
+/**
+ * Depth Page Transformer used to customize page transition.
+ *
+ * @constructor Instantiates a new DepthPageTransformer.
+ */
 class DepthPageTransformer : ViewPager.PageTransformer {
 
     override fun transformPage(view: View, position: Float) {

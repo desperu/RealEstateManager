@@ -21,7 +21,7 @@ import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.utils.Utils.concatenateStringFromMutableList
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.utils.Utils.deConcatenateStringToMutableList
-import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
 import java.lang.ref.WeakReference
 
 /**

@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.view
+package org.desperu.realestatemanager.view.adapter
 
 import android.content.Context
 import android.database.DataSetObserver
@@ -14,6 +14,18 @@ private const val EXTRA = 1
 /**
  * Decorator Adapter to allow a Spinner to show a 'Nothing Selected...' initially
  * displayed instead of the first choice in the Adapter.
+ *
+ * @param adapter the original spinner adapter.
+ * @param nothingSelectedLayout the unique identifier of the nothing selected layout.
+ * @param nothingSelectedDropdownLayout the unique identifier of the layout for each item of the list.
+ * @param context the context from this class is called.
+ *
+ * @constructor Instantiates a new NothingSelectedSpinnerAdapter.
+ *
+ * @property adapter the original spinner adapter to set.
+ * @property nothingSelectedLayout the unique identifier of the nothing selected layout to set.
+ * @property nothingSelectedDropdownLayout the unique identifier of the layout for each item of the list to set.
+ * @property context the context from this class is called to set.
  */
 class NothingSelectedSpinnerAdapter(private var adapter: SpinnerAdapter,
                                     private var nothingSelectedLayout: Int,

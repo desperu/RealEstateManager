@@ -13,7 +13,7 @@ import org.desperu.realestatemanager.repositories.AddressRepository
 import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.GeocoderService
-import org.desperu.realestatemanager.view.RecyclerViewAdapter
+import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
 import java.lang.ref.WeakReference
 
 /**
@@ -50,7 +50,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // For tablet (two frame)
     private var selectedItem: Estate? = null
     private var estateNotification: Estate? = null
-//    private var screenOrientationChanged = false
 
     init {
         loadEstateList()
@@ -64,18 +63,14 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * Load estate list with images and address for each, from database.
      */
     private fun loadEstateList() = viewModelScope.launch(Dispatchers.Main) {
-//        var estateList: List<Estate>? = null
-//        if (!screenOrientationChanged) {
-            val estateList = estateRepository.getAll().toMutableList()
-            estateList.forEach { estate ->
-                estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
-                estate.address = addressRepository.getAddress(estate.id)
-            }
-            onRetrieveEstateList(estateList, false)
-//        }
+        val estateList = estateRepository.getAll().toMutableList()
+        estateList.forEach { estate ->
+            estate.imageList = imageRepository.getEstateImages(estate.id).toMutableList()
+            estate.address = addressRepository.getAddress(estate.id)
+        }
+        onRetrieveEstateList(estateList, false)
         // Populate to main
         estateList.let { router.populateEstateListToMain(it) }
-//        screenOrientationChanged = false
     }
 
     /**
@@ -197,7 +192,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * @param isUpdated true if data were updated, false otherwise
      */
     private fun setLatLngInAddress(address: Address, isUpdated: Boolean) = viewModelScope.launch(Dispatchers.Main) {
-        val hasAddressData = address.city.isNotBlank() && address.country.isNotBlank()
+        val hasAddressData = address.city.isNotBlank() && address.country.isNotBlank() // TODO try or, it should work héhé
         val isEmptyLatLng = address.latitude == 0.0 && address.longitude == 0.0
         if (hasAddressData && (isEmptyLatLng || isUpdated)) {
             val latLng = geocoder.getLatLngFromAddress(address)
@@ -225,8 +220,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     // --- SETTERS ---
 
     internal fun setEstateNotification(estate: Estate) { estateNotification = estate }
-
-//    internal fun setScreenOrientationChanged(hasChanged: Boolean) { screenOrientationChanged = hasChanged }
 
     // --- GETTERS ---
 

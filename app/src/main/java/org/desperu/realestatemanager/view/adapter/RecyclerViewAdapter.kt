@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.view
+package org.desperu.realestatemanager.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

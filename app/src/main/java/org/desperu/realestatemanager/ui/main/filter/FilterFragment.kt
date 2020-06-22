@@ -16,7 +16,7 @@ import org.desperu.realestatemanager.databinding.FragmentFilterBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.extension.createDatePickerDialog
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.view.NothingSelectedSpinnerAdapter
+import org.desperu.realestatemanager.view.adapter.NothingSelectedSpinnerAdapter
 
 
 /**
