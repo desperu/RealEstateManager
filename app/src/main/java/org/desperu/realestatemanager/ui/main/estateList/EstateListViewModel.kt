@@ -13,6 +13,7 @@ import org.desperu.realestatemanager.repositories.AddressRepository
 import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.GeocoderService
+import org.desperu.realestatemanager.ui.main.MainCommunication
 import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
 import java.lang.ref.WeakReference
 
@@ -22,6 +23,7 @@ import java.lang.ref.WeakReference
  * @param estateRepository the estate repository interface witch provide database access.
  * @param imageRepository the image repository interface witch provide database access.
  * @param addressRepository the address repository interface witch provide database access.
+ * @param communication the main communication interface that allow communication with activity.
  * @param router the estate router interface witch provide user redirection.
  * @param geocoder the geocoder service interface witch provide geocoder service access.
  *
@@ -30,19 +32,21 @@ import java.lang.ref.WeakReference
  * @property estateRepository the estate repository interface witch provide database access to set.
  * @property imageRepository the image repository interface witch provide database access to set.
  * @property addressRepository the address repository interface witch provide database access to set.
+ * @property communication the main communication interface that allow communication with activity to set.
  * @property router the estate router interface witch provide user redirection to set.
  * @property geocoder the geocoder service interface witch provide geocoder service access to set.
  */
 class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val imageRepository: ImageRepository,
                           private val addressRepository: AddressRepository,
+                          private val communication: MainCommunication,
                           private val router: EstateRouter,
                           private val geocoder: GeocoderService
 ): ViewModel() {
 
     // FOR DATA
     private var estateListAdapter = WeakReference(RecyclerViewAdapter(
-            if (router.isFrame2Visible()) R.layout.item_estate
+            if (communication.isFrame2Visible) R.layout.item_estate
             else R.layout.item_estate_large))
     private val estateVMList = mutableListOf<EstateViewModel>()
     private val refreshing = ObservableBoolean(false)
@@ -70,7 +74,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         }
         onRetrieveEstateList(estateList, false)
         // Populate to main
-        estateList.let { router.populateEstateListToMain(it) }
+        estateList.let { communication.populateEstateListToMain(it) }
     }
 
     /**
@@ -80,7 +84,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     fun reloadEstateList() {
         refreshing.set(true)
         loadEstateList()
-        estateVMList.map { it.getEstate.value }.let { router.updateEstateList(it as List<Estate>) }
+        estateVMList.map { it.getEstate.value }.let { communication.updateEstateList(it as List<Estate>, false) }
     }
 
     /**
@@ -148,7 +152,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     private fun updateUi(estate: Estate?, isUpdate: Boolean) {
         refreshing.set(false)
         showEmptyText.set(estateVMList.isEmpty())
-        if (router.isFrame2Visible()) showDetailForTablet(estate, isUpdate)
+        if (communication.isFrame2Visible) showDetailForTablet(estate, isUpdate)
     }
 
     /**
@@ -160,7 +164,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     private fun showDetailForTablet(estate: Estate?, isUpdate: Boolean) {
         if (estateVMList.isNotEmpty()) {
             val estateToShow = estateNotification ?: estate ?: estateVMList[0].getEstate.value
-            estateToShow?.let { switchSelectedItem(it); router.showDetailForTablet(it, isUpdate) }
+            estateToShow?.let { switchSelectedItem(it); router.openEstateDetailForTablet(it, isUpdate) }
         }
     }
 
@@ -174,7 +178,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * @param estate the selected estate item.
      */
     internal fun switchSelectedItem(estate: Estate) = viewModelScope.launch(Dispatchers.Default) {
-        if (router.isFrame2Visible()) {
+        if (communication.isFrame2Visible) {
             estateVMList.find { it.getEstate.value?.id == selectedItem?.id }?.setIsSelected(false)
             estateVMList.find { it.getEstate.value?.id == estate.id }?.setIsSelected(true)
             selectedItem = estate
@@ -192,7 +196,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * @param isUpdated true if data were updated, false otherwise
      */
     private fun setLatLngInAddress(address: Address, isUpdated: Boolean) = viewModelScope.launch(Dispatchers.Main) {
-        val hasAddressData = address.city.isNotBlank() && address.country.isNotBlank() // TODO try or, it should work héhé
+        val hasAddressData = address.city.isNotBlank() || address.country.isNotBlank()
         val isEmptyLatLng = address.latitude == 0.0 && address.longitude == 0.0
         if (hasAddressData && (isEmptyLatLng || isUpdated)) {
             val latLng = geocoder.getLatLngFromAddress(address)

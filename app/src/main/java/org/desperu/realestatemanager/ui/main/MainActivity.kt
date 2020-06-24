@@ -75,7 +75,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private val fabFilter: FabFilterView by lazy<FabFilterView> { activity_main_fab_filter }
     private lateinit var bottomSheet: BottomSheetBehavior<View>
     private val isExpanded get() = bottomSheet.state == STATE_HALF_EXPANDED || bottomSheet.state == STATE_EXPANDED
-    private val isFrame2Visible get() = activity_main_frame_layout2 != null
+    override val isFrame2Visible get() = activity_main_frame_layout2 != null
 
     // FOR DATA
     @JvmField @State var hasFilter = false
@@ -419,7 +419,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * Show EstateDetailFragment for the given estate.
      * @param estate the estate to show details.
      */
-    internal fun showEstateDetailFragment(estate: Estate) =
+    override fun showEstateDetailFragment(estate: Estate) =
             configureAndShowFragment(FRAG_ESTATE_DETAIL, estate)
 
     /**
@@ -427,7 +427,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * @param estate the estate to show details.
      * @param isUpdate true if is call for an update, false for first launching data.
      */
-    internal fun showDetailForTablet(estate: Estate, isUpdate: Boolean) {
+    override fun showDetailForTablet(estate: Estate, isUpdate: Boolean) {
         if (isFrame2Visible) {
             if (getCurrentFragment() is EstateDetailFragment)
                 estateDetailFragment?.updateEstate(estate)
@@ -472,9 +472,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 hasFilter -> getFilterFragment()?.applyFilters(searchedList)
                 query.isNotBlank() -> {
                     searchedList = fullEstateList?.let { SearchHelper().applySearch(it, query) }
-                    searchedList?.let { updateEstateList(it) }
+                    searchedList?.let { populateEstateList(it) }
                 }
-                else -> fullEstateList?.let { updateEstateList(it) }
+                else -> fullEstateList?.let { populateEstateList(it) }
             }
         }
     }
@@ -528,6 +528,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // -----------------
 
     /**
+     * Populate estate list to this activity with intent.
+     * @param estateList the estate list to populate.
+     */
+    override fun populateEstateListToMain(estateList: List<Estate>) {
+        intent.putParcelableArrayListExtra(FULL_ESTATE_LIST, estateList as java.util.ArrayList)
+    }
+
+    /**
      * Update estate list with new filtered or unfiltered estate list.
      * @param estateList the new estate list to set.
      * @param hasFilter true if list has filters, false otherwise.
@@ -540,15 +548,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 filteredList = SearchHelper().applySearch(estateList, query)
             if (hasFilter) closeFilterFragment(false)
             fabFilter.switchFabFilter(hasFilter)
-            updateEstateList(filteredList)
+            populateEstateList(filteredList)
         }
     }
 
     /**
-     * Try to update estate list in all fragments lists.
-     * @param estateList the estate list to set.
+     * Try to populate estate list to all fragments lists.
+     * @param estateList the estate list to populate.
      */
-    private fun updateEstateList(estateList: List<Estate>) {
+    private fun populateEstateList(estateList: List<Estate>) {
         estateListFragment?.updateEstateList(estateList)
         mapsFragment?.updateEstateList(estateList)
         manageFilteredList(estateList)

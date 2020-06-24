@@ -11,6 +11,7 @@ import org.desperu.realestatemanager.service.GeocoderServiceImpl
 import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.service.ResourceServiceImpl
 import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorViewModel
+import org.desperu.realestatemanager.ui.main.MainCommunication
 import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailViewModel
 import org.desperu.realestatemanager.ui.main.estateDetail.ImagesRouterImpl
 import org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel
@@ -56,6 +57,7 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
                         inject(EstateRepository::class.java).value,
                         inject(ImageRepository::class.java).value,
                         inject(AddressRepository::class.java).value,
+                        activity as MainCommunication,
                         router as EstateRouter,
                         geocoder as GeocoderService) as T
             }
@@ -75,7 +77,9 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
             // Return a MapsViewModel instance.
             modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
                 val router = EstateRouterImpl(activity)
-                return MapsViewModel(router) as T
+                return MapsViewModel(
+                        router,
+                        activity as MainCommunication) as T
             }
 
             // Return a EstateDetailViewModel instance.
