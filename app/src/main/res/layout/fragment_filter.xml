@@ -178,7 +178,7 @@
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_price"
                 app:layout_constraintEnd_toEndOf="@id/fragment_filter_seekbar_price" />
 
-            <org.desperu.realestatemanager.view.CustomSeekBar
+            <org.desperu.realestatemanager.view.CustomSeekBarView
                 android:id="@+id/fragment_filter_seekbar_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -231,7 +231,7 @@
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_surface"
                 app:layout_constraintEnd_toEndOf="@id/fragment_filter_seekbar_surface" />
 
-            <org.desperu.realestatemanager.view.CustomSeekBar
+            <org.desperu.realestatemanager.view.CustomSeekBarView
                 android:id="@+id/fragment_filter_seekbar_surface"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -284,7 +284,7 @@
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_rooms"
                 app:layout_constraintEnd_toEndOf="@id/fragment_filter_seekbar_rooms" />
 
-            <org.desperu.realestatemanager.view.CustomSeekBar
+            <org.desperu.realestatemanager.view.CustomSeekBarView
                 android:id="@+id/fragment_filter_seekbar_rooms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

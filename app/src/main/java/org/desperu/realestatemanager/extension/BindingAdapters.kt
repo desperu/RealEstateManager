@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
-import org.desperu.realestatemanager.view.CustomSeekBar
+import org.desperu.realestatemanager.view.CustomSeekBarView
 import org.desperu.realestatemanager.view.OnRangeChangeListener
 
 /**
@@ -222,6 +222,6 @@ fun TextView.setSelectedTextColor(isSelected: Boolean?) {
  * @param listener the listener to set.
  */
 @BindingAdapter("onRangeChanged")
-fun CustomSeekBar.setRangeChangeListener(listener: OnRangeChangeListener) {
+fun CustomSeekBarView.setRangeChangeListener(listener: OnRangeChangeListener) {
     setOnRangeChangeListener(listener)
 }

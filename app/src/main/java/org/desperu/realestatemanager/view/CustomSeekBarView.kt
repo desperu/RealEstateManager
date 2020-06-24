@@ -13,14 +13,14 @@ import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
  * Custom crystal range seek bar, switch color when a value is selected, to make the toggling seem more smooth,
  * and show min and max values in text view.
  *
- * @param context the context from this CustomMapView is instantiate.
+ * @param context the context from this CustomSeekBarView is instantiate.
  * @param attrs the attribute set to apply at this view.
  * @param defStyleAttr the default style to apply at this view.
  *
- * @constructor Instantiate a new CustomSeekBar.
+ * @constructor Instantiate a new CustomSeekBarView.
  */
 @Suppress("deprecation")
-class CustomSeekBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+class CustomSeekBarView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : CrystalRangeSeekbar(context, attrs, defStyleAttr) {
 
     // FOR DATA
@@ -33,7 +33,7 @@ class CustomSeekBar @JvmOverloads constructor(context: Context, attrs: Attribute
     private val unselectedBarColor = resources.getColor(R.color.unselectedBar)
 
     // Custom thumbs and bar size.
-    override fun getThumbWidth(): Float = resources.getDimension(R.dimen.thumb_size)
+    override fun getThumbWidth(): Float = resources.getDimension(R.dimen.thumb_size) // TODO use 30dp and min range to 10
     override fun getThumbHeight(): Float = resources.getDimension(R.dimen.thumb_size)
     override fun getBarHeight(): Float = thumbHeight / 4.5f
 
@@ -157,7 +157,7 @@ class CustomSeekBar @JvmOverloads constructor(context: Context, attrs: Attribute
 
 
     @Deprecated(message = "Use setOnRangeChangeListener instead", replaceWith = ReplaceWith(
-            "addTransitionListener(listener)",
+            "setOnRangeChangeListener(listener)",
             "org.desperu.realestatemanager.view.CustomSeekBar.setOnRangeChangeListener"
     ))
     override fun setOnRangeSeekbarChangeListener(onRangeSeekbarChangeListener: OnRangeSeekbarChangeListener?) {

@@ -28,7 +28,7 @@ import org.desperu.realestatemanager.extension.animateCamera
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
-import org.desperu.realestatemanager.view.MapMotionLayout
+import org.desperu.realestatemanager.animation.MapMotionLayout
 import pub.devrel.easypermissions.EasyPermissions
 
 /**
@@ -58,7 +58,7 @@ const val MAP_MODE: String = "mapMode"
  */
 class MapsFragment : BaseBindingFragment() {
 
-    // FROM BUNDLE
+    // FOR BUNDLE
     private val estate: Estate? get() = arguments?.getParcelable(ESTATE_MAP)
     private val estateList: List<Estate>? get() = arguments?.getParcelableArrayList(ESTATE_LIST_MAP)
     private val mapMode: Int? get() = arguments?.getInt(MAP_MODE)

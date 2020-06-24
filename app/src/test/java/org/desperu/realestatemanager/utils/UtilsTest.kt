@@ -59,7 +59,7 @@ class UtilsTest {
     fun given_priceString_When_convertPriceToPatternPrice_Then_checkPatternPrice() {
         val price = "12000000"
         val expected = "12,000,000"
-        val output = convertPriceToPatternPrice(price, false)
+        output = convertPriceToPatternPrice(price, false)
 
         assertEquals(expected, output)
 
@@ -73,7 +73,7 @@ class UtilsTest {
     fun given_patternPrice_When_convertPatternPriceToString_Then_checkValue() {
         val patternPrice = "17,000,000"
         val expected = "17000000"
-        val output = convertPatternPriceToString(patternPrice)
+        output = convertPatternPriceToString(patternPrice)
 
         assertEquals(expected, output)
     }
@@ -103,7 +103,7 @@ class UtilsTest {
     @Test
     fun given_creditData_When_realCreditRate_Then_realRate() {
         val expected = "18,75"
-        val output = realCreditRate(600000.0, 112488.0).replace(".", ",")
+        output = realCreditRate(600000.0, 112488.0).replace(".", ",")
 
         assertEquals(expected, output)
     }

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewParent
 import com.google.android.gms.maps.MapView
-// TODO better organisation in the view package
+
 /**
  * Custom map view to intercept touch event when it's in scroll view, and consume touch event
  * when interact with it.

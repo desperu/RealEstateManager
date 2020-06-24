@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.view
+package org.desperu.realestatemanager.animation
 
 import android.content.Context
 import android.graphics.drawable.Drawable

@@ -59,7 +59,7 @@
 
         </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <org.desperu.realestatemanager.view.FabFilterView
             android:id="@+id/activity_main_fab_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
