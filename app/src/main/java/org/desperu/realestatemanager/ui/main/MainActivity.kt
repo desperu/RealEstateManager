@@ -1,12 +1,16 @@
 package org.desperu.realestatemanager.ui.main
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -47,6 +51,7 @@ import org.desperu.realestatemanager.utils.MainUtils.retrievedFragKeyFromClass
 import org.desperu.realestatemanager.utils.MainUtils.setTitleActivity
 import org.desperu.realestatemanager.utils.MainUtils.switchFrameSizeForTablet
 import org.desperu.realestatemanager.view.FabFilterView
+
 
 /**
  * The arguments names for intent to received the data in this Activity.
@@ -308,8 +313,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onResume() {
         super.onResume()
         if (::bottomSheet.isInitialized) closeFilterFragment(false) // TODO not work, fab filter mistake and filter not saved when turn phone
-        if (estateNotification != null) {//            clearAllBackStack()
-//            configureAndShowFragment(FRAG_ESTATE_LIST, null)
+        if (estateNotification != null) {
             if (isFrame2Visible) configureAndShowFragment(FRAG_ESTATE_LIST, estateNotification)
             else configureAndShowFragment(FRAG_ESTATE_DETAIL, estateNotification)
             intent.removeExtra(ESTATE_NOTIFICATION)
@@ -340,8 +344,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.activity_main_menu_drawer_credit -> showCreditSimulatorActivity()
             R.id.activity_main_menu_drawer_settings -> showSettingsActivity()
-            R.id.activity_main_drawer_about -> TODO("to implement")
-            R.id.activity_main_drawer_help -> TODO("to implement")
+            R.id.activity_main_drawer_about -> showAboutDialog()
+            R.id.activity_main_drawer_help -> showHelpDocumentation()
         }
         activity_main_drawer_layout.closeDrawer(GravityCompat.START)
         return true
@@ -473,6 +477,27 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 else -> fullEstateList?.let { updateEstateList(it) }
             }
         }
+    }
+
+    /**
+     * Show about dialog.
+     */
+    private fun showAboutDialog() {
+        val dialog: AlertDialog = AlertDialog.Builder(this)
+                .setTitle("${getString(R.string.activity_main_dialog_about_title)} ${getString(R.string.app_name)}")
+                .setMessage(R.string.activity_main_dialog_about_message)
+                .setPositiveButton(R.string.activity_main_dialog_about_positive_button, null)
+                .show()
+        dialog.findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    /**
+     * Show help documentation.
+     */
+    private fun showHelpDocumentation() {
+        val browserIntent = Intent(Intent.ACTION_VIEW)
+        browserIntent.setDataAndType(Uri.parse(DOCUMENTATION_URL), "text/html")
+        startActivity(browserIntent)
     }
 
     // -----------------

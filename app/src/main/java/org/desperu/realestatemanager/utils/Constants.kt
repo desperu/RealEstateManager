@@ -24,6 +24,9 @@ const val FRAG_ESTATE_DETAIL = 2
 const val UNFILTERED = "unFiltered"
 const val FILTERED = "filtered"
 
+// Documentation url
+const val DOCUMENTATION_URL = "https://github.com/desperu/RealEstateManager/blob/master/Documentation/Documentation%20Fonctionnelle%20RealEstateManager.pdf"
+
 
 // FOR MANAGE ESTATE VIEW PAGER
 
