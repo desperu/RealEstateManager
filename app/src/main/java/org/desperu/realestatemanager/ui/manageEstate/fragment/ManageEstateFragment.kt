@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -25,7 +26,6 @@ import icepick.State
 import kotlinx.android.synthetic.main.fragment_estate_address.*
 import kotlinx.android.synthetic.main.fragment_estate_data.*
 import kotlinx.android.synthetic.main.fragment_estate_sale.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
@@ -253,10 +253,9 @@ class ManageEstateFragment: BaseBindingFragment() {
         if (!EasyPermissions.hasPermissions(activity!!, READ_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(this, getString(R.string.fragment_estate_image_popup_title_permission_files_access),
                     RC_PERMS_STORAGE, READ_EXTERNAL_STORAGE)
-            return // TODO mistake when valid permission, close activity...!
-        }
-        // Launch an "Selection Image" Activity
-        startActivityForResult(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RC_CHOOSE_PHOTO)
+        } else
+            // Launch an "Selection Image" Activity
+            startActivityForResult(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RC_CHOOSE_PHOTO)
     }
 
     /**
@@ -266,10 +265,9 @@ class ManageEstateFragment: BaseBindingFragment() {
         if (!EasyPermissions.hasPermissions(activity!!, WRITE_EXTERNAL_STORAGE, CAMERA)) {
             EasyPermissions.requestPermissions(this, getString(R.string.fragment_estate_image_popup_title_permission_write_storage_and_camera),
                     RC_PERMS_PHOTO, WRITE_EXTERNAL_STORAGE, CAMERA)
-            return
-        }
-        // Launch an "Take Photo" Activity
-        startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE), RC_TAKE_PHOTO)
+        } else
+            // Launch an "Take Photo" Activity
+            startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE), RC_TAKE_PHOTO)
     }
 
     // -----------------
@@ -293,11 +291,12 @@ class ManageEstateFragment: BaseBindingFragment() {
     internal fun deleteImageInStorage(imageUri: String) = storageAction {
         val fileData = getFolderAndFileNameFromContentUri(imageUri)
         val messageError = "Can't retrieved folder name and file name from content uri"
-        if (fileData.isNotEmpty())
+        return@storageAction if (fileData.isNotEmpty())
             activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let {
                 deleteFileInStorage(it, fileData["folderName"] ?: error(messageError),
                         fileData["fileName"] ?: error(messageError))
             }
+        else false
     }
 
     /**
@@ -306,7 +305,7 @@ class ManageEstateFragment: BaseBindingFragment() {
      */
     private fun storageAction(action: suspend () -> Any?) {
         if (isExternalStorageWritable()) { // Check external storage write access.
-            CoroutineScope(Dispatchers.Main).launch {
+            lifecycleScope.launch(Dispatchers.Main) {
                 val result = action()
                 handleStorageResult(result)
             }
@@ -373,6 +372,6 @@ class ManageEstateFragment: BaseBindingFragment() {
             showToast(getString(R.string.fragment_estate_image_toast_saved_photo))
             viewModel.addImageToImageList(result)
         } else
-            showToast(getString(R.string.fragment_estate_image_toast_error_happened)) // TODO error when delete image, perhaps with simulator
+            showToast(getString(R.string.fragment_estate_image_toast_error_happened))
     }
 }

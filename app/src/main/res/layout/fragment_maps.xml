@@ -13,11 +13,11 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/fragment_maps_text_no_google_services"
+            android:id="@+id/fragment_maps_text_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_large_margin"
-            android:text="@string/fragment_estate_detail_text_no_google_play_services_available"
+            android:gravity="center"
             android:textStyle="italic"
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"

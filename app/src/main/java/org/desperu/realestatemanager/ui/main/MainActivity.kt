@@ -313,18 +313,20 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onResume() {
         super.onResume()
         if (::bottomSheet.isInitialized) closeFilterFragment(false) // TODO not work, fab filter mistake and filter not saved when turn phone
-        if (estateNotification != null) {
+        if (estateNotification != null) { // Show estate notification.
             if (isFrame2Visible) configureAndShowFragment(FRAG_ESTATE_LIST, estateNotification)
             else configureAndShowFragment(FRAG_ESTATE_DETAIL, estateNotification)
             intent.removeExtra(ESTATE_NOTIFICATION)
-        } else
+        } else { // Resume last visible fragment if there's one, else launch estate list frag.
+            val tempFragmentKey = fragmentKey
+            fragmentKey = NO_FRAG
             configureAndShowFragment(
-                    if (fragmentKey != NO_FRAG) fragmentKey
+                    if (tempFragmentKey != NO_FRAG) tempFragmentKey
                     else FRAG_ESTATE_LIST,
                     null)
+        }
         // TODO restore search view state
         // TODO mistake with filter frag, it is state half expanded when turn phone if it is not null.
-        // TODO show list when turn from map and fab filter position
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

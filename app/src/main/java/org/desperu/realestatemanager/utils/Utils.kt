@@ -163,14 +163,6 @@ internal object Utils {
         return "$stringDay/$stringMonth/$year"
     }
 
-    // TODO not used
-    /**
-     * Convert date object to string format "dd/MM/yyyy".
-     * @param givenDate Given date object.
-     * @return String date with good format.
-     */
-    internal fun dateToString(givenDate: Date): String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(givenDate)
-
     /**
      * Convert string date format from "dd/MM/yyyy" to Date, return null if an error happened.
      * @param givenDate The given date.

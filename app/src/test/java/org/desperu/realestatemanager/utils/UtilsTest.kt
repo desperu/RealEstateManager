@@ -15,7 +15,6 @@ import org.desperu.realestatemanager.utils.Utils.convertEuroToDollar
 import org.desperu.realestatemanager.utils.Utils.convertPatternPriceToString
 import org.desperu.realestatemanager.utils.Utils.convertPriceToPatternPrice
 import org.desperu.realestatemanager.utils.Utils.creditCalculus
-import org.desperu.realestatemanager.utils.Utils.dateToString
 import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContentUri
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
@@ -145,17 +144,6 @@ class UtilsTest {
     }
 
     @Test
-    fun given_dateObject_When_askDateToString_Then_checkNewDateFormat() {
-        val expected = "15/10/2019"
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.set(2019, 9, 15)
-        val date: Date = calendar.time
-        output = dateToString(date)
-
-        assertEquals(expected, output)
-    }
-
-    @Test
     @Throws(ParseException::class)
     fun given_stringDate_When_askStringToDate_Then_checkNewDateFormat() {
         val givenDate = "5/9/2019"
@@ -191,6 +179,15 @@ class UtilsTest {
         val output = getFolderAndFileNameFromContentUri(contentUri)
 
         assertEquals(expected, output)
+    }
+
+    @Test
+    fun given_wrongUri_When_getFolderAndFileNameFromContentUri_Then_checkResult() {
+        val contentUri = "wrong uri"
+
+        val output = getFolderAndFileNameFromContentUri(contentUri).isEmpty()
+
+        assertTrue(output)
     }
 
     @Test
@@ -255,35 +252,4 @@ class UtilsTest {
 
         assertTrue(output)
     }
-
-// // TODO remove if unused
-//    @Mock
-//    var mockContext: Context? = null
-//
-//    @Mock
-//    var mockPrefs: SharedPreferences? = null
-//
-//    @Test
-//    fun Given_articleUrl_When_searchUrlInHistory_Then_returnPosition() {
-//        val expected = 0
-//        val url: String = MyNewsTools.Constant.nyTimesImageUrl
-//        `when`(mockContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mockPrefs)
-//        `when`(mockPrefs!!.getString(ARTICLE_READ_URL + 0, "")).thenReturn(url)
-//        `when`(mockPrefs!!.getInt(MAX_HISTORY_VALUE, 0)).thenReturn(expected)
-//        val output: Int = MyNewsUtils.searchReadArticle(mockContext, url)
-
-//        assertEquals(expected, output)
-//    }
-//
-//    @Test
-//    fun Given_articleUrl_When_searchUrlInHistory_Then_returnDefault() {
-//        val expected = -1
-//        val url: String = MyNewsTools.Constant.nyTimesImageUrl
-//        `when`(mockContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mockPrefs)
-//        `when`(mockPrefs!!.getString(ARTICLE_READ_URL + 0, "")).thenReturn("test")
-//        `when`(mockPrefs!!.getInt(MAX_HISTORY_VALUE, 0)).thenReturn(0)
-//        val output: Int = MyNewsUtils.searchReadArticle(mockContext, url)
-
-//        assertEquals(expected, output)
-//    }
 }

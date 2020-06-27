@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_estate_list.view.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseBindingFragment
@@ -15,6 +14,7 @@ import org.desperu.realestatemanager.databinding.FragmentEstateListBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
+import org.desperu.realestatemanager.ui.main.MainCommunication
 
 /**
  * The argument name for bundle to received the estate from notification to this Fragment.
@@ -65,7 +65,8 @@ class EstateListFragment: BaseBindingFragment() {
     }
 
     /**
-     * Configure recycler view, support large screen size and use specific interface.
+     * Configure recycler view, support large screen size and use specific user interface.
+     * Set fall down animation for recycler view items.
      */
     private fun configureRecyclerView() {
         binding.fragmentEstateListRecyclerView.layoutManager =
@@ -92,8 +93,8 @@ class EstateListFragment: BaseBindingFragment() {
 
     override fun onResume() {
         super.onResume()
-        // When comes back from map frag with filters, restore selected item for tablet mode.
-        if (isFrame2Visible) viewModel?.restoreDetailForTablet() // TODO mistake when turn tab
+        // When comes back from map frag with filters, or call from drawer menu, restore selected item for tablet mode.
+        if (isFrame2Visible) viewModel?.restoreDetailForTablet()
     }
 
     // --------------
@@ -140,5 +141,5 @@ class EstateListFragment: BaseBindingFragment() {
     /**
      * True if activity main frame layout is visible, false otherwise.
      */
-    private val isFrame2Visible get() = activity?.activity_main_frame_layout2 != null
+    private val isFrame2Visible get() = (activity as MainCommunication).isFrame2Visible
 }

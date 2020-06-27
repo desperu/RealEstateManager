@@ -33,7 +33,7 @@ class CustomSeekBarView @JvmOverloads constructor(context: Context, attrs: Attri
     private val unselectedBarColor = resources.getColor(R.color.unselectedBar)
 
     // Custom thumbs and bar size.
-    override fun getThumbWidth(): Float = resources.getDimension(R.dimen.thumb_size) // TODO use 30dp and min range to 10
+    override fun getThumbWidth(): Float = resources.getDimension(R.dimen.thumb_size)
     override fun getThumbHeight(): Float = resources.getDimension(R.dimen.thumb_size)
     override fun getBarHeight(): Float = thumbHeight / 4.5f
 

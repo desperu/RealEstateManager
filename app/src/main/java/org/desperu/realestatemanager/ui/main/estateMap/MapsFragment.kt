@@ -29,6 +29,7 @@ import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import org.desperu.realestatemanager.animation.MapMotionLayout
+import org.desperu.realestatemanager.utils.Utils.isInternetAvailable
 import pub.devrel.easypermissions.EasyPermissions
 
 /**
@@ -82,7 +83,7 @@ class MapsFragment : BaseBindingFragment() {
     override fun configureDesign() {}
 
     override fun updateDesign() {
-        configureMapView()
+        checkDependencies()
     }
 
     // --------------
@@ -91,18 +92,9 @@ class MapsFragment : BaseBindingFragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        // Forward results to EasyPermissions
+        // Forward results to EasyPermissions.
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
         isLocationEnabled = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun onAttach(context: Context) {
-        if (isGooglePlayServicesAvailable(context)) // TODO check internet connexion, check client ask
-            super.onAttach(context)
-        else { // If Google Play Services aren't available, hide map view and show message.
-            fragment_maps_text_no_google_services.visibility = View.VISIBLE
-            fragment_maps_maps_view.visibility = View.GONE
-        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -147,6 +139,18 @@ class MapsFragment : BaseBindingFragment() {
 
         binding.viewModel = viewModel
         return binding.root
+    }
+
+    /**
+     * Check that the needed dependencies are available.
+     */
+    private fun checkDependencies() = when {
+        // If Google Play Services aren't available, hide map view and show message.
+        !isGooglePlayServicesAvailable(context!!) -> showWarningMessage(false)
+        // If there's no internet connexion available, hide map view and show message.
+        !isInternetAvailable(context!!) -> showWarningMessage(true)
+        // Else start map view.
+        else -> configureMapView()
     }
 
     /**
@@ -229,8 +233,6 @@ class MapsFragment : BaseBindingFragment() {
         else checkLocationPermissionsStatus()
     }
 
-//    private val onLongClickMyLocation = View.OnLongClickListener {  } // TODO to implement with update camera with user and estate in screen
-
     /**
      * On click listener for switch map size (little size and full screen), use motion layout to perform animation.
      */
@@ -240,9 +242,9 @@ class MapsFragment : BaseBindingFragment() {
      * On marker click, show marker data.
      * @param marker the clicked marker.
      */
+    @Suppress("unused_parameter")
     private fun onMarkerClick(marker: Marker): Boolean {
         repositionMapToolbar()
-//        return marker.snippet != null
         return false
     }
 
@@ -336,6 +338,20 @@ class MapsFragment : BaseBindingFragment() {
         }
     }
 
+    /**
+     * Show warning message when there's no internet connexion or google play services on the device.
+     * @param isInternet true if there's no internet connexion available, false otherwise.
+     */
+    private fun showWarningMessage(isInternet: Boolean) {
+        val message = getString(if (isInternet) R.string.fragment_maps_text_no_internet_connexion
+                                else R.string.fragment_maps_text_no_google_play_services_available)
+        fragment_maps_text_warning.visibility = View.VISIBLE
+        fragment_maps_text_warning.text = message
+        fragment_maps_maps_view.visibility = View.GONE
+        fragment_maps_fullscreen_button.visibility = View.GONE
+        fragment_maps_floating_button_location.visibility = View.GONE
+    }
+
     // --------------
     // LOCATION
     // --------------
@@ -357,10 +373,4 @@ class MapsFragment : BaseBindingFragment() {
             }
             return myLocation
         }
-
-    /**
-     * Get screen global location.
-     * @return LatLng bounds for current screen.
-     */
-    private val getLatLngBounds = mGoogleMap?.projection?.visibleRegion?.latLngBounds
 }
