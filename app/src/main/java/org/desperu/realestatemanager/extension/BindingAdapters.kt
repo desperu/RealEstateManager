@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.extension
 
 import android.net.Uri
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ImageView
@@ -224,4 +225,13 @@ fun TextView.setSelectedTextColor(isSelected: Boolean?) {
 @BindingAdapter("onRangeChanged")
 fun CustomSeekBarView.setRangeChangeListener(listener: OnRangeChangeListener) {
     setOnRangeChangeListener(listener)
+}
+
+/**
+ * Set text watcher listener for text date in filter fragment.
+ * @param listener the text watcher listener to set.
+ */
+@BindingAdapter("onTextChanged")
+fun TextView.setOnTextChanged(listener: TextWatcher) {
+    addTextChangedListener(listener)
 }

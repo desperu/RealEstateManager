@@ -25,8 +25,7 @@ import org.desperu.realestatemanager.view.OnRangeChangeListener
  * @property communication the filter view model communication interface witch provide view model communication to set.
  */
 @Suppress("unchecked_cast")
-class FilterViewModel(private val communication: FilterVMCommunication
-): ViewModel() {
+class FilterViewModel(private val communication: FilterVMCommunication): ViewModel() {
 
     // FOR DATA
     private var originalList = listOf<Estate>()
@@ -34,19 +33,10 @@ class FilterViewModel(private val communication: FilterVMCommunication
     private val hasFilter: Boolean get() = filtersMap.isNotEmpty()
     private val selectedBackground = R.drawable.text_filter_selected
     private val unselectedBackground = R.drawable.text_filter_unselected
-    // Custom setter for dates values, due to multiple uses, in layout, in DialogDatePicker and need to intercept when set here.
-    var saleBegin = String()
-        set(value) { field = value; saleBeginObs.set(value); manageDateFilter("saleDate", saleBegin, saleEnd) }
-    val saleBeginObs = ObservableField<String>()
-    var saleEnd = String()
-        set(value) { field = value; saleEndObs.set(value); manageDateFilter("saleDate", saleBegin, saleEnd) }
-    val saleEndObs = ObservableField<String>()
-    var soldBegin = String()
-        set(value) { field = value; soldBeginObs.set(value); manageDateFilter("soldDate", soldBegin, soldEnd) }
-    val soldBeginObs = ObservableField<String>()
-    var soldEnd = String()
-        set(value) { field = value; soldEndObs.set(value); manageDateFilter("soldDate", soldBegin, soldEnd) }
-    val soldEndObs = ObservableField<String>()
+    val saleBegin = ObservableField<String>()
+    val saleEnd = ObservableField<String>()
+    val soldBegin = ObservableField<String>()
+    val soldEnd = ObservableField<String>()
 
     // -------------
     // SET ORIGINAL LIST
@@ -151,11 +141,63 @@ class FilterViewModel(private val communication: FilterVMCommunication
     /**
      * On range change listener for all custom seek bar.
      */
-    private val onRangeChanged = object : OnRangeChangeListener {
+    private val onRangeChanged = object: OnRangeChangeListener {
         override fun onRangeSelected(view: View, minValue: Number, maxValue: Number) {
             addFilter("${view.tag}", listOf(minValue, maxValue))
         }
         override fun onRangeUnselected(view: View) { removeFilter("${view.tag}", null) }
+    }
+
+    /**
+     * Text watcher for text view sale date begin.
+     */
+    private val onSaleDateBeginChanged = object: TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            saleBegin.set(s.toString())
+            manageDateFilter("saleDate", s.toString(), saleEnd.get() ?: "")
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    /**
+     * Text watcher for text view sale date end.
+     */
+    private val onSaleDateEndChanged = object: TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            saleEnd.set(s.toString())
+            manageDateFilter("saleDate", saleBegin.get() ?: "", s.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    /**
+     * Text watcher for text view sold date begin.
+     */
+    private val onSoldDateBeginChanged = object: TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            soldBegin.set(s.toString())
+            manageDateFilter("soldDate", s.toString(), soldEnd.get() ?: "")
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    /**
+     * Text watcher for text view sold date end.
+     */
+    private val onSoldDateEndChanged = object: TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            soldEnd.set(s.toString())
+            manageDateFilter("soldDate", soldBegin.get() ?: "", s.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
     /**
@@ -226,6 +268,14 @@ class FilterViewModel(private val communication: FilterVMCommunication
     val getOnTextImageChanged = onTextImageChanged
 
     val getOnRangeChanged = onRangeChanged
+
+    val getOnSaleDateBeginChanged = onSaleDateBeginChanged
+
+    val getOnSaleDateEndChanged = onSaleDateEndChanged
+
+    val getOnSoldDateBeginChanged = onSoldDateBeginChanged
+
+    val getOnSoldDateEndChanged = onSoldDateEndChanged
 
     val getSpinnerListener = spinnerListener
 }

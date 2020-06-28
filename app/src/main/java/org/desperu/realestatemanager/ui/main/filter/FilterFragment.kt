@@ -72,10 +72,10 @@ class FilterFragment: BaseBindingFragment() {
      * Configure begin and end date picker.
      */
     private fun configureDatePicker() {
-        setPickerTextOnClickListener(context!!, fragment_filter_sale_date_begin, viewModel?.saleBeginObs)
-        setPickerTextOnClickListener(context!!, fragment_filter_sale_date_end, viewModel?.saleEndObs)
-        setPickerTextOnClickListener(context!!, fragment_filter_sold_date_begin, viewModel?.soldBeginObs)
-        setPickerTextOnClickListener(context!!, fragment_filter_sold_date_end, viewModel?.soldEndObs)
+        setPickerTextOnClickListener(context!!, fragment_filter_sale_date_begin, viewModel?.saleBegin)
+        setPickerTextOnClickListener(context!!, fragment_filter_sale_date_end, viewModel?.saleEnd)
+        setPickerTextOnClickListener(context!!, fragment_filter_sold_date_begin, viewModel?.soldBegin)
+        setPickerTextOnClickListener(context!!, fragment_filter_sold_date_end, viewModel?.soldEnd)
     }
 
     /**

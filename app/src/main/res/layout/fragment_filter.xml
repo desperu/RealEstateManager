@@ -395,7 +395,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/fragment_filter_sale_date_end"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_sale_date_begin"
-                android:text="@={viewModel.saleBegin}"/>
+                app:onTextChanged="@{viewModel.getOnSaleDateBeginChanged}"/>
 
             <View
                 android:id="@+id/fragment_filter_sale_date_begin_divider"
@@ -427,7 +427,7 @@
                 app:layout_constraintStart_toEndOf="@id/fragment_filter_sale_date_begin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_sale_date_end"
-                android:text="@={viewModel.saleEnd}"/>
+                app:onTextChanged="@{viewModel.getOnSaleDateEndChanged}"/>
 
             <View
                 android:id="@+id/fragment_filter_sale_date_end_divider"
@@ -472,7 +472,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/fragment_filter_sold_date_end"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_sold_date_begin"
-                android:text="@={viewModel.soldBegin}"/>
+                app:onTextChanged="@{viewModel.getOnSoldDateBeginChanged}"/>
 
             <View
                 android:id="@+id/fragment_filter_sold_date_begin_divider"
@@ -504,7 +504,7 @@
                 app:layout_constraintStart_toEndOf="@id/fragment_filter_sold_date_begin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_subcategory_sold_date_end"
-                android:text="@={viewModel.soldEnd}"/>
+                app:onTextChanged="@{viewModel.getOnSoldDateEndChanged}"/>
 
             <View
                 android:id="@+id/fragment_filter_sold_date_end_divider"

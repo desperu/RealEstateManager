@@ -195,7 +195,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * @param address the given address from witch retrieved latitude and longitude.
      * @param isUpdated true if data were updated, false otherwise
      */
-    private fun setLatLngInAddress(address: Address, isUpdated: Boolean) = viewModelScope.launch(Dispatchers.Main) {
+    private fun setLatLngInAddress(address: Address, isUpdated: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         val hasAddressData = address.city.isNotBlank() || address.country.isNotBlank()
         val isEmptyLatLng = address.latitude == 0.0 && address.longitude == 0.0
         if (hasAddressData && (isEmptyLatLng || isUpdated)) {
