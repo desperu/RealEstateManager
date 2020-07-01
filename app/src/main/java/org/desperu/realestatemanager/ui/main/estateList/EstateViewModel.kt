@@ -61,7 +61,7 @@ class EstateViewModel(private val givenEstate: Estate,
     val itemClick = View.OnClickListener {
         estate.value?.let { estate ->
             estateListVM.switchSelectedItem(estate)
-            router.openEstateDetail(estate)
+            router.openEstateDetail(estate, true)
         }
     }
 

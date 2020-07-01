@@ -11,10 +11,11 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
@@ -29,7 +30,10 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.animation.MapMotionLayout
 import org.desperu.realestatemanager.animation.ToolbarAnimHelper
 import org.desperu.realestatemanager.base.BaseActivity
-import org.desperu.realestatemanager.filter.SearchHelper
+import org.desperu.realestatemanager.databinding.ToolbarBinding
+import org.desperu.realestatemanager.di.ViewModelFactory
+import org.desperu.realestatemanager.di.module.mainModule
+import org.desperu.realestatemanager.filter.ManageFiltersHelper
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorActivity
 import org.desperu.realestatemanager.ui.main.estateDetail.ESTATE_DETAIL
@@ -39,7 +43,6 @@ import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
 import org.desperu.realestatemanager.ui.main.estateMap.ESTATE_LIST_MAP
 import org.desperu.realestatemanager.ui.main.estateMap.MAP_MODE
 import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
-import org.desperu.realestatemanager.ui.main.filter.FILTER_ESTATE_LIST
 import org.desperu.realestatemanager.ui.main.filter.FilterFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
@@ -51,14 +54,15 @@ import org.desperu.realestatemanager.utils.MainUtils.retrievedFragKeyFromClass
 import org.desperu.realestatemanager.utils.MainUtils.setTitleActivity
 import org.desperu.realestatemanager.utils.MainUtils.switchFrameSizeForTablet
 import org.desperu.realestatemanager.view.FabFilterView
+import org.koin.android.ext.android.get
+import org.koin.core.context.unloadKoinModules
+import org.koin.core.parameter.parametersOf
 
 
 /**
  * The arguments names for intent to received the data in this Activity.
  */
 const val NEW_ESTATE: String = "newEstate" // For new or updated estate.
-const val FULL_ESTATE_LIST: String = "fullEstateList" // For full estate list.
-const val FILTERED_ESTATE_LIST: String = "filteredEstateList" // For filtered estate list.
 const val ESTATE_NOTIFICATION: String = "estateNotification" // For estate notification.
 
 /**
@@ -67,7 +71,7 @@ const val ESTATE_NOTIFICATION: String = "estateNotification" // For estate notif
  *
  * @constructor Instantiates a new MainActivity.
  */
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener, MainCommunication {
+class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSelectedListener, MainCommunication {
 
     // FOR UI
     @JvmField @State var fragmentKey: Int = NO_FRAG
@@ -78,13 +82,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override val isFrame2Visible get() = activity_main_frame_layout2 != null
 
     // FOR DATA
-    @JvmField @State var hasFilter = false
-    @JvmField @State var query = ""
+    private val filters by lazy { get<ManageFiltersHelper>() }
 
     // FOR INTENT
-    // TODO get from view model list for better update and communication, for map !! but here for turn phone restore data view model not kill for that ??
-    private val fullEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FULL_ESTATE_LIST)
-    private val filteredEstateList: List<Estate>? get() = intent.getParcelableArrayListExtra(FILTERED_ESTATE_LIST)
     private val estateNotification get() = intent.getParcelableExtra<Estate>(ESTATE_NOTIFICATION)
 
     // --------------
@@ -94,16 +94,21 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun getActivityLayout(): Int = R.layout.activity_main
 
     override fun configureDesign() {
-        //Stetho.initializeWithDefaults(this) // TODO For test only, to remove
+        configureKoinDependency()
         configureToolBar()
-        configureSearchViewListener()
         configureDrawerLayout()
         configureNavigationView()
+        configureViewModel()
     }
 
     // -----------------
     // CONFIGURATION
     // -----------------
+
+    /**
+     * Configure koin dependency for main communication interface.
+     */
+    private fun configureKoinDependency() = get<MainCommunication> { parametersOf(this@MainActivity) }
 
     /**
      * Configure Drawer layout.
@@ -126,20 +131,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     /**
-     * Configure Search View Listener in toolbar.
+     * Configure data binding with view model for the search view in toolbar.
      */
-    private fun configureSearchViewListener() {
-        toolbar_search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                onSearchTextChange(query)
-                return false
-            }
+    private fun configureViewModel() {
+        val binding: ToolbarBinding? = DataBindingUtil.bind(activity_main_toolbar)
+        val viewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ToolbarViewModel::class.java)
 
-            override fun onQueryTextChange(s: String): Boolean {
-                onSearchTextChange(s)
-                return false
-            }
-        })
+        binding?.viewModel = viewModel
     }
 
     // --------------
@@ -245,11 +243,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * Populate estate list to fragment with bundle.
      * @param fragment the fragment instance to send estate.
-     * @param bundleKey the bundle key to use.
      */
-    private fun populateEstateListToFragment(fragment: Fragment, bundleKey: String) {
+    private fun populateEstateListToFragment(fragment: Fragment) {
         fragment.arguments = setBundle(fragment.arguments)
-        fragment.arguments?.putParcelableArrayList(bundleKey, (filteredEstateList ?: fullEstateList) as ArrayList?)
+        fragment.arguments?.putParcelableArrayList(ESTATE_LIST_MAP,
+                (filters.getFilteredEstateList ?: filters.getFullEstateList) as ArrayList?)
     }
 
     /**
@@ -258,7 +256,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     private fun setMapsFragmentBundle(fragment: Fragment) {
         fragment.arguments = setBundle(fragment.arguments)
-        populateEstateListToFragment(fragment, ESTATE_LIST_MAP)
+        populateEstateListToFragment(fragment)
         fragment.arguments?.putInt(MAP_MODE, FULL_MODE)
     }
 
@@ -285,7 +283,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         var fragment = getFilterFragment()
         if (fragment == null) {
             fragment = FilterFragment()
-            populateEstateListToFragment(fragment, FILTER_ESTATE_LIST)
             fm.beginTransaction()
                     .replace(activity_main_bottom_sheet.id, fragment, fragment.javaClass.simpleName)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -312,12 +309,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onResume() {
         super.onResume()
-        if (::bottomSheet.isInitialized) closeFilterFragment(false) // TODO not work, fab filter mistake and filter not saved when turn phone
-        if (estateNotification != null) { // Show estate notification.
+        // Show estate notification if there's one.
+        if (estateNotification != null) {
             if (isFrame2Visible) configureAndShowFragment(FRAG_ESTATE_LIST, estateNotification)
             else configureAndShowFragment(FRAG_ESTATE_DETAIL, estateNotification)
             intent.removeExtra(ESTATE_NOTIFICATION)
-        } else { // Resume last visible fragment if there's one, else launch estate list frag.
+        // Resume last visible fragment if there's one, else launch estate list frag.
+        } else {
             val tempFragmentKey = fragmentKey
             fragmentKey = NO_FRAG
             configureAndShowFragment(
@@ -325,8 +323,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     else FRAG_ESTATE_LIST,
                     null)
         }
-        // TODO restore search view state
-        // TODO mistake with filter frag, it is state half expanded when turn phone if it is not null.
+        restoreSearchView()
+        switchFabFilter(filters.hasFilters)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -341,7 +339,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.activity_main_menu_drawer_estate_map -> configureAndShowFragment(FRAG_ESTATE_MAP, null)
             R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity()
             R.id.activity_main_menu_drawer_Search -> {
-                ToolbarAnimHelper().switchSearchViewVisibility(this, toolbar_search_view, true)
+                switchSearchView()
                 configureAndShowBottomSheetFilterFragment(STATE_EXPANDED)
             }
             R.id.activity_main_menu_drawer_credit -> showCreditSimulatorActivity()
@@ -361,7 +359,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.activity_main_menu_add -> showManageEstateActivity()
-            R.id.activity_main_menu_search -> ToolbarAnimHelper().switchSearchViewVisibility(this, toolbar_search_view, false)
+            R.id.activity_main_menu_search -> switchSearchView()
         }
 
         return super.onOptionsItemSelected(item)
@@ -378,7 +376,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         // If search view is shown, hide it.
         toolbar_search_view != null && toolbar_search_view.isShown ->
-            ToolbarAnimHelper().switchSearchViewVisibility(this, toolbar_search_view, false)
+            switchSearchView()
 
         // If map is expended in estate detail fragment, collapse it.
         mapsFragmentChildDetail?.view?.fragment_maps_fullscreen_button?.tag == FULL_SIZE ->
@@ -413,31 +411,20 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             activity_main_nav_view.checkedItem?.isChecked = false
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        // To prevent ui mistake when turn device and filter frag isn't null, it's shown in half expended mode if not remove.
+        if (::bottomSheet.isInitialized) closeFilterFragment(true)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unloadKoinModules(mainModule)
+    }
+
     // --------------------
     // ACTION
     // --------------------
-
-    /**
-     * Show EstateDetailFragment for the given estate.
-     * @param estate the estate to show details.
-     */
-    override fun showEstateDetailFragment(estate: Estate) =
-            configureAndShowFragment(FRAG_ESTATE_DETAIL, estate)
-
-    /**
-     * Show estate detail for tablet.
-     * @param estate the estate to show details.
-     * @param isUpdate true if is call for an update, false for first launching data.
-     */
-    override fun showDetailForTablet(estate: Estate, isUpdate: Boolean) {
-        if (isFrame2Visible) {
-            if (getCurrentFragment() is EstateDetailFragment)
-                estateDetailFragment?.updateEstate(estate)
-            else if (!isUpdate)
-                configureAndShowFragment(FRAG_ESTATE_DETAIL, estate)
-            estateListFragment?.scrollToNewItem(null, estate)
-        }
-    }
 
     /**
      * On click fab filter action.
@@ -446,8 +433,26 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     fun onClickFilter(v: View) {
         if (v.tag == UNFILTERED)
             configureAndShowBottomSheetFilterFragment(STATE_HALF_EXPANDED)
-        else
-            fullEstateList?.let { updateEstateList(it, false) }
+        else {
+            switchFabFilter(false)
+            removeFilters(false)
+        }
+    }
+
+    /**
+     * Show EstateDetailFragment for the given estate, with tablet mode support.
+     * @param estate the estate to show details.
+     * @param isUpdate true if is call for an update, false for first launching data.
+     */
+    override fun showEstateDetail(estate: Estate, isUpdate: Boolean) {
+        if (isFrame2Visible) {
+            if (getCurrentFragment() is EstateDetailFragment)
+                estateDetailFragment?.updateEstate(estate)
+            else if (!isUpdate)
+                configureAndShowFragment(FRAG_ESTATE_DETAIL, estate)
+            estateListFragment?.scrollToNewItem(null, estate)
+        } else
+            configureAndShowFragment(FRAG_ESTATE_DETAIL, estate)
     }
 
     /**
@@ -459,25 +464,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == STATE_HIDDEN)
                 fabFilter.fabFilterVisibility(false)
-        }
-    }
-
-    /**
-     * Apply the searched query term to filter the estate list, and send query term to corresponding fragment.
-     * @param query the query term to search.
-     */
-    private fun onSearchTextChange(query: String) = lifecycleScope.launch(Dispatchers.Main) {
-        if (this@MainActivity.query != query) {
-            this@MainActivity.query = query
-            var searchedList = fullEstateList
-            when {
-                hasFilter -> getFilterFragment()?.applyFilters(searchedList)
-                query.isNotBlank() -> {
-                    searchedList = fullEstateList?.let { SearchHelper().applySearch(it, query) }
-                    searchedList?.let { populateEstateList(it) }
-                }
-                else -> fullEstateList?.let { populateEstateList(it) }
-            }
         }
     }
 
@@ -499,7 +485,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun showHelpDocumentation() {
         val browserIntent = Intent(Intent.ACTION_VIEW)
         browserIntent.setDataAndType(Uri.parse(DOCUMENTATION_URL), "text/html")
-        startActivity(browserIntent)
+        startActivity(browserIntent) // TODO update documentation in repo
     }
 
     // -----------------
@@ -509,9 +495,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * Start manage estate activity to manage an existing estate or create a new.
      */
-    private fun showManageEstateActivity() {
+    private fun showManageEstateActivity() =
         startActivityForResult(Intent(this, ManageEstateActivity::class.java).putExtra(MANAGE_ESTATE, Estate()), RC_ESTATE)
-    }
 
     /**
      * Start Settings activity.
@@ -530,50 +515,57 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // -----------------
 
     /**
-     * Populate estate list to this activity with intent.
+     * Populate estate list to the koin instance of ManageFiltersHelper.
      * @param estateList the estate list to populate.
      */
-    override fun populateEstateListToMain(estateList: List<Estate>) {
-        intent.putParcelableArrayListExtra(FULL_ESTATE_LIST, estateList as java.util.ArrayList)
+    override fun populateEstateList(estateList: List<Estate>) {
+        filters.setFullEstateList(estateList)
     }
 
     /**
-     * Update estate list with new filtered or unfiltered estate list.
-     * @param estateList the new estate list to set.
-     * @param hasFilter true if list has filters, false otherwise.
-     */
-    override fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            this@MainActivity.hasFilter = hasFilter
-            var filteredList = estateList
-            if (query.isNotBlank())
-                filteredList = SearchHelper().applySearch(estateList, query)
-            if (hasFilter) closeFilterFragment(false)
-            fabFilter.switchFabFilter(hasFilter)
-            populateEstateList(filteredList)
-        }
-    }
-
-    /**
-     * Try to populate estate list to all fragments lists.
+     * Try to update estate list to all fragments lists.
      * @param estateList the estate list to populate.
      */
-    private fun populateEstateList(estateList: List<Estate>) {
+    override fun updateEstateList(estateList: List<Estate>) {
         estateListFragment?.updateEstateList(estateList)
-        mapsFragment?.updateEstateList(estateList)
-        manageFilteredList(estateList)
+        mapsFragment?.updateEstateList(estateList) // TODO filter not work why ???
     }
 
     /**
-     * Manage the filtered list in intent data, save if is filtered,
-     * remove intent data if is equal to full list.
-     * @param filteredList the filtered list to manage.
+     * Remove filters and reapply if there's a query.
+     * @param isReload true if is called from swipe refresh to reload data from database.
      */
-    private fun manageFilteredList(filteredList: List<Estate>) {
-        if (filteredList != fullEstateList)
-            intent.putParcelableArrayListExtra(FILTERED_ESTATE_LIST, filteredList as ArrayList)
-        else
-            intent.removeExtra(FILTERED_ESTATE_LIST)
+    override fun removeFilters(isReload: Boolean) {
+        lifecycleScope.launch(Dispatchers.Main) { filters.removeFilters(isReload) }
+    }
+
+    // -----------------
+    // UI
+    // -----------------
+
+    /**
+     * Switch fab filter state, filtered or unfiltered.
+     * @param hasFilter true if has filters, false otherwise.
+     */
+    override fun switchFabFilter(hasFilter: Boolean) {
+        fabFilter.switchFabFilter(hasFilter)
+    }
+
+    /**
+     * Switch search view visibility with animation.
+     */
+    override fun switchSearchView() =
+            ToolbarAnimHelper().switchSearchViewVisibility(this, toolbar_search_view, false)
+
+    /**
+     * Restore search view state when resume activity.
+     */
+    private fun restoreSearchView() {
+        val hasQuery = filters.getQuery.isNotBlank()
+        if (hasQuery) {
+            switchSearchView()
+            toolbar_search_view.setQuery(filters.getQuery, false)
+        }
     }
 
     // -----------------

@@ -1,7 +1,6 @@
 package org.desperu.realestatemanager.ui.main.filter
 
 import androidx.appcompat.app.AppCompatActivity
-import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainCommunication
 
 
@@ -13,22 +12,21 @@ interface FilterVMCommunication {
     /**
      * Used to allow view model to update bottom bar color. If hasFilters, set background red,
      * else use original color.
-     * @param hasFilters true if has one filter or more set, false otherwise.
+     * @param hasFilter true if has one filter or more set, false otherwise.
      */
-    fun updateBottomBarColor(hasFilters: Boolean): Unit?
-
-    /**
-     * Used to allow view model to update estate list.
-     * @param estateList the new estate list to set.
-     * @param hasFilter true if list has filter, false otherwise.
-     */
-    fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean)
+    fun updateBottomBarColor(hasFilter: Boolean): Unit?
 
     /**
      * Used to allow view model to close filter fragment.
      * @param toRemove true if remove fragment.
      */
     fun closeFilterFragment(toRemove: Boolean)
+
+    /**
+     * Used to allow view model to switch fab filter state.
+     * @param hasFilter true if has one filter or more set, false otherwise.
+     */
+    fun switchFabFilter(hasFilter: Boolean)
 }
 
 /**
@@ -45,18 +43,10 @@ class FilterVMCommunicationImpl(private val activity: AppCompatActivity): Filter
     /**
      * Used to allow view model to update bottom bar color. If hasFilters, set background red,
      * else use original color.
-     * @param hasFilters true if has one filter or more set, false otherwise.
+     * @param hasFilter true if has one filter or more set, false otherwise.
      */
-    override fun updateBottomBarColor(hasFilters: Boolean): Unit? =
-            (activity as MainCommunication).getFilterFragment()?.setBottomBarColor(hasFilters)
-
-    /**
-     * Used to allow view model to update estate list.
-     * @param estateList the new estate list to set.
-     * @param hasFilter true if list has filter, false otherwise.
-     */
-    override fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean) =
-            (activity as MainCommunication).updateEstateList(estateList, hasFilter)
+    override fun updateBottomBarColor(hasFilter: Boolean): Unit? =
+            (activity as MainCommunication).getFilterFragment()?.setBottomBarColor(hasFilter)
 
     /**
      * Used to allow view model to close filter fragment.
@@ -64,4 +54,11 @@ class FilterVMCommunicationImpl(private val activity: AppCompatActivity): Filter
      */
     override fun closeFilterFragment(toRemove: Boolean) =
             (activity as MainCommunication).closeFilterFragment(toRemove)
+
+    /**
+     * Used to allow view model to switch fab filter state.
+     * @param hasFilter true if has one filter or more set, false otherwise.
+     */
+    override fun switchFabFilter(hasFilter: Boolean) =
+            (activity as MainCommunication).switchFabFilter(hasFilter)
 }

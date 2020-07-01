@@ -15,14 +15,8 @@ import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentFilterBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.extension.createDatePickerDialog
-import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.view.adapter.NothingSelectedSpinnerAdapter
 
-
-/**
- * The argument name for bundle, to received estate list in this Fragment.
- */
-const val FILTER_ESTATE_LIST: String = "filterEstateList"
 
 /**
  * Fragment to filter estates from list.
@@ -30,9 +24,6 @@ const val FILTER_ESTATE_LIST: String = "filterEstateList"
  * @constructor Instantiates a new FilterFragment.
  */
 class FilterFragment: BaseBindingFragment() {
-
-    // FROM BUNDLE
-    private val estateList: List<Estate>? get() = arguments?.getParcelableArrayList(FILTER_ESTATE_LIST)
 
     // FOR DATA
     private lateinit var binding: FragmentFilterBinding
@@ -62,7 +53,6 @@ class FilterFragment: BaseBindingFragment() {
     private fun configureViewModel(): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter, container, false)
         viewModel = ViewModelProvider(this, ViewModelFactory(activity as AppCompatActivity)).get(FilterViewModel::class.java)
-        estateList?.let { viewModel?.setOriginalList(it) }
 
         binding.viewModel = viewModel
         return binding.root
@@ -118,21 +108,10 @@ class FilterFragment: BaseBindingFragment() {
                 return@setOnTouchListener false
             }
 
-            else -> {
-                return@setOnTouchListener false
-            }
+            else -> return@setOnTouchListener false
+
         }
     }
-
-    // -----------------
-    // ACTION
-    // -----------------
-
-    /**
-     * Apply filters with view model and helper support.
-     * @param searchedList the searched estate list to apply filters.
-     */
-    internal fun applyFilters(searchedList: List<Estate>?) = viewModel?.applyFilters(searchedList)
 
     // -----------------
     // UI

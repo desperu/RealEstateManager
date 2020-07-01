@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.utils.Utils
+import org.desperu.realestatemanager.utils.Utils.stringToDate
 import java.util.*
 
 /**
@@ -17,21 +18,22 @@ class FilterHelper {
      * Apply all filters in map filters to estate list.
      * @param originalList the original estate List.
      * @param filtersMap the map of the filters to apply.
-     * @return the estate list filtered.
+     * @return the filtered estate list.
      */
     internal suspend fun applyFilters(originalList: List<Estate>,
                                       filtersMap: Map<String, Any>
-    ): MutableList<Estate> = withContext(Dispatchers.Default) {
-
+    ): List<Estate> = withContext(Dispatchers.Default) {
         val filteredList = mutableListOf<Estate>()
-        if (filtersMap.isNotEmpty()) {
 
+        if (filtersMap.isNotEmpty()) {
             originalList.forEach estate@{ estate ->
                 var match = false
+
                 filtersMap.forEach {
                     match = getPredicate(estate, it.key, it.value)
                     if (!match) return@estate
                 }
+
                 if (match) filteredList.add(estate)
             }
         }
@@ -55,8 +57,8 @@ class FilterHelper {
             "surface" -> originalEstate.surfaceArea >= (value as List<Int>)[0] && originalEstate.surfaceArea <= value[1]
             "rooms" -> originalEstate.roomNumber >= (value as List<Int>)[0] && originalEstate.roomNumber <= value[1]
             "interestPlaces" -> Utils.deConcatenateStringToMutableList(originalEstate.interestPlaces).containsAll(value as List<String>)
-            "saleDate" -> compareDates(Utils.stringToDate(originalEstate.saleDate), value as List<String>)
-            "soldDate" -> compareDates(Utils.stringToDate(originalEstate.soldDate), value as List<String>)
+            "saleDate" -> compareDates(stringToDate(originalEstate.saleDate), value as List<String>)
+            "soldDate" -> compareDates(stringToDate(originalEstate.soldDate), value as List<String>)
             "state" -> originalEstate.state == value.toString()
             else -> throw IllegalArgumentException("Filter key not found: $key")
         }
@@ -72,8 +74,8 @@ class FilterHelper {
         var compare1 = false
         var compare2 = false
         if (estateDate != null) {
-            compare1 = if (rangeDate[0].isNotBlank()) estateDate >= Utils.stringToDate(rangeDate[0]) else true
-            compare2 = if (rangeDate[1].isNotBlank()) estateDate <= Utils.stringToDate(rangeDate[1]) else true
+            compare1 = if (rangeDate[0].isNotBlank()) estateDate >= stringToDate(rangeDate[0]) else true
+            compare2 = if (rangeDate[1].isNotBlank()) estateDate <= stringToDate(rangeDate[1]) else true
         }
         compare1 && compare2
     }

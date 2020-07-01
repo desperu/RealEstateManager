@@ -9,6 +9,12 @@ import org.desperu.realestatemanager.ui.main.filter.FilterFragment
 interface MainCommunication {
 
     /**
+     * Populate full estate list to manage filters helper.
+     * @param estateList the full estate list to populate.
+     */
+    fun populateEstateList(estateList: List<Estate>)
+
+    /**
      * Get the current fragment instance, from fragment manager.
      * @return the current Fragment instance.
      */
@@ -17,9 +23,8 @@ interface MainCommunication {
     /**
      * Update estate list after filtered or unfiltered list.
      * @param estateList the new estate list to set.
-     * @param hasFilter true if list has filter, false otherwise.
      */
-    fun updateEstateList(estateList: List<Estate>, hasFilter: Boolean)
+    fun updateEstateList(estateList: List<Estate>)
 
     /**
      * Close filter fragment.
@@ -28,23 +33,28 @@ interface MainCommunication {
     fun closeFilterFragment(toRemove: Boolean)
 
     /**
-     * Redirects the user to the EstateDetail Fragment to show estate details.
-     * @param estate the estate to show details in the EstateDetail Fragment.
+     * Used to allow view model to switch fab filter state.
+     * @param hasFilter true if has one filter or more set, false otherwise.
      */
-    fun showEstateDetailFragment(estate: Estate)
+    fun switchFabFilter(hasFilter: Boolean)
 
     /**
-     *
+     * Switch search view visibility with animation.
+     */
+    fun switchSearchView()
+
+    /**
+     * Remove filters and search query in manage filters helper.
+     * @param isReload true if is called from swipe refresh to reload data from database.
+     */
+    fun removeFilters(isReload: Boolean)
+
+    /**
+     * Redirects the user to the EstateDetail Fragment to show estate details.
      * @param estate the estate to show details.
      * @param isUpdate true if is call for an update, false for first launching data.
      */
-    fun showDetailForTablet(estate: Estate, isUpdate: Boolean)
-
-    /**
-     * Populate full estate list to main.
-     * @param estateList the full estate list to populate.
-     */
-    fun populateEstateListToMain(estateList: List<Estate>)
+    fun showEstateDetail(estate: Estate, isUpdate: Boolean)
 
     /**
      * True if activity main frame layout 2 is visible, false otherwise.

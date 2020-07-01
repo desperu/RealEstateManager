@@ -21,18 +21,21 @@ class SearchHelper {
      * @param query the searched query term.
      * @return the filtered estate list.
      */
-    internal suspend fun applySearch(originalList: List<Estate>, query: String): List<Estate> = withContext(Dispatchers.Default) {
+    internal suspend fun applySearch(originalList: List<Estate>,
+                                     query: String
+    ): List<Estate> = withContext(Dispatchers.Default) {
         val filteredList = mutableListOf<Estate>()
+
         if (query.isNotBlank()) {
             originalList.forEach { estate ->
-                if (getPredicate(estate, query.toLowerCase(Locale.ROOT))
-                        || getPredicate(estate.address, query.toLowerCase(Locale.ROOT)))
+                if (getEstatePredicate(estate, query.toLowerCase(Locale.ROOT))
+                        || getAddressPredicate(estate.address, query.toLowerCase(Locale.ROOT)))
                     filteredList.add(estate)
                 else
                     estate.imageList.forEach { image ->
-                        if (getPredicate(image, query.toLowerCase(Locale.ROOT)))
+                        if (getImagePredicate(image, query.toLowerCase(Locale.ROOT)))
                             filteredList.add(estate)
-                }
+                    }
             }
         }
         filteredList
@@ -44,7 +47,7 @@ class SearchHelper {
      * @param query the query term to search.
      * @return true if the estate value match the filter value, false otherwise.
      */
-    private suspend fun getPredicate(originalEstate: Estate, query: String): Boolean = withContext(Dispatchers.Default) {
+    private suspend fun getEstatePredicate(originalEstate: Estate, query: String): Boolean = withContext(Dispatchers.Default) {
         when {
             originalEstate.type.toLowerCase(Locale.ROOT).contains(query) -> true
             query.isInt() && originalEstate.price == query.toLong() -> true
@@ -60,12 +63,12 @@ class SearchHelper {
     }
 
     /**
-     * Check if the query term match the estate's values.
-     * @param originalAddress the estate to test.
+     * Check if the query term match the estate's address values.
+     * @param originalAddress the estate's address to test.
      * @param query the query term to search.
      * @return true if the estate value match the filter value, false otherwise.
      */
-    private suspend fun getPredicate(originalAddress: Address, query: String): Boolean = withContext(Dispatchers.Default) {
+    private suspend fun getAddressPredicate(originalAddress: Address, query: String): Boolean = withContext(Dispatchers.Default) {
         when {
             query.isInt() && originalAddress.streetNumber == query.toInt() -> true
             originalAddress.streetName.toLowerCase(Locale.ROOT).contains(query) -> true
@@ -78,12 +81,12 @@ class SearchHelper {
     }
 
     /**
-     * Check if the query term match the estate's values.
-     * @param originalImage the estate to test.
+     * Check if the query term match the estate's image values.
+     * @param originalImage the estate's image to test.
      * @param query the query term to search.
      * @return true if the estate value match the filter value, false otherwise.
      */
-    private suspend fun getPredicate(originalImage: Image, query: String): Boolean = withContext(Dispatchers.Default) {
+    private suspend fun getImagePredicate(originalImage: Image, query: String): Boolean = withContext(Dispatchers.Default) {
         when {
             originalImage.description.toLowerCase(Locale.ROOT).contains(query) -> true
             else -> false

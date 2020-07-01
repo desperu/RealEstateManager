@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
+    <data>
+        <variable
+            name="viewModel"
+            type="org.desperu.realestatemanager.ui.main.ToolbarViewModel" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:layout_height="?attr/actionBarSize">
 
-        android:theme="@style/ToolbarTheme"
-        app:titleTextColor="@android:color/white" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/toolbar_search_view"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/white"
-        android:visibility="invisible"
-        app:queryHint="@string/activity_main_search_edit_text_hint"/>
+            android:theme="@style/ToolbarTheme"
+            app:titleTextColor="@android:color/white" />
 
-</RelativeLayout>
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/toolbar_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/white"
+            android:visibility="invisible"
+            app:queryHint="@string/activity_main_search_edit_text_hint"
+            app:onQueryText="@{viewModel.getOnQueryTextListener}" />
+
+    </RelativeLayout>
+
+</layout>

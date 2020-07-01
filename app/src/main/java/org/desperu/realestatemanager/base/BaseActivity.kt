@@ -5,8 +5,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import icepick.Icepick
 import kotlinx.android.synthetic.main.toolbar.*
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
+import org.koin.core.module.Module
 
-abstract class BaseActivity: AppCompatActivity() {
+/**
+ * Abstract base activity class witch provide standard functions for activities.
+ *
+ * @param module the koin module to load for the corresponding activity.
+ */
+abstract class BaseActivity(private vararg val module: Module): AppCompatActivity() {
 
     // --------------------
     // BASE METHODS
@@ -23,12 +31,18 @@ abstract class BaseActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.setContentView(getActivityLayout())
         Icepick.restoreInstanceState(this, savedInstanceState)
+        loadKoinModules(module.toList()) // TODO useless ???
         configureDesign()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Icepick.saveInstanceState(this, outState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unloadKoinModules(listOf(*module))
     }
 
     // --------------------

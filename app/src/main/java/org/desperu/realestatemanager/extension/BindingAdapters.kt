@@ -7,6 +7,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.BindingAdapter
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
@@ -41,6 +42,15 @@ fun View.onClick(listener: View.OnClickListener) {
 @BindingAdapter("onLongClick")
 fun View.onLongClick(listener: View.OnLongClickListener) {
     setOnLongClickListener(listener)
+}
+
+/**
+ * Set on query text listener for the search view in the toolbar.
+ * @param listener the listener to set for on query text changed.
+ */
+@BindingAdapter("onQueryText")
+fun SearchView.setOnQueryText(listener: SearchView.OnQueryTextListener) {
+    setOnQueryTextListener(listener)
 }
 
 /**

@@ -13,21 +13,15 @@ interface EstateRouter {
     /**
      * Redirects the user to the EstateDetail Fragment to show estate details.
      * @param estate the estate to show details in the EstateDetail Fragment.
+     * @param isUpdate true if is call for an update, false for first launching data.
      */
-    fun openEstateDetail(estate: Estate)
+    fun openEstateDetail(estate: Estate, isUpdate: Boolean)
 
     /**
      * Redirects the user to the ManageEstate Activity to manage estate.
      * @param estate the estate to manage in the ManageEstate Activity.
      */
     fun openManageEstate(estate: Estate)
-
-    /**
-     *
-     * @param estate the estate to show details.
-     * @param isUpdate true if is call for an update, false for first launching data.
-     */
-    fun openEstateDetailForTablet(estate: Estate, isUpdate: Boolean)
 }
 
 /**
@@ -44,9 +38,10 @@ class EstateRouterImpl(private val activity: AppCompatActivity): EstateRouter {
     /**
      * Redirects the user to the EstateDetail Fragment to show estate details.
      * @param estate the estate to show details in the EstateDetail Fragment.
+     * @param isUpdate true if is call for an update, false for first launching data.
      */
-    override fun openEstateDetail(estate: Estate) =
-            (activity as MainCommunication).showEstateDetailFragment(estate)
+    override fun openEstateDetail(estate: Estate, isUpdate: Boolean) =
+            (activity as MainCommunication).showEstateDetail(estate, isUpdate)
 
     /**
      * Redirects the user to the ManageEstate Activity to manage estate.
@@ -54,12 +49,4 @@ class EstateRouterImpl(private val activity: AppCompatActivity): EstateRouter {
      */
     override fun openManageEstate(estate: Estate) =
             ManageEstateActivity.routeFromActivity(activity, estate)
-
-    /**
-     *
-     * @param estate the estate to show details.
-     * @param isUpdate true if is call for an update, false for first launching data.
-     */
-    override fun openEstateDetailForTablet(estate: Estate, isUpdate: Boolean) =
-            (activity as MainCommunication).showDetailForTablet(estate, isUpdate)
 }

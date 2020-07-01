@@ -2,6 +2,7 @@ package org.desperu.realestatemanager
 
 import android.app.Application
 import org.desperu.realestatemanager.di.module.dbModule
+import org.desperu.realestatemanager.di.module.filterModule
 import org.desperu.realestatemanager.di.module.repositoryModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,7 +20,7 @@ open class RealEstateManager: Application() {
             startKoin {
                 androidLogger()
                 androidContext(this@RealEstateManager)
-                modules(listOf(dbModule, repositoryModule))
+                modules(listOf(dbModule, repositoryModule, filterModule))
             }
         }
     }

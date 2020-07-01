@@ -73,18 +73,19 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             estate.address = addressRepository.getAddress(estate.id)
         }
         onRetrieveEstateList(estateList, false)
-        // Populate to main
-        estateList.let { communication.populateEstateListToMain(it) }
+        // Populate to ManageFiltersHelper
+        estateList.let { communication.populateEstateList(it) }
     }
 
     /**
-     * Reload estate list from database.
+     * Reload estate list from database and remove filters.
      */
-    @Suppress("unchecked_cast")
     fun reloadEstateList() {
         refreshing.set(true)
         loadEstateList()
-        estateVMList.map { it.getEstate.value }.let { communication.updateEstateList(it as List<Estate>, false) }
+        communication.removeFilters(true)
+        communication.switchFabFilter(false)
+        communication.switchSearchView()
     }
 
     /**
@@ -93,10 +94,10 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
      * @param isUpdate true if is call for an update, false for first launching data.
      */
     @Suppress("unchecked_cast")
-    private fun onRetrieveEstateList(estateList: List<Estate>, isUpdate: Boolean) {
+    private fun onRetrieveEstateList(estateList: List<Estate>, isUpdate: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         // For Recycler adapter
         estateVMList.clear()
-        estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router, this) })
+        estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router, this@EstateListViewModel) })
         estateListAdapter.get()?.updateList(estateVMList as MutableList<Any>)
         estateListAdapter.get()?.notifyDataSetChanged()
         // Set latitude and longitude for each estate address if not already do.
@@ -164,7 +165,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     private fun showDetailForTablet(estate: Estate?, isUpdate: Boolean) {
         if (estateVMList.isNotEmpty()) {
             val estateToShow = estateNotification ?: estate ?: estateVMList[0].getEstate.value
-            estateToShow?.let { switchSelectedItem(it); router.openEstateDetailForTablet(it, isUpdate) }
+            estateToShow?.let { switchSelectedItem(it); router.openEstateDetail(it, isUpdate) }
         }
     }
 

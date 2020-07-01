@@ -10,25 +10,27 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.filter.FilterHelper
-import org.desperu.realestatemanager.model.Estate
+import org.desperu.realestatemanager.filter.ManageFiltersHelper
 import org.desperu.realestatemanager.view.CustomTextView
 import org.desperu.realestatemanager.view.OnRangeChangeListener
 
 /**
  * View Model witch register and apply filters for estate list.
  *
+ * @param filters the manage filters witch manage and apply filters and search for the estate list.
  * @param communication the filter view model communication interface witch provide view model communication.
  *
  * @constructor Instantiates a new FilterViewModel.
  *
+ * @property filters the manage filters witch manage and apply filters and search for the estate list to set.
  * @property communication the filter view model communication interface witch provide view model communication to set.
  */
 @Suppress("unchecked_cast")
-class FilterViewModel(private val communication: FilterVMCommunication): ViewModel() {
+class FilterViewModel(private val filters: ManageFiltersHelper,
+                      private val communication: FilterVMCommunication
+): ViewModel() {
 
     // FOR DATA
-    private var originalList = listOf<Estate>()
     private val filtersMap = sortedMapOf<String, Any>()
     private val hasFilter: Boolean get() = filtersMap.isNotEmpty()
     private val selectedBackground = R.drawable.text_filter_selected
@@ -37,16 +39,6 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
     val saleEnd = ObservableField<String>()
     val soldBegin = ObservableField<String>()
     val soldEnd = ObservableField<String>()
-
-    // -------------
-    // SET ORIGINAL LIST
-    // -------------
-
-    /**
-     * Set original estate list.
-     * @param list the original estate list to set.
-     */
-    internal fun setOriginalList(list: List<Estate>) { originalList = list }
 
     // -------------
     // FILTERS
@@ -154,7 +146,7 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
     private val onSaleDateBeginChanged = object: TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             saleBegin.set(s.toString())
-            manageDateFilter("saleDate", s.toString(), saleEnd.get() ?: "")
+            manageDateFilter("saleDate", s.toString(), saleEnd.get() ?: String())
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -167,7 +159,7 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
     private val onSaleDateEndChanged = object: TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             saleEnd.set(s.toString())
-            manageDateFilter("saleDate", saleBegin.get() ?: "", s.toString())
+            manageDateFilter("saleDate", saleBegin.get() ?: String(), s.toString())
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -180,7 +172,7 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
     private val onSoldDateBeginChanged = object: TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             soldBegin.set(s.toString())
-            manageDateFilter("soldDate", s.toString(), soldEnd.get() ?: "")
+            manageDateFilter("soldDate", s.toString(), soldEnd.get() ?: String())
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -193,7 +185,7 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
     private val onSoldDateEndChanged = object: TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             soldEnd.set(s.toString())
-            manageDateFilter("soldDate", soldBegin.get() ?: "", s.toString())
+            manageDateFilter("soldDate", soldBegin.get() ?: String(), s.toString())
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -217,19 +209,10 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
     /**
      * Apply all filters in map filters to estate list.
      */
-    fun applyFilters() = viewModelScope.launch(Dispatchers.Default) {
-        val filteredList = FilterHelper().applyFilters(originalList, filtersMap)
-        updateEstateList(filteredList)
-    }
-
-    /**
-     * Apply all filters in map filters to searched estate list.
-     * @param searchedList the searched estate list to filter.
-     */
-    internal fun applyFilters(searchedList: List<Estate>?) = viewModelScope.launch(Dispatchers.Default) {
-        val listToFilter = searchedList ?: originalList
-        val filteredList = FilterHelper().applyFilters(listToFilter, filtersMap)
-        updateEstateList(filteredList)
+    fun applyFilters() = viewModelScope.launch(Dispatchers.Main) {
+        filters.applyFilters(filtersMap = filtersMap)
+        communication.closeFilterFragment(false)
+        communication.switchFabFilter(hasFilter)
     }
 
     /**
@@ -237,6 +220,7 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
      */
     fun removeFilters() {
         filtersMap.clear()
+        filters.clearFiltersMap()
         communication.closeFilterFragment(true)
     }
 
@@ -249,14 +233,6 @@ class FilterViewModel(private val communication: FilterVMCommunication): ViewMod
      */
     private fun updateBottomBarColor() = viewModelScope.launch(Dispatchers.Main) {
         communication.updateBottomBarColor(hasFilter)
-    }
-
-    /**
-     * Update estate list in other fragments.
-     * @param newList the new estate list to set.
-     */
-    private fun updateEstateList(newList: List<Estate>) = viewModelScope.launch(Dispatchers.Main) {
-        communication.updateEstateList(newList, hasFilter)
     }
 
     // --- GETTERS ---
