@@ -238,8 +238,9 @@ class ManageEstateFragment: BaseBindingFragment() {
     private val isLastVisible: Boolean
         get() {
             val pos = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-            val numItems: Int = recyclerView.adapter?.itemCount!!
-            return pos >= numItems - 1
+            val numItems: Int? = recyclerView.adapter?.itemCount
+            return if (numItems == null) false
+                   else pos >= numItems - 1
         }
 
     // --------------------

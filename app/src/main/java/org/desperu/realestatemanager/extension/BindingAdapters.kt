@@ -126,6 +126,10 @@ fun TextView.setStreet(estate: Estate?) {
         text = when {
             estate.address.streetNumber != 0 && estate.address.streetName.isNotBlank() ->
                 "${estate.address.streetNumber}, ${estate.address.streetName}"
+            estate.address.streetNumber != 0 && estate.address.streetName.isBlank() ->
+                "${estate.address.streetNumber}"
+            estate.address.streetNumber == 0 && estate.address.streetName.isNotBlank() ->
+                estate.address.streetName
             else -> resources.getString(R.string.fragment_estate_detail_text_no_data)
         }
     }

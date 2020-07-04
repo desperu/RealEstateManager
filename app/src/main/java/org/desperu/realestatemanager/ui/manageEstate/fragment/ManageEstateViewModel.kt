@@ -145,7 +145,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
     private fun setInterestPlace(index: Int, value: String) {
         val size = interestPlaces.value?.size
         if (size != null && size > index) interestPlaces.value?.set(index, value)
-        else interestPlaces.value?.add(index, value)
+        else interestPlaces.value?.add(value)
     }
 
     /**

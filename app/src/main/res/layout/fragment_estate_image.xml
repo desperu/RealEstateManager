@@ -16,18 +16,11 @@
         android:background="@color/colorPassedWhite"
         android:gravity="center">
 
-        <TextView
-            android:id="@+id/fragment_estate_image_text_category_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/fragment_estate_image_text_category_image"
-            style="@style/ManageCategoryTheme"
-            android:layout_margin="@dimen/default_margin"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_estate_image_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
             app:adapter="@{viewModel.getImageListAdapter.get()}"
             tools:listitem="@layout/item_manage_image"/>
 

@@ -85,7 +85,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
 
     // Swipe to refresh
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     // SeekBar
     implementation 'com.crystal:crystalrangeseekbar:1.0.0'
@@ -123,7 +123,7 @@ dependencies {
 //    implementation 'com.facebook.stetho:stetho:1.5.1'
 
     // Leak Canary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
 }
 repositories {
     mavenCentral()

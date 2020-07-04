@@ -30,13 +30,11 @@
     <!-- Manage Container Style -->
     <style name="ManageContainerTheme" parent="AppTheme">
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
-        <item name="android:background">@drawable/container_border</item>
-        <item name="android:layout_margin">@dimen/fragments_manage_estate_container_margin</item>
+        <item name="android:padding">@dimen/fragments_manage_estate_relative_padding</item>
     </style>
 
     <!-- Manage Category Style -->
-    <style name="ManageCategoryTheme" parent="ManageContainerTheme">
+    <style name="ManageCategoryTheme">
         <item name="android:layout_margin">@dimen/fragments_manage_estate_text_category_margin</item>
         <item name="android:padding">@dimen/fragments_manage_estate_text_category_padding</item>
         <item name="android:layout_gravity">center_horizontal</item>

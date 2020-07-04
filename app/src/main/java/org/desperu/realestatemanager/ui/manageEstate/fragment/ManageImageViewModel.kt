@@ -78,7 +78,7 @@ class ManageImageViewModel(private val givenImage: Image,
      * @param clickedButton the clicked button to determinate orientation rotation, right or left.
      */
     private fun turnImage(clickedButton: View) {
-        val imageView = (clickedButton.parent.parent as View).item_image_photo
+        val imageView = (clickedButton.parent.parent as View).item_manage_image_photo
         var rotation = imageView.rotation + if (clickedButton.tag == "turnRight") 90F else 270F
         while (rotation >= 360) rotation -= 360
         imageView.rotation = rotation
