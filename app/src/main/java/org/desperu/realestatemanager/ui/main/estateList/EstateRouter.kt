@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainCommunication
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.parameter.parametersOf
 
 /**
  * The estate router that allows redirection of the user.
@@ -33,7 +36,7 @@ interface EstateRouter {
  *
  * @param activity the Activity that is used to perform redirection to set.
  */
-class EstateRouterImpl(private val activity: AppCompatActivity): EstateRouter {
+class EstateRouterImpl(private val activity: AppCompatActivity): EstateRouter, KoinComponent {
 
     /**
      * Redirects the user to the EstateDetail Fragment to show estate details.
@@ -41,7 +44,7 @@ class EstateRouterImpl(private val activity: AppCompatActivity): EstateRouter {
      * @param isUpdate true if is call for an update, false for first launching data.
      */
     override fun openEstateDetail(estate: Estate, isUpdate: Boolean) =
-            (activity as MainCommunication).showEstateDetail(estate, isUpdate)
+            get<MainCommunication> { parametersOf(activity) }.showEstateDetail(estate, isUpdate)
 
     /**
      * Redirects the user to the ManageEstate Activity to manage estate.

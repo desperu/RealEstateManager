@@ -39,7 +39,7 @@ import java.lang.ref.WeakReference
 class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val imageRepository: ImageRepository,
                           private val addressRepository: AddressRepository,
-                          private val communication: MainCommunication,
+                          private var communication: MainCommunication,
                           private val router: EstateRouter,
                           private val geocoder: GeocoderService
 ): ViewModel() {
@@ -85,7 +85,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         loadEstateList()
         communication.removeFilters(true)
         communication.switchFabFilter(false)
-        communication.switchSearchView()
+        communication.switchSearchView(false, isReload = true)
     }
 
     /**
@@ -224,6 +224,16 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 
     // --- SETTERS ---
 
+    /**
+     * Set new Main Communication interface instance.
+     * @param communication the new Main Communication instance to set.
+     */
+    internal fun setMainCommunication(communication: MainCommunication) { this.communication = communication }
+
+    /**
+     * Set the estate from notification to show, needed here for tablet mode.
+     * @param estate the estate from notification to show.
+     */
     internal fun setEstateNotification(estate: Estate) { estateNotification = estate }
 
     // --- GETTERS ---

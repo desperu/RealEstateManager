@@ -18,16 +18,17 @@ class ToolbarAnimHelper {
      * Switch search view visibility, clear query and start animations.
      * @param context the context from this function is called.
      * @param searchView the search view to switch visibility.
-     * @param fromDrawer true if called from menu drawer.
+     * @param fromDrawer true if called from menu drawer, false otherwise.
+     * @param isReload true if called for a reload, false otherwise.
      */
-    internal fun switchSearchViewVisibility(context: Context, searchView: SearchView?, fromDrawer: Boolean) {
+    internal fun switchSearchViewVisibility(context: Context, searchView: SearchView?, fromDrawer: Boolean, isReload: Boolean) {
         if (searchView != null) {
             // Hide search view
             if (searchView.isShown && !fromDrawer) {
                 searchView.setQuery(null, true)
                 animSearchViewVisibility(context, searchView, false)
                 animMenuItem(context, true)
-            } else if (!searchView.isShown) { // Show search view
+            } else if (!searchView.isShown && !isReload) { // Show search view
                 animMenuItem(context, false)
                 animSearchViewVisibility(context, searchView, true)
                 searchView.onActionViewExpanded()

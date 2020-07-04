@@ -1,8 +1,6 @@
 package org.desperu.realestatemanager.di.module
 
-import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.filter.ManageFiltersHelper
-import org.desperu.realestatemanager.ui.main.MainCommunication
 import org.koin.dsl.module
 
 /**
@@ -11,7 +9,7 @@ import org.koin.dsl.module
 val filterModule = module {
 
     /**
-     * Provides a ManageFilters instance.
+     * Provides a ManageFilters single instance.
      */
     single {
         ManageFiltersHelper(

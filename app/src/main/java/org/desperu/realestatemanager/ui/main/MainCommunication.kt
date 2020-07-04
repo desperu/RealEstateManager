@@ -9,6 +9,17 @@ import org.desperu.realestatemanager.ui.main.filter.FilterFragment
 interface MainCommunication {
 
     /**
+     * Get the fragment key value.
+     */
+    fun getFragmentKey(): Int
+
+    /**
+     * Set fragment key value.
+     * @param fragmentKey the fragment key value to set.
+     */
+    fun setFragmentKey(fragmentKey: Int)
+
+    /**
      * Populate full estate list to manage filters helper.
      * @param estateList the full estate list to populate.
      */
@@ -33,6 +44,12 @@ interface MainCommunication {
     fun closeFilterFragment(toRemove: Boolean)
 
     /**
+     * Remove filters and search query in manage filters helper.
+     * @param isReload true if is called from swipe refresh to reload data from database.
+     */
+    fun removeFilters(isReload: Boolean)
+
+    /**
      * Used to allow view model to switch fab filter state.
      * @param hasFilter true if has one filter or more set, false otherwise.
      */
@@ -40,14 +57,10 @@ interface MainCommunication {
 
     /**
      * Switch search view visibility with animation.
+     * @param fromDrawer true if is called from drawer, false otherwise.
+     * @param isReload true if is called for a reload data, false otherwise.
      */
-    fun switchSearchView()
-
-    /**
-     * Remove filters and search query in manage filters helper.
-     * @param isReload true if is called from swipe refresh to reload data from database.
-     */
-    fun removeFilters(isReload: Boolean)
+    fun switchSearchView(fromDrawer: Boolean, isReload: Boolean)
 
     /**
      * Redirects the user to the EstateDetail Fragment to show estate details.

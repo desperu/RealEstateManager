@@ -15,6 +15,9 @@ import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.main.MainActivity
 import org.desperu.realestatemanager.ui.main.MainCommunication
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.parameter.parametersOf
 
 /**
  * The argument name for bundle to received the estate from notification to this Fragment.
@@ -26,7 +29,7 @@ const val ESTATE_NOTIFICATION_FOR_LIST: String = "estateNotificationForList"
  *
  * @constructor Instantiates a new EstateListFragment.
  */
-class EstateListFragment: BaseBindingFragment() {
+class EstateListFragment: BaseBindingFragment(), KoinComponent {
 
     // FOR DATA
     private lateinit var binding: FragmentEstateListBinding
@@ -58,6 +61,7 @@ class EstateListFragment: BaseBindingFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_estate_list, container, false)
 
         viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity() as MainActivity)).get(EstateListViewModel::class.java)
+        viewModel?.setMainCommunication(get { parametersOf(activity) })
         // For tablet (two frames) notification click.
         if (isFrame2Visible && estateNotification != null) showEstateNotification(estateNotification!!)
         binding.viewModel = viewModel

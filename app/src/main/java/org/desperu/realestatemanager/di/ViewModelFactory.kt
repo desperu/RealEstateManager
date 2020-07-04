@@ -3,7 +3,6 @@ package org.desperu.realestatemanager.di
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.desperu.realestatemanager.filter.ManageFiltersHelper
 import org.desperu.realestatemanager.repositories.AddressRepository
 import org.desperu.realestatemanager.repositories.EstateRepository
 import org.desperu.realestatemanager.repositories.ImageRepository
@@ -12,7 +11,6 @@ import org.desperu.realestatemanager.service.GeocoderServiceImpl
 import org.desperu.realestatemanager.service.ResourceService
 import org.desperu.realestatemanager.service.ResourceServiceImpl
 import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorViewModel
-import org.desperu.realestatemanager.ui.main.MainCommunication
 import org.desperu.realestatemanager.ui.main.ToolbarViewModel
 import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailViewModel
 import org.desperu.realestatemanager.ui.main.estateDetail.ImagesRouterImpl
@@ -25,7 +23,9 @@ import org.desperu.realestatemanager.ui.main.filter.FilterViewModel
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateVMCommunication
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateVMCommunicationImpl
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
-import org.koin.java.KoinJavaComponent.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 
 /**
@@ -38,7 +38,7 @@ import org.koin.java.KoinJavaComponent.inject
  * @property activity the activity witch ask for as view model instance to set.
  */
 @Suppress("unchecked_cast")
-class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvider.Factory {
+class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvider.Factory, KoinComponent {
 
     /**
      * Instantiates the expected ViewModel and returns it.
@@ -60,7 +60,7 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
                         inject(EstateRepository::class.java).value,
                         inject(ImageRepository::class.java).value,
                         inject(AddressRepository::class.java).value,
-                        activity as MainCommunication,
+                        get { parametersOf(activity) },
                         router as EstateRouter,
                         geocoder as GeocoderService) as T
             }
@@ -93,13 +93,13 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
             // Return a ToolbarViewModel instance.
             modelClass.isAssignableFrom(ToolbarViewModel::class.java) ->
                 return ToolbarViewModel(
-                        get(ManageFiltersHelper::class.java)) as T
+                        get()) as T
 
             // Return a FilterViewModel instance.
             modelClass.isAssignableFrom(FilterViewModel::class.java) -> {
                 val communication = FilterVMCommunicationImpl(activity)
                 return FilterViewModel(
-                        get(ManageFiltersHelper::class.java),
+                        get(),
                         communication) as T
             }
 

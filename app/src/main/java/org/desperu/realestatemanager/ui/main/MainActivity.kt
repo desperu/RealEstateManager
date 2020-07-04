@@ -8,21 +8,19 @@ import android.text.method.LinkMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.google.android.material.navigation.NavigationView
 import icepick.State
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_maps.view.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,26 +34,13 @@ import org.desperu.realestatemanager.di.module.mainModule
 import org.desperu.realestatemanager.filter.ManageFiltersHelper
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorActivity
-import org.desperu.realestatemanager.ui.main.estateDetail.ESTATE_DETAIL
-import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailFragment
-import org.desperu.realestatemanager.ui.main.estateList.ESTATE_NOTIFICATION_FOR_LIST
-import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
-import org.desperu.realestatemanager.ui.main.estateMap.ESTATE_LIST_MAP
-import org.desperu.realestatemanager.ui.main.estateMap.MAP_MODE
-import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
 import org.desperu.realestatemanager.ui.main.filter.FilterFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.ui.settings.SettingsActivity
 import org.desperu.realestatemanager.utils.*
-import org.desperu.realestatemanager.utils.MainUtils.getFragClassFromKey
-import org.desperu.realestatemanager.utils.MainUtils.getFrame
-import org.desperu.realestatemanager.utils.MainUtils.retrievedFragKeyFromClass
-import org.desperu.realestatemanager.utils.MainUtils.setTitleActivity
-import org.desperu.realestatemanager.utils.MainUtils.switchFrameSizeForTablet
 import org.desperu.realestatemanager.view.FabFilterView
 import org.koin.android.ext.android.get
-import org.koin.core.context.unloadKoinModules
 import org.koin.core.parameter.parametersOf
 
 
@@ -75,10 +60,8 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
 
     // FOR UI
     @JvmField @State var fragmentKey: Int = NO_FRAG
-    private val fm = supportFragmentManager
+    private val fm by lazy { get<MainFragmentManager> { parametersOf(this@MainActivity) } }
     private val fabFilter: FabFilterView by lazy<FabFilterView> { activity_main_fab_filter }
-    private lateinit var bottomSheet: BottomSheetBehavior<View>
-    private val isExpanded get() = bottomSheet.state == STATE_HALF_EXPANDED || bottomSheet.state == STATE_EXPANDED
     override val isFrame2Visible get() = activity_main_frame_layout2 != null
 
     // FOR DATA
@@ -145,163 +128,16 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
     // --------------
 
     /**
-     * Configure and show fragments, with back stack management to restore instance.
-     * @param fragmentKey the fragment key to show corresponding fragment.
-     * @param estate the estate to show in estate detail or maps.
+     * Return the fragment key value.
+     * @return the fragment key value.
      */
-    private fun configureAndShowFragment(fragmentKey: Int, estate: Estate?) {
-        if (this.fragmentKey != fragmentKey || estate != null) {
-            this.fragmentKey = fragmentKey
-
-            // Get the fragment class from the fragment key
-            val fragmentClass: Class<Fragment> = getFragClassFromKey(fragmentKey)
-
-            // Restore instance from back stack if there's one,
-            // else create a new instance for asked fragment.
-            val fragment = fm.findFragmentByTag(fragmentClass.simpleName) ?: fragmentClass.newInstance()
-
-            // Populate data to fragment with bundle.
-            populateDataToFragment(fragmentKey, fragment, estate)
-
-            // Clear all back stack when recall Estate List Fragment,
-            // because it's the root fragment of this activity.
-            if (fragmentKey == FRAG_ESTATE_LIST) clearAllBackStack()
-
-            // Set the corresponding activity title.
-            setTitleActivity(this, fragmentKey, isFrame2Visible)
-
-            // If the device is a tablet and asked fragment is maps, collapse list frame,
-            // else set the list frame to original size.
-            switchFrameSizeForTablet(activity_main_frame_layout, fragmentKey, isFrame2Visible)
-
-            // Adapt fab filter position or hide, depend of the asked fragment.
-            fabFilter.adaptFabFilter(fragmentKey, isFrame2Visible)
-
-            // Apply the fragment transaction in the corresponding frame.
-            fragmentTransaction(fragment, getFrame(fragmentKey, isFrame2Visible))
-        }
-    }
+    override fun getFragmentKey(): Int = fragmentKey
 
     /**
-     * Populate data to fragment with bundle.
-     * @param fragmentKey the of the asked fragment.
-     * @param fragment the fragment instance to send data.
-     * @param estate the to send to fragment.
+     * Set fragment key with the given value.
+     * @param fragmentKey the fragment key value to set.
      */
-    private fun populateDataToFragment(fragmentKey: Int, fragment: Fragment, estate: Estate?) {
-        // Populate estate to fragment with bundle if there's one.
-        if (estate != null) {
-            // Try to update estate detail data if there is an instance of fragment.
-            estateDetailFragment?.updateEstate(estate)
-            populateEstateToFragment(fragment, estate)
-        }
-        // Populate estate list to maps fragment with bundle, and set map mode.
-        if (fragmentKey == FRAG_ESTATE_MAP) setMapsFragmentBundle(fragment)
-    }
-
-    /**
-     * Show fragment in corresponding container, add to back stack and set transition.
-     * @param fragment the fragment to show in the frame layout.
-     * @param frame the unique identifier of the frame layout to set the fragment.
-     */
-    private fun fragmentTransaction(fragment: Fragment, frame: Int) {
-        if (!fm.isDestroyed) {
-            fm.beginTransaction()
-                    .replace(frame, fragment, fragment.javaClass.simpleName)
-                    .addToBackStack(fragment.javaClass.simpleName)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit()
-        }
-    }
-
-    /**
-     * Remove all fragments from the back stack.
-     */
-    private fun clearAllBackStack() { while (fm.backStackEntryCount > 0) fm.popBackStackImmediate() }
-
-    // --------------
-    // BUNDLE
-    // --------------
-
-    /**
-     * Set bundle instance only if given is null.
-     * @param bundle the bundle to set.
-     */
-    private fun setBundle(bundle: Bundle?): Bundle = bundle ?: Bundle()
-
-    /**
-     * Populate estate to fragment with bundle.
-     * @param fragment the fragment instance to send estate.
-     * @param estate the estate to populate.
-     */
-    private fun populateEstateToFragment(fragment: Fragment, estate: Estate) {
-        fragment.arguments = setBundle(fragment.arguments)
-        val bundleKey = if (fragment is EstateDetailFragment) ESTATE_DETAIL else ESTATE_NOTIFICATION_FOR_LIST
-        fragment.arguments?.putParcelable(bundleKey, estate)
-    }
-
-    /**
-     * Populate estate list to fragment with bundle.
-     * @param fragment the fragment instance to send estate.
-     */
-    private fun populateEstateListToFragment(fragment: Fragment) {
-        fragment.arguments = setBundle(fragment.arguments)
-        fragment.arguments?.putParcelableArrayList(ESTATE_LIST_MAP,
-                (filters.getFilteredEstateList ?: filters.getFullEstateList) as ArrayList?)
-    }
-
-    /**
-     * Set Maps Fragment Bundle to send data, populate estate list and set the map mode.
-     * @param fragment the fragment instance to send data.
-     */
-    private fun setMapsFragmentBundle(fragment: Fragment) {
-        fragment.arguments = setBundle(fragment.arguments)
-        populateEstateListToFragment(fragment)
-        fragment.arguments?.putInt(MAP_MODE, FULL_MODE)
-    }
-
-    // ----------------------------
-    // BOTTOM SHEET FILTER FRAGMENT
-    // ----------------------------
-
-    /**
-     * Configure and show bottom sheet filter fragment.
-     * @param state the state to open the bottom sheet.
-     */
-    private fun configureAndShowBottomSheetFilterFragment(state: Int) {
-        fabFilter.fabFilterVisibility(true)
-        configureAndShowFilterFragment()
-        bottomSheet = from(activity_main_bottom_sheet)
-        bottomSheet.state = state
-        bottomSheet.addBottomSheetCallback(bottomSheetCallback)
-    }
-
-    /**
-     * Configure and show filter fragment.
-     */
-    private fun configureAndShowFilterFragment() {
-        var fragment = getFilterFragment()
-        if (fragment == null) {
-            fragment = FilterFragment()
-            fm.beginTransaction()
-                    .replace(activity_main_bottom_sheet.id, fragment, fragment.javaClass.simpleName)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commit()
-        }
-        fragment.scrollToTop()
-    }
-
-    /**
-     * Close bottom sheet filter fragment (hide).
-     * @param toRemove true if remove fragment.
-     */
-    override fun closeFilterFragment(toRemove: Boolean) {
-        if (toRemove)
-            fm.findFragmentById(R.id.activity_main_bottom_sheet)?.let { fm.beginTransaction().remove(it).commit() }
-
-        bottomSheet.state = STATE_HIDDEN
-        fabFilter.fabFilterVisibility(false)
-    }
+    override fun setFragmentKey(fragmentKey: Int) { this.fragmentKey = fragmentKey }
 
     // -----------------
     // METHODS OVERRIDE
@@ -309,20 +145,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
 
     override fun onResume() {
         super.onResume()
-        // Show estate notification if there's one.
-        if (estateNotification != null) {
-            if (isFrame2Visible) configureAndShowFragment(FRAG_ESTATE_LIST, estateNotification)
-            else configureAndShowFragment(FRAG_ESTATE_DETAIL, estateNotification)
-            intent.removeExtra(ESTATE_NOTIFICATION)
-        // Resume last visible fragment if there's one, else launch estate list frag.
-        } else {
-            val tempFragmentKey = fragmentKey
-            fragmentKey = NO_FRAG
-            configureAndShowFragment(
-                    if (tempFragmentKey != NO_FRAG) tempFragmentKey
-                    else FRAG_ESTATE_LIST,
-                    null)
-        }
+        fm.resumeFragment(estateNotification)
         restoreSearchView()
         switchFabFilter(filters.hasFilters)
     }
@@ -335,12 +158,12 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
-            R.id.activity_main_menu_drawer_estate_list -> configureAndShowFragment(FRAG_ESTATE_LIST, null)
-            R.id.activity_main_menu_drawer_estate_map -> configureAndShowFragment(FRAG_ESTATE_MAP, null)
+            R.id.activity_main_menu_drawer_estate_list -> fm.configureAndShowFragment(FRAG_ESTATE_LIST, null)
+            R.id.activity_main_menu_drawer_estate_map -> fm.configureAndShowFragment(FRAG_ESTATE_MAP, null)
             R.id.activity_main_menu_drawer_estate_new -> showManageEstateActivity()
             R.id.activity_main_menu_drawer_Search -> {
-                switchSearchView()
-                configureAndShowBottomSheetFilterFragment(STATE_EXPANDED)
+                switchSearchView(true, isReload = false)
+                fm.configureAndShowBottomSheetFilterFragment(STATE_EXPANDED)
             }
             R.id.activity_main_menu_drawer_credit -> showCreditSimulatorActivity()
             R.id.activity_main_menu_drawer_settings -> showSettingsActivity()
@@ -359,7 +182,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.activity_main_menu_add -> showManageEstateActivity()
-            R.id.activity_main_menu_search -> switchSearchView()
+            R.id.activity_main_menu_search -> switchSearchView(false, isReload = false)
         }
 
         return super.onOptionsItemSelected(item)
@@ -371,39 +194,36 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
             activity_main_drawer_layout.closeDrawer(GravityCompat.START)
 
         // If bottom sheet is state expanded , hide it.
-        ::bottomSheet.isInitialized && isExpanded ->
+        fm.isBottomSheetInitialized && fm.isExpanded ->
             closeFilterFragment(false)
 
         // If search view is shown, hide it.
         toolbar_search_view != null && toolbar_search_view.isShown ->
-            switchSearchView()
+            switchSearchView(false, isReload = false)
 
         // If map is expended in estate detail fragment, collapse it.
-        mapsFragmentChildDetail?.view?.fragment_maps_fullscreen_button?.tag == FULL_SIZE ->
-            MapMotionLayout(this, mapsFragmentChildDetail?.view).switchMapSize()
+        fm.mapsFragmentChildDetail?.view?.findViewById<ImageButton>(R.id.fragment_maps_fullscreen_button)?.tag == FULL_SIZE ->
+            MapMotionLayout(this, fm.mapsFragmentChildDetail?.view).switchMapSize()
 
         // If current fragment is EstateListFragment, remove it and call super to finish activity.
         fragmentKey == FRAG_ESTATE_LIST -> {
-            clearAllBackStack()
+            fm.clearAllBackStack()
             super.onBackPressed()
         }
         // If device is tablet and frag is not map frag, remove the two frags and call super to finish activity.
         isFrame2Visible && fragmentKey != FRAG_ESTATE_MAP -> {
-            clearAllBackStack()
+            fm.clearAllBackStack()
             super.onBackPressed()
         }
         // Else show previous fragment in back stack, and set fragmentKey with restored fragment.
         else -> {
             super.onBackPressed()
-            getCurrentFragment()?.let { fragmentKey = retrievedFragKeyFromClass(it::class.java) }
-            setTitleActivity(this, fragmentKey, isFrame2Visible)
-            switchFrameSizeForTablet(activity_main_frame_layout, fragmentKey, isFrame2Visible)
-            fabFilter.adaptFabFilter(fragmentKey, isFrame2Visible)
+            fm.fragmentBack()
         }
     }
 
     override fun onUserInteraction() {
-        super.onUserInteraction()
+        super.onUserInteraction() // TODO create function ??
         // To check nav drawer item when fragment change.
         if (fragmentKey in 0..1)
             activity_main_nav_view.menu.getItem(fragmentKey).isChecked = true
@@ -413,13 +233,8 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
 
     override fun onSaveInstanceState(outState: Bundle) {
         // To prevent ui mistake when turn device and filter frag isn't null, it's shown in half expended mode if not remove.
-        if (::bottomSheet.isInitialized) closeFilterFragment(true)
+        if (fm.isBottomSheetInitialized) closeFilterFragment(true)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unloadKoinModules(mainModule)
     }
 
     // --------------------
@@ -432,7 +247,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
      */
     fun onClickFilter(v: View) {
         if (v.tag == UNFILTERED)
-            configureAndShowBottomSheetFilterFragment(STATE_HALF_EXPANDED)
+            fm.configureAndShowBottomSheetFilterFragment(STATE_HALF_EXPANDED)
         else {
             switchFabFilter(false)
             removeFilters(false)
@@ -444,28 +259,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
      * @param estate the estate to show details.
      * @param isUpdate true if is call for an update, false for first launching data.
      */
-    override fun showEstateDetail(estate: Estate, isUpdate: Boolean) {
-        if (isFrame2Visible) {
-            if (getCurrentFragment() is EstateDetailFragment)
-                estateDetailFragment?.updateEstate(estate)
-            else if (!isUpdate)
-                configureAndShowFragment(FRAG_ESTATE_DETAIL, estate)
-            estateListFragment?.scrollToNewItem(null, estate)
-        } else
-            configureAndShowFragment(FRAG_ESTATE_DETAIL, estate)
-    }
-
-    /**
-     * Listener for bottom sheet, callback when state changed.
-     */
-    private val bottomSheetCallback = object : BottomSheetCallback() {
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == STATE_HIDDEN)
-                fabFilter.fabFilterVisibility(false)
-        }
-    }
+    override fun showEstateDetail(estate: Estate, isUpdate: Boolean) = fm.showEstateDetail(estate, isUpdate)
 
     /**
      * Show about dialog.
@@ -496,7 +290,8 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
      * Start manage estate activity to manage an existing estate or create a new.
      */
     private fun showManageEstateActivity() =
-        startActivityForResult(Intent(this, ManageEstateActivity::class.java).putExtra(MANAGE_ESTATE, Estate()), RC_ESTATE)
+        startActivityForResult(Intent(this, ManageEstateActivity::class.java)
+                .putExtra(MANAGE_ESTATE, Estate()), RC_ESTATE)
 
     /**
      * Start Settings activity.
@@ -527,8 +322,8 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
      * @param estateList the estate list to populate.
      */
     override fun updateEstateList(estateList: List<Estate>) {
-        estateListFragment?.updateEstateList(estateList)
-        mapsFragment?.updateEstateList(estateList) // TODO filter not work why ???
+        fm.estateListFragment?.updateEstateList(estateList)
+        fm.getMapsFragment()?.updateEstateList(estateList)
     }
 
     /**
@@ -553,9 +348,11 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
 
     /**
      * Switch search view visibility with animation.
+     * @param fromDrawer true if is called from drawer, false otherwise.
+     * @param isReload true if is called for a reload data, false otherwise.
      */
-    override fun switchSearchView() =
-            ToolbarAnimHelper().switchSearchViewVisibility(this, toolbar_search_view, false)
+    override fun switchSearchView(fromDrawer: Boolean, isReload: Boolean) =
+            ToolbarAnimHelper().switchSearchViewVisibility(this, toolbar_search_view, fromDrawer, isReload)
 
     /**
      * Restore search view state when resume activity.
@@ -563,10 +360,16 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
     private fun restoreSearchView() {
         val hasQuery = filters.getQuery.isNotBlank()
         if (hasQuery) {
-            switchSearchView()
+            switchSearchView(false, isReload = false)
             toolbar_search_view.setQuery(filters.getQuery, false)
         }
     }
+
+    /**
+     * Close bottom sheet filter fragment (hide).
+     * @param toRemove true if remove fragment.
+     */
+    override fun closeFilterFragment(toRemove: Boolean) = fm.closeFilterFragment(toRemove)
 
     // -----------------
     // UTILS
@@ -585,40 +388,18 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
             val newEstate: Estate? = data?.getParcelableExtra(NEW_ESTATE)
 
             // Add or update estate in list of view model and recycler view, if an instance was found.
-            val position = newEstate?.let { estateListFragment?.addOrUpdateEstate(it) }
+            val position = newEstate?.let { fm.estateListFragment?.addOrUpdateEstate(it) }
             // If an estate was added or updated, position is not null, scroll the recycler to the estate position.
-            position?.let { estateListFragment?.scrollToNewItem(it, newEstate) }
+            position?.let { fm.estateListFragment?.scrollToNewItem(it, newEstate) }
 
             // Update estate detail data, with it's view model.
-            newEstate?.let { estateDetailFragment?.updateEstate(it) }
+            newEstate?.let { fm.estateDetailFragment?.updateEstate(it) }
         }
     }
-
-    // Try to get Fragment instance from current and back stack, if not found value was null.
-    private val estateListFragment
-        get() = (fm.findFragmentByTag(EstateListFragment::class.java.simpleName) as EstateListFragment?)
-
-
-    private val estateDetailFragment
-        get() = (fm.findFragmentByTag(EstateDetailFragment::class.java.simpleName) as EstateDetailFragment?)
-
-    private val mapsFragment
-        get() = (fm.findFragmentByTag(MapsFragment::class.java.simpleName) as MapsFragment?)
-
-    // Try to get MapsFragment instance child of EstateDetailFragment.
-    private val mapsFragmentChildDetail
-        get() = (getCurrentFragment()?.childFragmentManager
-                ?.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?)
-
-    /**
-     * Return the current fragment instance attached to frame layout 1.
-     * @return the current fragment instance attached to frame layout 1.
-     */
-    private fun getCurrentFragment(): Fragment? = fm.findFragmentById(getFrame(fragmentKey, isFrame2Visible))
 
     /**
      * Get Filter Fragment instance.
      * @return the current filter fragment instance.
      */
-    override fun getFilterFragment(): FilterFragment? = fm.findFragmentById(R.id.activity_main_bottom_sheet) as FilterFragment?
+    override fun getFilterFragment(): FilterFragment? = fm.getFilterFragment()
 }
