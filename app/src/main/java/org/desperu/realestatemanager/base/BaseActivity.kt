@@ -31,7 +31,7 @@ abstract class BaseActivity(private vararg val module: Module): AppCompatActivit
         super.onCreate(savedInstanceState)
         this.setContentView(getActivityLayout())
         Icepick.restoreInstanceState(this, savedInstanceState)
-        loadKoinModules(module.toList()) // TODO useless ???
+        loadKoinModules(module.toList())
         configureDesign()
     }
 

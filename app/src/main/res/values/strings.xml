@@ -26,10 +26,6 @@
     <string name="fragment_estate_detail_text_subcategory_location">Location</string>
     <string name="fragment_estate_detail_text_subcategory_surface">Surface</string>
     <string name="fragment_estate_detail_text_subcategory_room_number">Number of rooms</string>
-    <string name="fragment_estate_detail_text_subcategory_bathroom_number">Number of bathrooms</string>
-    <string name="fragment_estate_detail_text_subcategory_bedroom_number">Number of bedrooms</string>
-    <string name="fragment_estate_detail_text_subcategory_sale_date">Sale date</string>
-    <string name="fragment_estate_detail_text_subcategory_real_estate_agent">Real Estate Agent</string>
     <!-- Maps Fragment -->
     <string name="fragment_maps_popup_title_permission_location">This application need location permission.</string>
     <string name="fragment_maps_text_no_google_play_services_available">Congratulation!! You don\'t have google play services, it\'s spies services that\'s register all your activities and data. You don\'t have google map, so there\'s no map available in this application. In future version, we will add OpenStreetMap, witch provide a full secure service!!</string>
@@ -94,7 +90,6 @@
     <string name="fragment_estate_address_text_city">City</string>
     <string name="fragment_estate_address_text_country">Country</string>
     <string name="fragment_estate_address_text_category_interest_places">Interest Places</string>
-    <string name="fragment_estate_address_text_interest_places_add">Add Interest Places</string>
     <!-- Estate Sale Fragment -->
     <string name="fragment_estate_sale_text_category_sale_data">Sale Data</string>
     <string name="fragment_estate_sale_text_sale_date">Sale Date</string>

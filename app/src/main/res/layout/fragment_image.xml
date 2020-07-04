@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
-            android:scaleType="centerCrop"
             android:rotation="@{viewModel.getImage.rotation}"
             app:imageUri="@{viewModel.getImage.imageUri}"
             app:layout_constraintStart_toStartOf="parent"
