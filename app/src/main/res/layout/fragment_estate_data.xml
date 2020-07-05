@@ -23,11 +23,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fragments_manage_estate_container_margin"
-                app:elevation="@dimen/default_elevation"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/fragments_manage_estate_container_corner_radius"
-                app:cardPreventCornerOverlap="true">
+                style="@style/ManageCardViewTheme">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -225,11 +221,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fragments_manage_estate_container_margin"
-                app:elevation="@dimen/default_elevation"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/fragments_manage_estate_container_corner_radius"
-                app:cardPreventCornerOverlap="true">
+                style="@style/ManageCardViewTheme">
 
                 <LinearLayout
                     android:layout_width="match_parent"

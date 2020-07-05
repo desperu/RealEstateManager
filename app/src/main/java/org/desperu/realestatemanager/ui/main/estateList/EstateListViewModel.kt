@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.ui.main.estateList
 
 import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,6 @@ import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.GeocoderService
 import org.desperu.realestatemanager.ui.main.MainCommunication
 import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
-import java.lang.ref.WeakReference
 
 /**
  * View Model witch provide data for estate list.
@@ -45,7 +45,7 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
 ): ViewModel() {
 
     // FOR DATA
-    private var estateListAdapter = WeakReference(RecyclerViewAdapter(
+    private var estateListAdapter = MutableLiveData<RecyclerViewAdapter>(RecyclerViewAdapter(
             if (communication.isFrame2Visible) R.layout.item_estate
             else R.layout.item_estate_large))
     private val estateVMList = mutableListOf<EstateViewModel>()
@@ -98,8 +98,8 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
         // For Recycler adapter
         estateVMList.clear()
         estateVMList.addAll(estateList.map { estate -> EstateViewModel(estate, router, this@EstateListViewModel) })
-        estateListAdapter.get()?.updateList(estateVMList as MutableList<Any>)
-        estateListAdapter.get()?.notifyDataSetChanged()
+        estateListAdapter.value?.updateList(estateVMList as MutableList<Any>)
+        estateListAdapter.value?.notifyDataSetChanged()
         // Set latitude and longitude for each estate address if not already do.
         estateList.forEach { setLatLngInAddress(it.address, false) }
         updateUi(null, isUpdate)
@@ -127,11 +127,11 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
             if (oldEstateVM == null) { // Add new element in first position
                 position = 0
                 estateVMList.add(position, EstateViewModel(estate, router, this))
-                estateListAdapter.get()?.notifyItemInserted(position)
+                estateListAdapter.value?.notifyItemInserted(position)
             } else { // Update existing element at his position
                 position = estateVMList.indexOf(oldEstateVM)
                 estateVMList[position] = EstateViewModel(estate, router, this)
-                estateListAdapter.get()?.notifyItemChanged(position)
+                estateListAdapter.value?.notifyItemChanged(position)
             }
             updateUi(estate, true)
             // Set latitude and longitude for the address.

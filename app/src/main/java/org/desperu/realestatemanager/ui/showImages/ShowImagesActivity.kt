@@ -113,6 +113,7 @@ class ShowImagesActivity: BaseActivity() {
      * Show toolbar when click on fragment.
      * @param v the clicked view.
      */
+    @Suppress("unused_parameter")
     fun showToolbar(v: View) {
         activity_show_images_toolbar.visibility = View.VISIBLE
         Handler().postDelayed( { activity_show_images_toolbar.visibility = View.INVISIBLE }, 3000)

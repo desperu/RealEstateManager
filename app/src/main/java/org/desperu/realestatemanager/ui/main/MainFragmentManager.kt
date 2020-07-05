@@ -287,7 +287,7 @@ class MainFragmentManager(private val activity: AppCompatActivity,
     // Try to get MapsFragment instance child of EstateDetailFragment.
     internal val mapsFragmentChildDetail
         get() = (getCurrentFragment()?.childFragmentManager
-                ?.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?)
+                ?.findFragmentById(R.id.fragment_estate_detail_frame_map) as MapsFragment?)
 
     /**
      * Return the current fragment instance attached to frame layout 1.

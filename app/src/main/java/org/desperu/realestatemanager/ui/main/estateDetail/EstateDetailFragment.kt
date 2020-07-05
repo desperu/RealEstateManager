@@ -88,12 +88,12 @@ class EstateDetailFragment: BaseBindingFragment() {
      * Configure and show maps fragment if google play services are available.
      */
     private fun configureAndShowMapFragment() {
-        mapsFragment = childFragmentManager.findFragmentById(R.id.fragment_estate_detail_container_map) as MapsFragment?
+        mapsFragment = childFragmentManager.findFragmentById(R.id.fragment_estate_detail_frame_map) as MapsFragment?
         if (mapsFragment == null) {
             mapsFragment = MapsFragment()
             setMapsFragmentBundle()
             childFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_estate_detail_container_map, mapsFragment!!)
+                    .replace(R.id.fragment_estate_detail_frame_map, mapsFragment!!)
                     .commit()
         }
     }

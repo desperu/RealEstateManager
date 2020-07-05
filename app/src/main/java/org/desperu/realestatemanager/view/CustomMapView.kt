@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewParent
 import com.google.android.gms.maps.MapView
+import kotlinx.android.synthetic.main.fragment_estate_detail.view.*
 
 /**
  * Custom map view to intercept touch event when it's in scroll view, and consume touch event
@@ -35,22 +36,27 @@ class CustomMapView @JvmOverloads constructor(context: Context?, attrs: Attribut
      * @return Return the super function returned value.
      */
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        val isScrollChild = rootView.fragment_estate_detail_scrollview != null
+
         when (event.action) {
-
-            MotionEvent.ACTION_DOWN -> if (null == mViewParent) {
-                parent.requestDisallowInterceptTouchEvent(true)
-            } else {
-                mViewParent!!.requestDisallowInterceptTouchEvent(true)
+            MotionEvent.ACTION_DOWN -> {
+                // To allow open menu drawer when not scroll child.
+                val toIntercept = if (!isScrollChild) event.rawX < 1f else true
+                dispatchTouchEvent(toIntercept)
             }
-
-            MotionEvent.ACTION_UP -> if (null == mViewParent) {
-                parent.requestDisallowInterceptTouchEvent(false)
-            } else {
-                mViewParent!!.requestDisallowInterceptTouchEvent(false)
-            }
-
+            MotionEvent.ACTION_UP -> dispatchTouchEvent(false)
             else -> {}
         }
         return super.onInterceptTouchEvent(event)
     }
+
+    /**
+     * Dispatch intercepted touch event action.
+     * @param toIntercept true if this map view must consume this event, false otherwise.
+     */
+    private fun dispatchTouchEvent(toIntercept: Boolean) =
+            if (null == mViewParent)
+                parent.requestDisallowInterceptTouchEvent(toIntercept)
+            else
+                mViewParent!!.requestDisallowInterceptTouchEvent(toIntercept)
 }

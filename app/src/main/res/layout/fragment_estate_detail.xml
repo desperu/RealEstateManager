@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:fillViewport="true"
         android:clipChildren="false"
+        android:background="@color/colorPassedWhite"
         tools:ignore="UnusedAttribute">
 
         <androidx.constraintlayout.motion.widget.MotionLayout
@@ -32,347 +33,424 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_title"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/ManageCardViewTheme">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/fragment_estate_detail_text_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/default_large_margin"
+                                android:layout_marginEnd="@dimen/default_large_margin"
+                                android:layout_marginTop="@dimen/default_large_margin"
+                                android:layout_marginBottom="@dimen/default_margin"
+                                android:gravity="center"
+                                android:ellipsize="end"
+                                android:textStyle="bold"
+                                android:textColor="@color/colorLightDark"
+                                android:textSize="@dimen/fragment_estate_detail_text_title_size"
+                                app:setTitle="@{viewModel.getEstate}"/>
+
+                            <TextView
+                                android:id="@+id/fragment_estate_detail_text_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/default_large_margin"
+                                android:layout_marginBottom="@dimen/default_large_margin"
+                                android:layout_gravity="center_horizontal"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/holo_green_dark"
+                                android:textSize="@dimen/fragment_estate_detail_text_title_size"
+                                app:setPrice="@{viewModel.getEstate.price}"/>
+
+                        </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_large_margin"
-                    android:layout_marginEnd="@dimen/default_large_margin"
-                    android:layout_marginTop="@dimen/default_large_margin"
-                    android:layout_marginBottom="@dimen/default_margin"
-                    android:gravity="center"
-                    android:ellipsize="end"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
-                    app:setTitle="@{viewModel.getEstate}"/>
+                    android:layout_marginVertical="@dimen/default_margin"
+                    android:orientation="vertical"
+                    android:background="@android:color/white"
+                    android:elevation="@dimen/default_elevation">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/default_large_margin"
-                    android:layout_gravity="center_horizontal"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_green_dark"
-                    android:textSize="@dimen/fragment_estate_detail_text_title_size"
-                    app:setPrice="@{viewModel.getEstate.price}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_category_images"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/default_large_margin"
+                        android:text="@string/fragment_estate_detail_text_category_images"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_category_size"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_category_images"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_large_margin"
-                    android:text="@string/fragment_estate_detail_text_category_images"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_category_size"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/fragment_estate_detail_recycler_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_large_margin"
+                        android:orientation="horizontal"
+                        app:adapter="@{viewModel.getImageListAdapter}"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/fragment_estate_detail_recycler_images"
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/default_large_margin"
-                    android:orientation="horizontal"
-                    app:adapter="@{viewModel.getImageListAdapter}"/>
+                    style="@style/ManageCardViewTheme">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_category_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_large_margin"
-                    android:text="@string/fragment_estate_detail_text_category_description"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_category_size"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/default_large_margin"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    app:setValue="@{viewModel.getEstate.description}" />
+                        <TextView
+                            android:id="@+id/fragment_estate_detail_text_category_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_large_margin"
+                            android:text="@string/fragment_estate_detail_text_category_description"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorLightDark"
+                            android:textSize="@dimen/fragment_estate_detail_text_category_size"/>
+
+                        <TextView
+                            android:id="@+id/fragment_estate_detail_text_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/default_large_margin"
+                            android:layout_marginBottom="@dimen/default_large_margin"
+                            android:textColor="@color/colorLightDark"
+                            android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                            app:setValue="@{viewModel.getEstate.description}" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:id="@+id/fragment_estate_detail_container_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_large_margin"
-                android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fragment_estate_detail_container_map"
                 app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images"
-                app:layout_constraintBottom_toBottomOf="@id/fragment_estate_detail_container_map">
+                app:layout_constraintBottom_toTopOf="@id/fragment_estate_detail_container_sale_data"
+                style="@style/ManageCardViewTheme">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_subcategory_location"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:text="@string/fragment_estate_detail_text_subcategory_location"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_location_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/default_margin">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_street"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    app:setStreet="@{viewModel.getEstate}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_subcategory_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:text="@string/fragment_estate_detail_text_subcategory_location"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_baseline_location_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark" />
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_flat_building"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    app:setAddress="@{viewModel.getEstate.address.flatBuilding}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_street"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        app:setStreet="@{viewModel.getEstate}"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    app:setAddress="@{viewModel.getEstate.address.city}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_flat_building"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        app:setAddress="@{viewModel.getEstate.address.flatBuilding}"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_postal_code"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    app:setAddress="@{`` + viewModel.getEstate.address.postalCode}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        app:setAddress="@{viewModel.getEstate.address.city}"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_country"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    app:setAddress="@{viewModel.getEstate.address.country}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_postal_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        app:setAddress="@{`` + viewModel.getEstate.address.postalCode}"/>
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        app:setAddress="@{viewModel.getEstate.address.country}"/>
 
-            <FrameLayout
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/fragment_estate_detail_container_map"
-                android:layout_width="@dimen/fragment_estate_detail_container_map_width"
-                android:layout_height="@dimen/fragment_estate_detail_container_map_height"
-                android:layout_margin="@dimen/default_large_margin"
-                android:isScrollContainer="false"
-                android:outlineProvider="paddedBounds"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images" />
-
-            <LinearLayout
-                android:id="@+id/fragment_estate_detail_container_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_large_margin"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images"
+                style="@style/ManageCardViewTheme">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_subcategory_surface"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_estate_detail_text_subcategory_surface"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_surface_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark"/>
+                <FrameLayout
+                    android:id="@+id/fragment_estate_detail_frame_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:isScrollContainer="false"
+                    android:outlineProvider="paddedBounds" />
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_surface"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textColor="@color/colorLightDark"
-                    android:tag="surfaceDetail"
-                    app:setValue="@{`` + viewModel.getEstate.surfaceArea}"/>
+            </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_subcategory_room_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_estate_detail_text_subcategory_room_number"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_home_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark" />
-
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_room_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textColor="@color/colorLightDark"
-                    app:setValue="@{`` + viewModel.getEstate.roomNumber}"/>
-
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_subcategory_interest_places"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_estate_address_text_category_interest_places"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_local_activity_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark"/>
-
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_interest_places"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textColor="@color/colorLightDark"
-                    app:setValue="@{viewModel.getEstate.interestPlaces}"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:id="@+id/fragment_estate_detail_container_sale_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_large_margin"
-                android:orientation="vertical"
-                app:layout_constraintStart_toEndOf="@id/fragment_estate_detail_container_data"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fragment_estate_detail_container_data"
+                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"
+                app:layout_constraintBottom_toBottomOf="parent"
+                style="@style/ManageCardViewTheme"
+                android:layout_marginTop="@dimen/default_large_margin">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/default_margin">
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_subcategory_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_estate_sale_text_state"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_baseline_home_work_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textColor="@color/colorLightDark"
+                        app:setValue="@{viewModel.getEstate.state}"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_subcategory_sale_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_estate_sale_text_sale_date"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_baseline_today_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_sale_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textColor="@color/colorLightDark"
+                        app:setValue="@{viewModel.getEstate.saleDate}"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_subcategory_sold_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_estate_sale_text_sold_out_date"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_baseline_event_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_sold_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textColor="@color/colorLightDark"
+                        app:setValue="@{viewModel.getEstate.soldDate}"/>
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_subcategory_real_estate_agent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_estate_sale_text_real_estate_agent"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_baseline_person_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark" />
+
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_real_estate_agent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
+                        android:maxLines="3"
+                        android:ellipsize="end"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textColor="@color/colorLightDark"
+                        app:setValue="@{viewModel.getEstate.realEstateAgent}"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fragment_estate_detail_container_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/fragment_estate_detail_container_sale_data"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintBottom_toBottomOf="parent"
+                style="@style/ManageCardViewTheme">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_subcategory_state"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fragment_estate_sale_text_state"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_home_work_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark"/>
+                    android:orientation="vertical"
+                    android:padding="@dimen/default_margin">
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textColor="@color/colorLightDark"
-                    app:setValue="@{viewModel.getEstate.state}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_subcategory_surface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_estate_detail_text_subcategory_surface"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:maxLength="25"
+                        android:drawableStart="@drawable/ic_baseline_surface_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_subcategory_sale_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_estate_sale_text_sale_date"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_today_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_surface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:maxLength="5"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textColor="@color/colorLightDark"
+                        android:tag="surfaceDetail"
+                        app:setValue="@{`` + viewModel.getEstate.surfaceArea}"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_sale_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textColor="@color/colorLightDark"
-                    app:setValue="@{viewModel.getEstate.saleDate}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_subcategory_room_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_estate_detail_text_subcategory_room_number"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_baseline_home_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark" />
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_subcategory_sold_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_estate_sale_text_sold_out_date"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_event_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_room_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:maxLength="4"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textColor="@color/colorLightDark"
+                        app:setValue="@{`` + viewModel.getEstate.roomNumber}"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_sold_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textColor="@color/colorLightDark"
-                    app:setValue="@{viewModel.getEstate.soldDate}"/>
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_subcategory_interest_places"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_estate_address_text_category_interest_places"
+                        android:textColor="@color/colorLightDark"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_baseline_local_activity_black_24"
+                        android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
+                        android:drawableTint="@color/colorLightDark"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_subcategory_real_estate_agent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_estate_sale_text_real_estate_agent"
-                    android:textColor="@color/colorLightDark"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_baseline_person_black_24"
-                    android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
-                    android:drawableTint="@color/colorLightDark" />
+                    <TextView
+                        android:id="@+id/fragment_estate_detail_text_interest_places"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="@dimen/fragments_manage_estate_edit_surface_width"
+                        android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
+                        android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
+                        android:ellipsize="end"
+                        android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
+                        android:textColor="@color/colorLightDark"
+                        app:setValue="@{viewModel.getEstate.interestPlaces}"/>
 
-                <TextView
-                    android:id="@+id/fragment_estate_detail_text_real_estate_agent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/fragment_estate_detail_text_subcategory_value_margin_start"
-                    android:layout_marginBottom="@dimen/fragment_estate_detail_text_subcategory_value_margin_bottom"
-                    android:maxWidth="@dimen/fragment_estate_detail_text_max_width"
-                    android:maxLines="3"
-                    android:ellipsize="end"
-                    android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
-                    android:textColor="@color/colorLightDark"
-                    app:setValue="@{viewModel.getEstate.realEstateAgent}"/>
+                </LinearLayout>
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 

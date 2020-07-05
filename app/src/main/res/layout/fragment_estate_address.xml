@@ -21,11 +21,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fragments_manage_estate_container_margin"
-                app:elevation="@dimen/default_elevation"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/fragments_manage_estate_container_corner_radius"
-                app:cardPreventCornerOverlap="true">
+                style="@style/ManageCardViewTheme">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,14 +75,16 @@
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="2"
                             style="@style/ManageContainerTheme">
 
                             <TextView
                                 android:id="@+id/fragment_estate_address_text_street_name"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
+                                android:layout_alignStart="@id/fragment_estate_address_edit_text_street_name"
+                                android:layout_alignEnd="@id/fragment_estate_address_edit_text_street_name"
                                 android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
                                 android:text="@string/fragment_estate_address_text_street_name"
                                 android:textStyle="bold"
@@ -94,10 +92,11 @@
 
                             <EditText
                                 android:id="@+id/fragment_estate_address_edit_text_street_name"
-                                android:layout_width="@dimen/fragments_manage_estate_edit_price_width"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                                 android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
+                                android:layout_marginTop="@dimen/fragments_manage_estate_edit_street_name_margin_top"
                                 android:layout_below="@+id/fragment_estate_address_text_street_name"
                                 android:inputType="text"
                                 android:hint="@null"
@@ -151,10 +150,12 @@
 
                             <TextView
                                 android:id="@+id/fragment_estate_address_text_postal_code"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                                android:layout_alignStart="@id/fragment_estate_address_edit_text_postal_code"
+                                android:layout_alignEnd="@id/fragment_estate_address_edit_text_postal_code"
                                 android:text="@string/fragment_estate_address_text_postal_code"
                                 android:textStyle="bold"
                                 android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
@@ -183,10 +184,12 @@
 
                             <TextView
                                 android:id="@+id/fragment_estate_address_text_city"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                                android:layout_alignStart="@id/fragment_estate_address_edit_text_city"
+                                android:layout_alignEnd="@id/fragment_estate_address_edit_text_city"
                                 android:text="@string/fragment_estate_address_text_city"
                                 android:textStyle="bold"
                                 android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
@@ -243,11 +246,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fragments_manage_estate_container_margin"
-                app:elevation="@dimen/default_elevation"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/fragments_manage_estate_container_corner_radius"
-                app:cardPreventCornerOverlap="true">
+                style="@style/ManageCardViewTheme">
 
                 <LinearLayout
                     android:layout_width="match_parent"

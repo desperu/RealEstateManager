@@ -35,11 +35,6 @@ android {
         }
     }
 
-//    compileOptions { // TODO remove if unused
-//        sourceCompatibility 1.8
-//        targetCompatibility 1.8
-//    }
-
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -93,7 +88,6 @@ dependencies {
     // Lifecycle & ViewModel
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-// TODO to clean unused library
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
@@ -119,7 +113,7 @@ dependencies {
     implementation "frankiesardo:icepick:$icepick_version"
     kapt "frankiesardo:icepick-processor:$icepick_version"
 
-    // Stetho to check DataBase // TODO for test only, to remove
+    // Stetho to check DataBase
 //    implementation 'com.facebook.stetho:stetho:1.5.1'
 
     // Leak Canary

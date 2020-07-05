@@ -247,12 +247,6 @@
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
                 android:background="@color/colorTransGrey"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_settings_divider_height"
-                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorTransGrey"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

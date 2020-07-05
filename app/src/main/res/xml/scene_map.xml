@@ -13,10 +13,10 @@
             <Layout
                 android:layout_width="@dimen/fragment_estate_detail_container_map_width"
                 android:layout_height="@dimen/fragment_estate_detail_container_map_height"
-                android:layout_marginStart="@dimen/default_large_margin"
-                android:layout_marginEnd="@dimen/default_large_margin"
-                android:layout_marginTop="@dimen/default_large_margin"
-                android:layout_marginBottom="@dimen/default_large_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_marginBottom="@dimen/default_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images" />
         </Constraint>
@@ -36,14 +36,29 @@
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_large_margin"
-                android:layout_marginEnd="@dimen/default_large_margin"
-                android:layout_marginTop="@dimen/default_large_margin"
-                android:layout_marginBottom="@dimen/default_large_margin"
-                android:orientation="vertical"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_marginBottom="@dimen/default_margin"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fragment_estate_detail_container_map"
                 app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_images"
-                app:layout_constraintBottom_toBottomOf="@id/fragment_estate_detail_container_map" />
+                app:layout_constraintBottom_toTopOf="@id/fragment_estate_detail_container_sale_data" />
+        </Constraint>
+
+        <!-- Start state of the sale data container. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_sale_data">
+        <Layout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_large_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fragment_estate_detail_container_data"
+            app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"
+            app:layout_constraintBottom_toBottomOf="parent"/>
         </Constraint>
 
         <!-- Start state of the data container. -->
@@ -51,29 +66,14 @@
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_large_margin"
-                android:layout_marginEnd="@dimen/default_large_margin"
-                android:layout_marginTop="@dimen/default_large_margin"
-                android:layout_marginBottom="@dimen/default_large_margin"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"/>
-        </Constraint>
-
-        <!-- Start state of the sale data container. -->
-        <Constraint android:id="@+id/fragment_estate_detail_container_sale_data">
-            <Layout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_large_margin"
-                android:layout_marginEnd="@dimen/default_large_margin"
-                android:layout_marginTop="@dimen/default_large_margin"
-                android:layout_marginBottom="@dimen/default_large_margin"
-                android:orientation="vertical"
-                app:layout_constraintStart_toEndOf="@id/fragment_estate_detail_container_data"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_marginBottom="@dimen/default_margin"
+                app:layout_constraintStart_toEndOf="@id/fragment_estate_detail_container_sale_data"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_estate_detail_container_map"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"/>
         </Constraint>
 
     </ConstraintSet>
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintEnd_toStartOf="parent"/>
         </Constraint>
 
         <!-- End state of the address container, way off-screen to the left. -->
@@ -109,20 +109,9 @@
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 app:layout_constraintEnd_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
-        </Constraint>
-
-        <!-- End state of the data container, way off-screen to the bottom. -->
-        <Constraint android:id="@+id/fragment_estate_detail_container_data" >
-            <Layout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"/>
         </Constraint>
 
         <!-- End state of the sale data container, way off-screen to the bottom. -->
@@ -130,8 +119,16 @@
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"/>
+        </Constraint>
+
+        <!-- End state of the data container, way off-screen to the bottom. -->
+        <Constraint android:id="@+id/fragment_estate_detail_container_data" >
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="parent"/>
         </Constraint>
 
