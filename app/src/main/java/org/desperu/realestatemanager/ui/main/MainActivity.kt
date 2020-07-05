@@ -3,7 +3,6 @@ package org.desperu.realestatemanager.ui.main
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.Menu
 import android.view.MenuItem
@@ -224,7 +223,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
     }
 
     override fun onUserInteraction() {
-        super.onUserInteraction() // TODO create function ??
+        super.onUserInteraction()
         // To check nav drawer item when fragment change.
         if (fragmentKey in 0..1)
             activity_main_nav_view.menu.getItem(fragmentKey).isChecked = true
@@ -232,10 +231,10 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
             activity_main_nav_view.checkedItem?.isChecked = false
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
+    override fun onPause() {
+        super.onPause()
         // To prevent ui mistake when turn device and filter frag isn't null, it's shown in half expended mode if not remove.
         if (fm.isBottomSheetInitialized) closeFilterFragment(true)
-        super.onSaveInstanceState(outState)
     }
 
     // --------------------
@@ -324,7 +323,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
      */
     override fun updateEstateList(estateList: List<Estate>) {
         fm.estateListFragment?.updateEstateList(estateList)
-        fm.getMapsFragment()?.updateEstateList(estateList)
+        fm.getMapsFragment()?.updateEstateList(estateList) // TODO Mistake to update map with filter ???....
     }
 
     /**

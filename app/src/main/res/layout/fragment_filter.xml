@@ -48,6 +48,7 @@
                     android:tag="type"
                     android:text="@string/fragment_filter_text_flat"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/default_text_size"
                     app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
@@ -58,6 +59,7 @@
                     android:padding="@dimen/fragment_filter_item_filter_padding"
                     android:tag="type"
                     android:text="@string/fragment_filter_text_duplex"
+                    android:textSize="@dimen/default_text_size"
                     android:textColor="@android:color/white"
                     app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
@@ -70,6 +72,7 @@
                     android:tag="type"
                     android:text="@string/fragment_filter_text_house"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/default_text_size"
                     app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
@@ -81,6 +84,7 @@
                     android:tag="type"
                     android:text="@string/fragment_filter_text_penthouse"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/default_text_size"
                     app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
@@ -109,6 +113,7 @@
                 android:textColor="@android:color/white"
                 android:hint="@string/fragment_estate_address_text_city"
                 android:textColorHint="@color/colorPassedWhite"
+                android:textSize="@dimen/default_text_size"
                 android:inputType="text"
                 android:autofillHints="@string/fragment_estate_address_text_city"
                 app:layout_constraintStart_toStartOf="parent"
@@ -141,6 +146,7 @@
                 android:maxLines="1"
                 android:hint="@string/fragment_filter_text_min_images_number"
                 android:textColorHint="@color/colorPassedWhite"
+                android:textSize="@dimen/default_text_size"
                 android:inputType="number"
                 android:autofillHints="@string/fragment_filter_text_min_images_number"
                 app:layout_constraintStart_toStartOf="parent"
@@ -321,10 +327,11 @@
 
             <LinearLayout
                 android:id="@+id/fragment_filter_container_interest_places"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_filter_category_interest_places">
 
                 <org.desperu.realestatemanager.view.CustomTextView
@@ -335,6 +342,7 @@
                     android:tag="interestPlaces"
                     android:text="@string/fragment_filter_text_school"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/default_text_size"
                     app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
@@ -346,6 +354,7 @@
                     android:tag="interestPlaces"
                     android:text="@string/fragment_filter_text_shop"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/default_text_size"
                     app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
@@ -357,6 +366,7 @@
                     android:tag="interestPlaces"
                     android:text="@string/fragment_filter_text_park"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/default_text_size"
                     app:myBackground="@drawable/text_filter_unselected"
                     app:onClick="@{viewModel.getOnClickFilter}"/>
 
@@ -381,6 +391,7 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/fragment_filter_text_begin_date"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/default_text_size"
                 app:layout_constraintStart_toStartOf="@id/fragment_filter_sale_date_begin"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_sale_date"/>
 
@@ -413,6 +424,7 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/fragment_filter_text_end_date"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/default_text_size"
                 app:layout_constraintStart_toStartOf="@id/fragment_filter_sale_date_end"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_sale_date"/>
 
@@ -458,6 +470,7 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/fragment_filter_text_begin_date"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/default_text_size"
                 app:layout_constraintStart_toStartOf="@id/fragment_filter_sold_date_begin"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_sold_date"/>
 
@@ -490,6 +503,7 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/fragment_filter_text_end_date"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/default_text_size"
                 app:layout_constraintStart_toStartOf="@id/fragment_filter_sold_date_end"
                 app:layout_constraintTop_toBottomOf="@id/fragment_filter_category_sold_date"/>
 
@@ -556,7 +570,7 @@
                     android:layout_margin="@dimen/fragment_filter_button_margin"
                     android:contentDescription="@null"
                     android:rotation="45"
-                    app:srcCompat="@drawable/ic_baseline_add_white_36"
+                    app:srcCompat="@dimen/fragment_filter_button_remove_drawable"
                     android:onClick="@{() -> viewModel.removeFilters()}"/>
 
                 <ImageView
@@ -566,7 +580,7 @@
                     android:layout_margin="@dimen/fragment_filter_button_margin"
                     android:contentDescription="@null"
                     android:tint="@android:color/white"
-                    app:srcCompat="@drawable/ic_baseline_filter_list_black_36"
+                    app:srcCompat="@dimen/fragment_filter_button_apply_drawable"
                     android:onClick="@{() -> viewModel.applyFilters()}"/>
 
             </LinearLayout>

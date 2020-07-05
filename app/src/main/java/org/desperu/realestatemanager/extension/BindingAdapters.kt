@@ -49,7 +49,7 @@ fun View.onLongClick(listener: View.OnLongClickListener) {
  * @param listener the listener to set for on query text changed.
  */
 @BindingAdapter("onQueryText")
-fun SearchView.setOnQueryText(listener: SearchView.OnQueryTextListener) {
+fun SearchView.setOnQueryText(listener: SearchView.OnQueryTextListener?) {
     setOnQueryTextListener(listener)
 }
 

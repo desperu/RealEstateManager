@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.desperu.realestatemanager.ui.main.fragment.estateList.EstateViewModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/item_estate_large_card_view_margin"
+        app:cardCornerRadius="@dimen/item_estate_large_card_view_corner_radius"
+        app:cardPreventCornerOverlap="true"
+        app:cardElevation="@dimen/item_estate_large_card_view_elevation"
+        app:onClick="@{viewModel.itemClick}"
+        app:onLongClick="@{viewModel.itemLongClick}"
+        app:setBackgroundColor="@{viewModel.getEstate.type}">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_margin">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/item_estate_image"
+                android:layout_width="@dimen/item_estate_large_image_width_height_land"
+                android:layout_height="@dimen/item_estate_large_image_width_height_land"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:rotation="@{viewModel.getPrimaryImage.rotation}"
+                app:imageUri="@{viewModel.getPrimaryImage.imageUri}"/>
+
+            <LinearLayout
+                android:id="@+id/item_estate_linear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_estate_image"
+                android:orientation="vertical"
+                android:padding="@dimen/item_estate_large_linear_padding">
+
+                <TextView
+                    android:id="@+id/item_estate_text_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/item_estate_large_text_type_size"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    app:setValue="@{viewModel.getEstate.type}" />
+
+                <TextView
+                    android:id="@+id/item_estate_text_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_estate_large_text_location_margin_top_and_bottom"
+                    android:layout_marginBottom="@dimen/item_estate_large_text_location_margin_top_and_bottom"
+                    android:textColor="@color/colorPassedWhite"
+                    android:textSize="@dimen/item_estate_large_text_location_size"
+                    android:textStyle="bold|italic"
+                    android:ellipsize="end"
+                    app:setValue="@{viewModel.getEstate.address.city}" />
+
+                <TextView
+                    android:id="@+id/item_estate_text_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_green_light"
+                    android:textSize="@dimen/item_estate_large_text_price_size"
+                    android:ellipsize="end"
+                    app:setPrice="@{viewModel.getEstate.price}" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>

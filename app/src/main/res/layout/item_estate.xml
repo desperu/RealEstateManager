@@ -68,6 +68,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/item_estate_text_price_size"
                     android:ellipsize="end"
+                    android:maxLength="10"
                     app:selectedTextColor="@{viewModel.getIsSelected}"
                     app:setPrice="@{viewModel.getEstate.price}" />
 

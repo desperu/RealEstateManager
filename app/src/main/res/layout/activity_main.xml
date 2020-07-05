@@ -69,6 +69,7 @@
         android:paddingTop="@dimen/nav_view_padding_top"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:theme="@style/NavigationDrawerTheme"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/activity_main_menu_drawer">
 

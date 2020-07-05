@@ -288,7 +288,7 @@ class ManageEstateFragment: BaseBindingFragment() {
     /**
      * Delete image in storage.
      * @param imageUri the image uri to delete.
-     */
+     */ // TODO remove of recycler and database dialog box to confirm?
     internal fun deleteImageInStorage(imageUri: String) = storageAction {
         val fileData = getFolderAndFileNameFromContentUri(imageUri)
         val messageError = "Can't retrieved folder name and file name from content uri"

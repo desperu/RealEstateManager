@@ -27,12 +27,12 @@
     <!-- Item Estate -->
     <dimen name="item_estate_card_view_margin_and_elevation">5dp</dimen>
     <dimen name="item_estate_card_view_corner_radius">5dp</dimen>
-    <dimen name="item_estate_image_width_height">100dp</dimen>
+    <dimen name="item_estate_image_width_height">120dp</dimen>
     <dimen name="item_estate_linear_padding">10dp</dimen>
-    <dimen name="item_estate_text_type_size">16sp</dimen>
+    <dimen name="item_estate_text_type_size">18sp</dimen>
     <dimen name="item_estate_text_location_margin_top_and_bottom">5dp</dimen>
-    <dimen name="item_estate_text_location_size">16sp</dimen>
-    <dimen name="item_estate_text_price_size">20sp</dimen>
+    <dimen name="item_estate_text_location_size">18sp</dimen>
+    <dimen name="item_estate_text_price_size">22sp</dimen>
 
     <!-- Item Estate Large -->
     <dimen name="item_estate_large_card_view_margin">5dp</dimen>
@@ -44,6 +44,8 @@
     <dimen name="item_estate_large_text_location_margin_top_and_bottom">5dp</dimen>
     <dimen name="item_estate_large_text_location_size">16sp</dimen>
     <dimen name="item_estate_large_text_price_size">20sp</dimen>
+    <!-- Land mode -->
+    <dimen name="item_estate_large_image_width_height_land">230dp</dimen>
 
     <!-- Estate Detail Fragment -->
     <dimen name="fragment_estate_detail_text_title_size">24sp</dimen>
@@ -55,6 +57,15 @@
     <dimen name="fragment_estate_detail_text_subcategory_value_margin_bottom">10dp</dimen>
     <dimen name="fragment_estate_detail_container_map_width">200dp</dimen>
     <dimen name="fragment_estate_detail_container_map_height">200dp</dimen>
+    <!-- Drawables -->
+    <dimen name="fragment_manage_estate_location_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_location_black_24</dimen>
+    <dimen name="fragment_manage_estate_state_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_home_work_black_24</dimen>
+    <dimen name="fragment_manage_estate_sale_date_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_today_black_24</dimen>
+    <dimen name="fragment_manage_estate_sold_date_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_event_black_24</dimen>
+    <dimen name="fragment_manage_estate_real_estate_agent_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_person_black_24</dimen>
+    <dimen name="fragment_manage_estate_surface_area_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_surface_black_24</dimen>
+    <dimen name="fragment_manage_estate_room_number_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_home_black_24</dimen>
+    <dimen name="fragment_manage_estate_interest_places_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_local_activity_black_24</dimen>
 
     <!-- Item Image -->
     <dimen name="item_image_card_view_width">150dp</dimen>
@@ -74,13 +85,14 @@
     <dimen name="fragment_maps_toolbar_margin_end">18dp</dimen>
     
     <!-- Filter Fragment -->
-    <dimen name="fragment_filter_scroll_padding_top">150dp</dimen>
     <dimen name="fragment_filter_text_category_size">16sp</dimen>
     <dimen name="fragment_filter_item_margin">15dp</dimen>
     <dimen name="fragment_filter_item_filter_padding">10dp</dimen>
     <dimen name="thumb_size">30dp</dimen>
     <dimen name="fragment_filter_text_date_width">100dp</dimen>
     <dimen name="fragment_filter_button_margin">10dp</dimen>
+    <dimen name="fragment_filter_button_remove_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_add_white_36</dimen>
+    <dimen name="fragment_filter_button_apply_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_filter_list_black_36</dimen>
 
     
     <!-- Manage Estate Activity -->
@@ -107,6 +119,7 @@
     <dimen name="fragments_manage_estate_edit_surface_width">100dp</dimen>
     <dimen name="fragments_manage_estate_edit_rooms_width">50dp</dimen>
     <dimen name="fragments_manage_estate_edit_description_padding">5dp</dimen>
+    <dimen name="fragments_manage_estate_edit_description_text_size">15sp</dimen>
     <dimen name="fragments_manage_estate_edit_street_name_margin_top">18dp</dimen>
     <dimen name="fragments_manage_estate_edit_flat_and_city_margin_start_and_end">20dp</dimen>
 
@@ -138,6 +151,8 @@
     <dimen name="activity_credit_simulator_edit_margin_top">5dp</dimen>
     <dimen name="activity_credit_simulator_edit_width">50dp</dimen>
     <dimen name="activity_credit_simulator_button_margin">10dp</dimen>
+    <dimen name="activity_credit_simulator_button_minus_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_remove_circle_black_36</dimen>
+    <dimen name="activity_credit_simulator_button_up_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_add_circle_black_36</dimen>
     <dimen name="activity_credit_simulator_big_margin_top">50dp</dimen>
 
 
@@ -161,8 +176,18 @@
     <!-- Menu Drawer -->
     <dimen name="nav_header_height">220dp</dimen>
     <dimen name="nav_header_text_app_size">26sp</dimen>
+    <dimen name="nav_drawer_text_item_text_size_theme">14sp</dimen>
 
     <!-- Toolbar -->
     <dimen name="toolbar_search_view_height">56dp</dimen>
+
+
+    <!-- SPINNER -->
+
+    <!-- Spinner item -->
+    <dimen name="spinner_item_text_size">16sp</dimen>
+
+    <!-- Spinner row nothing selected -->
+    <dimen name="spinner_row_nothing_selected_text_size">18sp</dimen>
 
 </resources>

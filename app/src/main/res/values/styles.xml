@@ -15,6 +15,11 @@
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
+    <!-- NAVIGATION VIEW THEME -->
+    <style name="NavigationDrawerTheme">
+        <item name="android:textSize">@dimen/nav_drawer_text_item_text_size_theme</item>
+    </style>
+
     <!-- Date Picker Dialog Theme -->
     <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>

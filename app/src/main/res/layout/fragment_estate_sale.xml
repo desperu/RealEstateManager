@@ -93,7 +93,7 @@
                             android:gravity="center_horizontal"
                             android:layout_alignStart="@id/fragment_estate_sale_date_picker_sold_out_date"
                             android:layout_alignEnd="@id/fragment_estate_sale_date_picker_sold_out_date"
-                            android:layout_margin="@dimen/fragments_manage_estate_text_sub_category_margin"
+                            android:layout_marginVertical="@dimen/fragments_manage_estate_text_sub_category_margin"
                             android:text="@string/fragment_estate_sale_text_sold_out_date"
                             android:textStyle="bold"
                             android:textSize="@dimen/fragments_manage_estate_text_sub_category_size"/>
@@ -186,6 +186,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/fragments_manage_estate_edit_margin_start"
                             android:layout_below="@+id/fragment_estate_sale_text_real_estate_agent"
+                            android:textSize="@dimen/default_text_size"
                             android:inputType="text"
                             android:hint="@null"
                             android:importantForAutofill="no"

@@ -163,7 +163,7 @@
                         android:textColor="@color/colorLightDark"
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
-                        android:drawableStart="@drawable/ic_baseline_location_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_location_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark" />
 
@@ -273,7 +273,7 @@
                         android:textColor="@color/colorLightDark"
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
-                        android:drawableStart="@drawable/ic_baseline_home_work_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_state_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark"/>
 
@@ -295,7 +295,7 @@
                         android:textColor="@color/colorLightDark"
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
-                        android:drawableStart="@drawable/ic_baseline_today_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_sale_date_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark"/>
 
@@ -317,7 +317,7 @@
                         android:textColor="@color/colorLightDark"
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
-                        android:drawableStart="@drawable/ic_baseline_event_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_sold_date_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark"/>
 
@@ -339,7 +339,7 @@
                         android:textColor="@color/colorLightDark"
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
-                        android:drawableStart="@drawable/ic_baseline_person_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_real_estate_agent_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark" />
 
@@ -385,7 +385,7 @@
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
                         android:maxLength="25"
-                        android:drawableStart="@drawable/ic_baseline_surface_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_surface_area_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark"/>
 
@@ -409,7 +409,7 @@
                         android:textColor="@color/colorLightDark"
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
-                        android:drawableStart="@drawable/ic_baseline_home_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_room_number_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark" />
 
@@ -432,7 +432,7 @@
                         android:textColor="@color/colorLightDark"
                         android:textSize="@dimen/fragment_estate_detail_text_subcategory_size"
                         android:textStyle="bold"
-                        android:drawableStart="@drawable/ic_baseline_local_activity_black_24"
+                        android:drawableStart="@dimen/fragment_manage_estate_interest_places_drawable"
                         android:drawablePadding="@dimen/fragment_estate_detail_text_subcategory_drawable_padding"
                         android:drawableTint="@color/colorLightDark"/>
 
