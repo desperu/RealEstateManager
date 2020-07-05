@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import io.mockk.every
 import io.mockk.mockk
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailFragment
-import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
-import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateDetail.EstateDetailFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateList.EstateListFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.MapsFragment
 import org.desperu.realestatemanager.ui.showImages.fragment.ShowImageFragment
 import org.desperu.realestatemanager.utils.MainUtils.getFragClassFromKey
 import org.desperu.realestatemanager.utils.MainUtils.getFrame

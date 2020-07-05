@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import org.desperu.realestatemanager.R
-import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailFragment
-import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
-import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateDetail.EstateDetailFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateList.EstateListFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.MapsFragment
 
 /**
  * Main utils object witch provide utils for main activity.

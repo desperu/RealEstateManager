@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailViewModel" />
+            type="org.desperu.realestatemanager.ui.main.fragment.estateDetail.EstateDetailViewModel" />
     </data>
 
     <ScrollView

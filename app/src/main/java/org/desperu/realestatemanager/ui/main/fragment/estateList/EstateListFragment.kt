@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.estateList
+package org.desperu.realestatemanager.ui.main.fragment.estateList
 
 import android.content.res.Configuration
 import android.view.View

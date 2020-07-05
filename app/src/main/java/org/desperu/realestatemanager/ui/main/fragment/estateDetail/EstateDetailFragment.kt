@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.estateDetail
+package org.desperu.realestatemanager.ui.main.fragment.estateDetail
 
 import android.os.Bundle
 import android.view.Menu
@@ -16,11 +16,11 @@ import org.desperu.realestatemanager.base.BaseBindingFragment
 import org.desperu.realestatemanager.databinding.FragmentEstateDetailBinding
 import org.desperu.realestatemanager.di.ViewModelFactory
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
-import org.desperu.realestatemanager.ui.main.estateList.EstateRouterImpl
-import org.desperu.realestatemanager.ui.main.estateMap.ESTATE_MAP
-import org.desperu.realestatemanager.ui.main.estateMap.MAP_MODE
-import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateList.EstateRouter
+import org.desperu.realestatemanager.ui.main.fragment.estateList.EstateRouterImpl
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.ESTATE_MAP
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.MAP_MODE
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.MapsFragment
 import org.desperu.realestatemanager.utils.LITTLE_MODE
 
 

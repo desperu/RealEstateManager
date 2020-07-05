@@ -1,7 +1,7 @@
 package org.desperu.realestatemanager.ui.main
 
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.ui.main.filter.FilterFragment
+import org.desperu.realestatemanager.ui.main.fragment.filter.FilterFragment
 
 /**
  * Interface to allow communications with Main Activity.

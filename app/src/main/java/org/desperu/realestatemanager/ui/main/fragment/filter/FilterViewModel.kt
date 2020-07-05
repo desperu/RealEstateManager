@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.filter
+package org.desperu.realestatemanager.ui.main.fragment.filter
 
 import android.text.Editable
 import android.text.TextWatcher

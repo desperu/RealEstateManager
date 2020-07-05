@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.estateDetail
+package org.desperu.realestatemanager.ui.main.fragment.estateDetail
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel

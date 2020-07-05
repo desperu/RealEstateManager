@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.estateMap
+package org.desperu.realestatemanager.ui.main.fragment.estateMap
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.estateDetail
+package org.desperu.realestatemanager.ui.main.fragment.estateDetail
 
 import androidx.appcompat.app.AppCompatActivity
 import org.desperu.realestatemanager.model.Image

@@ -2,7 +2,7 @@ package org.desperu.realestatemanager.di.module
 
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.ui.main.MainCommunication
-import org.desperu.realestatemanager.ui.main.MainFragmentManager
+import org.desperu.realestatemanager.ui.main.fragment.MainFragmentManager
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 

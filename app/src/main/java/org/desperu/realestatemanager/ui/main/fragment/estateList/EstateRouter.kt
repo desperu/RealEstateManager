@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.estateList
+package org.desperu.realestatemanager.ui.main.fragment.estateList
 
 import androidx.appcompat.app.AppCompatActivity
 import org.desperu.realestatemanager.model.Estate

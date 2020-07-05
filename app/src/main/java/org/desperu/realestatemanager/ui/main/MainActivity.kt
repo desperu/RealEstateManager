@@ -34,7 +34,8 @@ import org.desperu.realestatemanager.di.module.mainModule
 import org.desperu.realestatemanager.filter.ManageFiltersHelper
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.ui.creditSimulator.CreditSimulatorActivity
-import org.desperu.realestatemanager.ui.main.filter.FilterFragment
+import org.desperu.realestatemanager.ui.main.fragment.MainFragmentManager
+import org.desperu.realestatemanager.ui.main.fragment.filter.FilterFragment
 import org.desperu.realestatemanager.ui.manageEstate.MANAGE_ESTATE
 import org.desperu.realestatemanager.ui.manageEstate.ManageEstateActivity
 import org.desperu.realestatemanager.ui.settings.SettingsActivity

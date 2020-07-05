@@ -1,9 +1,9 @@
-package org.desperu.realestatemanager.ui.main.estateMap
+package org.desperu.realestatemanager.ui.main.fragment.estateMap
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.ui.main.estateList.EstateRouter
+import org.desperu.realestatemanager.ui.main.fragment.estateList.EstateRouter
 
 /**
  * View Model witch provide data for map.

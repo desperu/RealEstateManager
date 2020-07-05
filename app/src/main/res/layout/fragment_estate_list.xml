@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="org.desperu.realestatemanager.ui.main.estateList.EstateListViewModel" />
+            type="org.desperu.realestatemanager.ui.main.fragment.estateList.EstateListViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

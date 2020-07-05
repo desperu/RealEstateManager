@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main.filter
+package org.desperu.realestatemanager.ui.main.fragment.filter
 
 import androidx.appcompat.app.AppCompatActivity
 import org.desperu.realestatemanager.ui.main.MainCommunication

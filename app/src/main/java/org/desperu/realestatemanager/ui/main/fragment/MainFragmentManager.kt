@@ -1,4 +1,4 @@
-package org.desperu.realestatemanager.ui.main
+package org.desperu.realestatemanager.ui.main.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -10,14 +10,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.filter.ManageFiltersHelper
 import org.desperu.realestatemanager.model.Estate
-import org.desperu.realestatemanager.ui.main.estateDetail.ESTATE_DETAIL
-import org.desperu.realestatemanager.ui.main.estateDetail.EstateDetailFragment
-import org.desperu.realestatemanager.ui.main.estateList.ESTATE_NOTIFICATION_FOR_LIST
-import org.desperu.realestatemanager.ui.main.estateList.EstateListFragment
-import org.desperu.realestatemanager.ui.main.estateMap.ESTATE_LIST_MAP
-import org.desperu.realestatemanager.ui.main.estateMap.MAP_MODE
-import org.desperu.realestatemanager.ui.main.estateMap.MapsFragment
-import org.desperu.realestatemanager.ui.main.filter.FilterFragment
+import org.desperu.realestatemanager.ui.main.ESTATE_NOTIFICATION
+import org.desperu.realestatemanager.ui.main.MainCommunication
+import org.desperu.realestatemanager.ui.main.fragment.estateDetail.ESTATE_DETAIL
+import org.desperu.realestatemanager.ui.main.fragment.estateDetail.EstateDetailFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateList.ESTATE_NOTIFICATION_FOR_LIST
+import org.desperu.realestatemanager.ui.main.fragment.estateList.EstateListFragment
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.ESTATE_LIST_MAP
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.MAP_MODE
+import org.desperu.realestatemanager.ui.main.fragment.estateMap.MapsFragment
+import org.desperu.realestatemanager.ui.main.fragment.filter.FilterFragment
 import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.MainUtils.getFragClassFromKey
 import org.desperu.realestatemanager.utils.MainUtils.getFrame
