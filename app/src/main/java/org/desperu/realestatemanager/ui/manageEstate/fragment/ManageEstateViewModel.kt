@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
+import org.desperu.realestatemanager.extension.deleteUpTo3
 import org.desperu.realestatemanager.model.Estate
 import org.desperu.realestatemanager.model.Image
 import org.desperu.realestatemanager.repositories.AddressRepository
@@ -34,7 +35,7 @@ import java.lang.ref.WeakReference
  * @param resourceService the resource service interface witch provide application resources access.
  *
  * @constructor Instantiates a new ManageEstateViewModel.
- * TODO Réorganize repository !!
+ *
  * @property estateRepository the estate repository interface witch provide database access to set.
  * @property imageRepository the image repository interface witch provide database access to set.
  * @property addressRepository the address repository interface witch provide database access to set.
@@ -144,8 +145,13 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     private fun setInterestPlace(index: Int, value: String) {
         val size = interestPlaces.value?.size
-        if (size != null && size > index) interestPlaces.value?.set(index, value)
-        else interestPlaces.value?.add(value)
+        if (size != null)
+            when {
+                size > index -> interestPlaces.value?.set(index, value)
+                size == 3 -> interestPlaces.value?.add(index, value)
+                else -> interestPlaces.value?.add(value)
+            }
+        interestPlaces.value?.deleteUpTo3()
     }
 
     /**
@@ -180,6 +186,7 @@ class ManageEstateViewModel(private val estateRepository: EstateRepository,
      */
     internal fun bindDataInEstate() {
         price.get()?.let {  estate.value?.price = convertPatternPriceToString(it).toLong() }
+        interestPlaces.value?.deleteUpTo3()
         estate.value?.interestPlaces = interestPlaces.value?.let { concatenateStringFromMutableList(it) }.toString()
         estate.value?.saleDate = saleDate.get().toString()
         estate.value?.soldDate = soldDate.get().toString()
