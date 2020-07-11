@@ -114,12 +114,12 @@
     <dimen name="fragments_manage_estate_spinner_margin_bottom">6dp</dimen>
     <dimen name="fragments_manage_estate_edit_price_width">100dp</dimen>
     <dimen name="fragments_manage_estate_edit_margin_start">5dp</dimen>
+    <dimen name="fragments_manage_estate_edit_text_size">17sp</dimen>
     <dimen name="fragments_manage_estate_text_unity_margin_bottom">10dp</dimen>
     <dimen name="fragments_manage_estate_text_unity_size">19sp</dimen>
     <dimen name="fragments_manage_estate_edit_surface_width">80dp</dimen>
     <dimen name="fragments_manage_estate_edit_rooms_width">50dp</dimen>
     <dimen name="fragments_manage_estate_edit_description_padding">5dp</dimen>
-    <dimen name="fragments_manage_estate_edit_description_text_size">14sp</dimen>
     <dimen name="fragments_manage_estate_edit_street_name_margin_top">18dp</dimen>
     <dimen name="fragments_manage_estate_edit_flat_and_city_margin_start_and_end">20dp</dimen>
 

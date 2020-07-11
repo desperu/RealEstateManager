@@ -13,7 +13,7 @@
     <!-- Main Activity -->
     <!-- Dialog About -->
     <string name="activity_main_dialog_about_title">About</string>
-    <string name="activity_main_dialog_about_message">"<p>This application is developed by Desperu.\nSource code on <a href="https://github.com/desperu/RealEstateManager">github.com</a>.\n\nIf you have an issue with this application, please search <a href="https://github.com/desperu/RealEstateManager/issues">here</a>", create a new issue if there isn't yours. \nYou must create an account if you haven't.\n\nYou need help to use MyNews application?\nFind the documentation "<a href="https://github.com/desperu/RealEstateManager/blob/master/Documentation/Documentation%20Fonctionnelle%20RealEstateManager.pdf">here</a>.</p>"</string>
+    <string name="activity_main_dialog_about_message">"<p>This application is developed by Desperu.\nSource code on <a href="https://github.com/desperu/RealEstateManager">github.com</a>.\n\nIf you have an issue with this application, please search <a href="https://github.com/desperu/RealEstateManager/issues">here</a>", create a new issue if there isn't yours. \nYou must create an account if you haven't.\n\nYou need help to use RealEstateManager application?\nFind the documentation "<a href="https://github.com/desperu/RealEstateManager/blob/master/Documentation/Documentation%20Fonctionnelle%20RealEstateManager.pdf">here</a>.</p>"</string>
     <string name="activity_main_dialog_about_positive_button">OK</string>
     <!-- Estate List Fragment -->
     <string name="fragment_estate_list_item_text_empty">There isn\'t any Estate found !</string>

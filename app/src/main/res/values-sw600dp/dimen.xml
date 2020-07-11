@@ -4,7 +4,7 @@
     <!-- Support standard layout value -->
     <item name="match_parent" format="integer" type="dimen">-1</item>
     <item name="wrap_content" format="integer" type="dimen">-2</item>
-
+<!-- TODO text too large to correct ... fuck -->
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="default_large_margin">25dip</dimen>
     <dimen name="default_margin">15dip</dimen>
@@ -29,9 +29,9 @@
     <dimen name="item_estate_card_view_corner_radius">5dp</dimen>
     <dimen name="item_estate_image_width_height">110dp</dimen>
     <dimen name="item_estate_linear_padding">10dp</dimen>
-    <dimen name="item_estate_text_type_size">20sp</dimen>
+    <dimen name="item_estate_text_type_size">18sp</dimen>
     <dimen name="item_estate_text_location_margin_top_and_bottom">5dp</dimen>
-    <dimen name="item_estate_text_location_size">20sp</dimen>
+    <dimen name="item_estate_text_location_size">18sp</dimen>
     <dimen name="item_estate_text_price_size">22sp</dimen>
 
     <!-- Item Estate Large -->
@@ -112,12 +112,12 @@
     <dimen name="fragments_manage_estate_spinner_margin_bottom">6dp</dimen>
     <dimen name="fragments_manage_estate_edit_price_width">200dp</dimen>
     <dimen name="fragments_manage_estate_edit_margin_start">10dp</dimen>
+    <dimen name="fragments_manage_estate_edit_text_size">20sp</dimen>
     <dimen name="fragments_manage_estate_text_unity_margin_bottom">10dp</dimen>
     <dimen name="fragments_manage_estate_text_unity_size">30sp</dimen>
     <dimen name="fragments_manage_estate_edit_surface_width">150dp</dimen>
     <dimen name="fragments_manage_estate_edit_rooms_width">80dp</dimen>
     <dimen name="fragments_manage_estate_edit_description_padding">10dp</dimen>
-    <dimen name="fragments_manage_estate_edit_description_text_size">24sp</dimen>
     <dimen name="fragments_manage_estate_edit_street_name_margin_top">0dp</dimen>
     <dimen name="fragments_manage_estate_edit_flat_and_city_margin_start_and_end">30dp</dimen>
 
@@ -127,12 +127,12 @@
     <dimen name="item_manage_image_card_view_corner_radius">50dp</dimen>
     <dimen name="item_manage_image_photo_width">760dp</dimen>
     <dimen name="item_manage_image_photo_height">760dp</dimen>
-    <dimen name="item_manage_image_text_description_height">100dp</dimen>
-    <dimen name="item_manage_image_text_description_size">26sp</dimen>
+    <dimen name="item_manage_image_text_description_height">80dp</dimen>
+    <dimen name="item_manage_image_text_description_size">24sp</dimen>
     <dimen name="item_manage_image_button_turn_width">100dp</dimen>
-    <dimen name="item_manage_image_primary_marker_padding">20dp</dimen>
+    <dimen name="item_manage_image_primary_marker_padding">15dp</dimen>
     <dimen name="item_manage_image_primary_marker_margin">30dp</dimen>
-    <dimen name="item_manage_image_primary_marker_text_size">26sp</dimen>
+    <dimen name="item_manage_image_primary_marker_text_size">22sp</dimen>
 
     
     <!-- Show images Activity -->

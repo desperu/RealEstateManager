@@ -48,6 +48,7 @@
                     android:textSize="@dimen/item_estate_text_type_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
+                    android:singleLine="true"
                     app:setValue="@{viewModel.getEstate.type}" />
 
                 <TextView
@@ -60,6 +61,7 @@
                     android:textSize="@dimen/item_estate_text_location_size"
                     android:textStyle="bold"
                     android:ellipsize="end"
+                    android:singleLine="true"
                     app:setValue="@{viewModel.getEstate.address.city}" />
 
                 <TextView
@@ -68,7 +70,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/item_estate_text_price_size"
                     android:ellipsize="end"
-                    android:maxLength="10"
+                    android:maxLength="16"
+                    android:singleLine="true"
                     app:selectedTextColor="@{viewModel.getIsSelected}"
                     app:setPrice="@{viewModel.getEstate.price}" />
 

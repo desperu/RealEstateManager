@@ -12,6 +12,8 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.GoogleMap
@@ -181,6 +183,7 @@ class MapsFragment : BaseBindingFragment() {
     /**
      * Check location permission, enable MyLocation, and hide google MyLocation button to use custom.
      */
+    @SuppressLint("missingPermission")
     private fun configureMapLocation() {
         checkLocationPermissionsStatus()
         mGoogleMap?.isMyLocationEnabled = isLocationEnabled
@@ -227,6 +230,7 @@ class MapsFragment : BaseBindingFragment() {
      * On click listener for my location button, set isMyLocationEnabled to prevent mistakes.
      * If location is enabled, update map with location, else ask for location permissions.
      */
+    @SuppressLint("missingPermission")
     private val onClickMyLocation = View.OnClickListener {
         mGoogleMap?.isMyLocationEnabled = isLocationEnabled
         if (isLocationEnabled) updateMapWithLocation(userLocation)
@@ -304,12 +308,13 @@ class MapsFragment : BaseBindingFragment() {
     private fun repositionMapToolbar() {
         if (mMapView != null && mMapView?.findViewWithTag<View>(GOOGLE_MAP_TOOLBAR) != null) {
             // Get the toolbar view
-            val button: View? = mMapView?.findViewWithTag(GOOGLE_MAP_TOOLBAR)
-            val layoutParams = button?.layoutParams as RelativeLayout.LayoutParams
+            val mapToolbar: View? = mMapView?.findViewWithTag(GOOGLE_MAP_TOOLBAR)
             // position to the left of custom My Location button
-            layoutParams.setMargins(0, 0, 0, resources.getDimension(R.dimen.fragment_maps_toolbar_margin_bottom).toInt())
-            layoutParams.marginEnd = resources.getDimension(R.dimen.fragment_maps_toolbar_margin_end).toInt()
-            button.bottom = resources.getDimension(R.dimen.fragment_maps_toolbar_margin_bottom).toInt()
+            mapToolbar?.updateLayoutParams<RelativeLayout.LayoutParams> {
+                setMargins(0, 0, 0, resources.getDimension(R.dimen.fragment_maps_toolbar_margin_bottom).toInt())
+                marginEnd = resources.getDimension(R.dimen.fragment_maps_toolbar_margin_end).toInt()
+            }
+            mapToolbar?.bottom = resources.getDimension(R.dimen.fragment_maps_toolbar_margin_bottom).toInt()
         }
         supportLocationButtonKitkat()
     }
@@ -320,10 +325,11 @@ class MapsFragment : BaseBindingFragment() {
     private fun repositionMapZoom() {
         if (mMapView != null && mMapView?.findViewWithTag<View>(GOOGLE_MAP_ZOOM_OUT_BUTTON) != null) {
             // Get the zoom button view
-            val button: View? = mMapView?.findViewWithTag(GOOGLE_MAP_ZOOM_OUT_BUTTON)
-            val layoutParams = button?.layoutParams as LinearLayout.LayoutParams
+            val mapZoom: View? = mMapView?.findViewWithTag(GOOGLE_MAP_ZOOM_OUT_BUTTON)
             // position to the top of custom My Location button
-            layoutParams.setMargins(0, 0, resources.getDimension(R.dimen.fragment_maps_zoom_button_margin_end).toInt(), resources.getDimension(R.dimen.fragment_maps_zoom_button_margin_bottom).toInt())
+            mapZoom?.updateLayoutParams<LinearLayout.LayoutParams> {
+                setMargins(0, 0, resources.getDimension(R.dimen.fragment_maps_zoom_button_margin_end).toInt(), resources.getDimension(R.dimen.fragment_maps_zoom_button_margin_bottom).toInt())
+            }
         }
         supportLocationButtonKitkat()
     }
@@ -333,8 +339,9 @@ class MapsFragment : BaseBindingFragment() {
      */
     private fun supportLocationButtonKitkat() {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            val layoutParams = fragment_maps_floating_button_location.layoutParams as RelativeLayout.LayoutParams
-            layoutParams.setMargins(0, 0, resources.getDimension(R.dimen.fragment_maps_floating_button_location_margin_kitkat).toInt(), resources.getDimension(R.dimen.fragment_maps_floating_button_location_margin_kitkat).toInt())
+            fragment_maps_floating_button_location.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                setMargins(0, 0, resources.getDimension(R.dimen.fragment_maps_floating_button_location_margin_kitkat).toInt(), resources.getDimension(R.dimen.fragment_maps_floating_button_location_margin_kitkat).toInt())
+            }
         }
     }
 

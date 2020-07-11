@@ -118,7 +118,7 @@
                                 android:hint="@null"
                                 android:importantForAutofill="no"
                                 android:textColor="@android:color/holo_green_dark"
-                                android:textSize="@dimen/default_text_size"
+                                android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                                 android:theme="@style/EditTextPriceTheme"
                                 app:onTextChanged="@{viewModel.getEditTextListener}"
                                 app:priceText="@{viewModel.price}" />
@@ -160,11 +160,11 @@
                                 android:inputType="number"
                                 android:maxLines="1"
                                 android:textAlignment="viewEnd"
-                                android:textSize="@dimen/default_text_size"
+                                android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                                 android:hint="@null"
                                 android:importantForAutofill="no"
                                 android:maxLength="5"
-                                android:text="@={viewModel.estate.surfaceArea}"/>
+                                android:text="@={`` + viewModel.estate.surfaceArea}"/>
 
                             <TextView
                                 android:id="@+id/fragment_estate_data_text_surface_unity"
@@ -206,11 +206,11 @@
                                 android:inputType="number"
                                 android:maxLines="1"
                                 android:textAlignment="viewEnd"
-                                android:textSize="@dimen/default_text_size"
+                                android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                                 android:hint="@null"
                                 android:importantForAutofill="no"
                                 android:maxLength="4"
-                                android:text="@={viewModel.estate.roomNumber}"/>
+                                android:text="@={`` + viewModel.estate.roomNumber}"/>
 
                         </RelativeLayout>
 
@@ -245,7 +245,7 @@
                         android:padding="@dimen/fragments_manage_estate_edit_description_padding"
                         android:gravity="top"
                         android:background="@drawable/edit_text_border"
-                        android:textSize="@dimen/fragments_manage_estate_edit_description_text_size"
+                        android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                         android:inputType="textMultiLine"
                         android:hint="@string/fragment_estate_data_text_description_hint"
                         android:minLines="5"

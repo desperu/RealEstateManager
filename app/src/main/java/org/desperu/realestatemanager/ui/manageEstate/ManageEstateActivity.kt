@@ -161,11 +161,13 @@ class ManageEstateActivity: BaseActivity(), Communication {
     /**
      * On click add estate button.
      */
+    @Suppress("unused_parameter")
     fun onClickAddEstate(v: View) { saveEstateAndFinish() }
 
     /**
      * On click add image.
      */
+    @Suppress("unused_parameter")
     fun onClickAddImage(v: View) {
         if (viewPager.currentItem == ESTATE_IMAGE)
             getCurrentViewPagerFragment().onClickAddImage()

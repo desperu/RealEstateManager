@@ -64,12 +64,12 @@
                                 android:layout_marginStart="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                                 android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                                 android:layout_below="@+id/fragment_estate_address_text_street_number"
-                                android:textSize="@dimen/default_text_size"
+                                android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                                 android:inputType="number"
                                 android:maxLength="5"
                                 android:hint="@null"
                                 android:importantForAutofill="no"
-                                android:text="@={viewModel.estate.address.streetNumber}"/>
+                                android:text="@={`` + viewModel.estate.address.streetNumber}"/>
 
                         </RelativeLayout>
 
@@ -99,7 +99,7 @@
                                 android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                                 android:layout_marginTop="@dimen/fragments_manage_estate_edit_street_name_margin_top"
                                 android:layout_below="@+id/fragment_estate_address_text_street_name"
-                                android:textSize="@dimen/default_text_size"
+                                android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                                 android:inputType="text"
                                 android:ellipsize="end"
                                 android:hint="@null"
@@ -132,7 +132,7 @@
                             android:layout_marginStart="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                             android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                             android:layout_below="@+id/fragment_estate_address_text_flat_building"
-                            android:textSize="@dimen/default_text_size"
+                            android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                             android:inputType="text"
                             android:hint="@null"
                             android:importantForAutofill="no"
@@ -172,12 +172,12 @@
                                 android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                                 android:gravity="center_horizontal"
                                 android:layout_below="@+id/fragment_estate_address_text_postal_code"
-                                android:textSize="@dimen/default_text_size"
+                                android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                                 android:inputType="number"
                                 android:maxLength="5"
                                 android:hint="@null"
                                 android:importantForAutofill="no"
-                                android:text="@={viewModel.estate.address.postalCode}"/>
+                                android:text="@={`` + viewModel.estate.address.postalCode}"/>
 
                         </RelativeLayout>
 
@@ -206,7 +206,7 @@
                                 android:layout_marginStart="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                                 android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                                 android:layout_below="@+id/fragment_estate_address_text_city"
-                                android:textSize="@dimen/default_text_size"
+                                android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                                 android:inputType="text"
                                 android:hint="@null"
                                 android:importantForAutofill="no"
@@ -238,7 +238,7 @@
                             android:layout_marginStart="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                             android:layout_marginEnd="@dimen/fragments_manage_estate_edit_flat_and_city_margin_start_and_end"
                             android:layout_below="@+id/fragment_estate_address_text_country"
-                            android:textSize="@dimen/default_text_size"
+                            android:textSize="@dimen/fragments_manage_estate_edit_text_size"
                             android:inputType="text"
                             android:hint="@null"
                             android:importantForAutofill="no"

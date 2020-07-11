@@ -16,6 +16,7 @@ import org.desperu.realestatemanager.repositories.ImageRepository
 import org.desperu.realestatemanager.service.GeocoderService
 import org.desperu.realestatemanager.ui.main.MainCommunication
 import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
+import org.koin.java.KoinJavaComponent.inject
 
 /**
  * View Model witch provide data for estate list.
@@ -23,7 +24,6 @@ import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
  * @param estateRepository the estate repository interface witch provide database access.
  * @param imageRepository the image repository interface witch provide database access.
  * @param addressRepository the address repository interface witch provide database access.
- * @param communication the main communication interface that allow communication with activity.
  * @param router the estate router interface witch provide user redirection.
  * @param geocoder the geocoder service interface witch provide geocoder service access.
  *
@@ -39,12 +39,12 @@ import org.desperu.realestatemanager.view.adapter.RecyclerViewAdapter
 class EstateListViewModel(private val estateRepository: EstateRepository,
                           private val imageRepository: ImageRepository,
                           private val addressRepository: AddressRepository,
-                          private var communication: MainCommunication,
                           private val router: EstateRouter,
                           private val geocoder: GeocoderService
 ): ViewModel() {
 
     // FOR DATA
+    private val communication: MainCommunication by inject(MainCommunication::class.java)
     private var estateListAdapter = MutableLiveData<RecyclerViewAdapter>(RecyclerViewAdapter(
             if (communication.isFrame2Visible) R.layout.item_estate
             else R.layout.item_estate_large))
@@ -223,12 +223,6 @@ class EstateListViewModel(private val estateRepository: EstateRepository,
     }
 
     // --- SETTERS ---
-
-    /**
-     * Set new Main Communication interface instance.
-     * @param communication the new Main Communication instance to set.
-     */
-    internal fun setMainCommunication(communication: MainCommunication) { this.communication = communication }
 
     /**
      * Set the estate from notification to show, needed here for tablet mode.

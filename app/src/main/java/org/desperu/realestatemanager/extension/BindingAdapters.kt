@@ -59,7 +59,7 @@ fun SearchView.setOnQueryText(listener: SearchView.OnQueryTextListener?) {
  */
 @Suppress("deprecation")
 @BindingAdapter("imageUri")
-fun ImageView.setImageUri(imageUri: String?) { // TODO create bug on real phone
+fun ImageView.setImageUri(imageUri: String?) {
     if (!imageUri.isNullOrBlank())
         setImageURI(Uri.parse(imageUri))
     else

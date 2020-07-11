@@ -10,6 +10,7 @@ import org.desperu.realestatemanager.R
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.utils.MySharedPreferences
 import org.desperu.realestatemanager.utils.*
+import org.koin.ext.isInt
 
 
 /**
@@ -144,7 +145,7 @@ class SettingsActivity : BaseActivity() {
             // Set positive button
             dialog.setPositiveButton(R.string.activity_settings_dialog_positive_button) { _, _ ->
                 val newZoomLevel = editText.text.toString()
-                if (newZoomLevel.isNotEmpty() && newZoomLevel.toInt() >= 2 && newZoomLevel.toInt() <= 21)
+                if (newZoomLevel.isNotEmpty() && newZoomLevel.isInt() && newZoomLevel.toInt() >= 2 && newZoomLevel.toInt() <= 21)
                     activity_settings_text_map_zoom_level_value.text = newZoomLevel
                 else
                     Toast.makeText(this, R.string.activity_settings_toast_zoom_level_wrong_value, Toast.LENGTH_LONG).show()
@@ -172,7 +173,7 @@ class SettingsActivity : BaseActivity() {
     private fun resetSettings() {
         activity_settings_notification_switch.isChecked = NOTIFICATION_DEFAULT
         activity_settings_notification_disable_update_switch.isChecked = UPDATE_NOTIFICATION_DEFAULT
-        activity_settings_text_map_zoom_level_value.setText(ZOOM_LEVEL_DEFAULT)
+        activity_settings_text_map_zoom_level_value.text = ZOOM_LEVEL_DEFAULT.toString()
         activity_settings_map_zoom_button_switch.isChecked = ZOOM_BUTTON_DEFAULT
         Toast.makeText(baseContext, R.string.activity_settings_toast_reset_settings_default, Toast.LENGTH_SHORT).show()
     }

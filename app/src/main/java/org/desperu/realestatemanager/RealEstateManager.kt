@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import org.desperu.realestatemanager.di.module.dbModule
 import org.desperu.realestatemanager.di.module.filterModule
 import org.desperu.realestatemanager.di.module.repositoryModule
@@ -23,5 +24,8 @@ open class RealEstateManager: Application() {
                 modules(listOf(dbModule, repositoryModule, filterModule))
             }
         }
+
+        // Support for kitkat bug with setImageDrawable() and vector drawable.
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 }

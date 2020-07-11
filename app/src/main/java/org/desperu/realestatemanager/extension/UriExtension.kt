@@ -23,6 +23,6 @@ fun Uri.toBitmap(contentResolver: ContentResolver): Bitmap? = try {
         // Use older version
         MediaStore.Images.Media.getBitmap(contentResolver, this)
 } catch (e: Exception) {
-    Log.w(javaClass.toString(), e.message!!) // TODO to check
+    Log.w(javaClass.toString(), e.message!!)
     null
 }

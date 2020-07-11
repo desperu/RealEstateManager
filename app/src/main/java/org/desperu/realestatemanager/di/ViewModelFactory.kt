@@ -25,7 +25,6 @@ import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateVMComm
 import org.desperu.realestatemanager.ui.manageEstate.fragment.ManageEstateViewModel
 import org.koin.core.KoinComponent
 import org.koin.core.get
-import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 
 /**
@@ -60,7 +59,6 @@ class ViewModelFactory(private val activity: AppCompatActivity): ViewModelProvid
                         inject(EstateRepository::class.java).value,
                         inject(ImageRepository::class.java).value,
                         inject(AddressRepository::class.java).value,
-                        get { parametersOf(activity) },
                         router as EstateRouter,
                         geocoder as GeocoderService) as T
             }

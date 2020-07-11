@@ -48,6 +48,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/item_estate_large_text_type_size"
                     android:textStyle="bold"
+                    android:maxLines="1"
                     android:ellipsize="end"
                     app:setValue="@{viewModel.getEstate.type}" />
 
@@ -60,6 +61,7 @@
                     android:textColor="@color/colorPassedWhite"
                     android:textSize="@dimen/item_estate_large_text_location_size"
                     android:textStyle="bold|italic"
+                    android:maxLines="2"
                     android:ellipsize="end"
                     app:setValue="@{viewModel.getEstate.address.city}" />
 
@@ -69,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/holo_green_light"
                     android:textSize="@dimen/item_estate_large_text_price_size"
+                    android:maxLines="2"
                     android:ellipsize="end"
                     app:setPrice="@{viewModel.getEstate.price}" />
 

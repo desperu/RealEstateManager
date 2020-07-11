@@ -159,12 +159,7 @@ class ManageEstateFragment: BaseBindingFragment() {
         recyclerView = (binding as FragmentEstateImageBinding).fragmentEstateImageRecyclerView
         recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recyclerView.addOnScrollListener( object: OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                switchFabVisibility()
-            }
-        })
+        recyclerView.addOnScrollListener(onScrollListener)
         viewModel.updateRecyclerImageList()
     }
 
@@ -185,7 +180,7 @@ class ManageEstateFragment: BaseBindingFragment() {
     /**
      * Set on click listener for add image floating button.
      */
-    fun onClickAddImage() { alertDialogImage() }
+    internal fun onClickAddImage() { alertDialogImage() }
 
     // -----------------
     // UI
@@ -223,6 +218,16 @@ class ManageEstateFragment: BaseBindingFragment() {
         val scroll = { recyclerView.layoutManager?.scrollToPosition(position) }
         if (position == 0) recyclerView.layoutManager?.postOnAnimation { scroll() } // When move item
         else scroll() // When add item
+    }
+
+    /**
+     * Listener for scroll view fragments.
+     */
+    private val onScrollListener = object: OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            switchFabVisibility()
+        }
     }
 
     /**
@@ -288,7 +293,7 @@ class ManageEstateFragment: BaseBindingFragment() {
     /**
      * Delete image in storage.
      * @param imageUri the image uri to delete.
-     */ // TODO remove of recycler and database dialog box to confirm?
+     */
     internal fun deleteImageInStorage(imageUri: String) = storageAction {
         val fileData = getFolderAndFileNameFromContentUri(imageUri)
         val messageError = "Can't retrieved folder name and file name from content uri"
