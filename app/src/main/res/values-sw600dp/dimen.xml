@@ -4,13 +4,13 @@
     <!-- Support standard layout value -->
     <item name="match_parent" format="integer" type="dimen">-1</item>
     <item name="wrap_content" format="integer" type="dimen">-2</item>
-<!-- TODO text too large to correct ... -->
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="default_large_margin">25dip</dimen>
     <dimen name="default_margin">15dip</dimen>
-    <dimen name="default_title_size">28sp</dimen>
-    <dimen name="default_text_size">24sp</dimen>
-    <dimen name="default_text_size_mini">18sp</dimen>
+    <dimen name="default_title_size">22sp</dimen>
+    <dimen name="default_text_size">16sp</dimen>
+    <dimen name="default_text_size_mini">20sp</dimen>
     <dimen name="default_elevation">15dp</dimen>
 
     <!-- LAYOUTS -->
@@ -40,15 +40,15 @@
     <dimen name="item_estate_large_card_view_corner_radius">15dp</dimen>
     <dimen name="item_estate_large_image_width_height">220dp</dimen>
     <dimen name="item_estate_large_linear_padding">15dp</dimen>
-    <dimen name="item_estate_large_text_type_size">22sp</dimen>
+    <dimen name="item_estate_large_text_type_size">18sp</dimen>
     <dimen name="item_estate_large_text_location_margin_top_and_bottom">7dp</dimen>
-    <dimen name="item_estate_large_text_location_size">20sp</dimen>
-    <dimen name="item_estate_large_text_price_size">25sp</dimen>
+    <dimen name="item_estate_large_text_location_size">18sp</dimen>
+    <dimen name="item_estate_large_text_price_size">22sp</dimen>
 
     <!-- Estate Detail Fragment -->
-    <dimen name="fragment_estate_detail_text_title_size">28sp</dimen>
-    <dimen name="fragment_estate_detail_text_category_size">25sp</dimen>
-    <dimen name="fragment_estate_detail_text_subcategory_size">20sp</dimen>
+    <dimen name="fragment_estate_detail_text_title_size">26sp</dimen>
+    <dimen name="fragment_estate_detail_text_category_size">22sp</dimen>
+    <dimen name="fragment_estate_detail_text_subcategory_size">18sp</dimen>
     <dimen name="fragment_estate_detail_text_subcategory_drawable_padding">15dp</dimen>
     <dimen name="fragment_estate_detail_text_max_width">150dp</dimen>
     <dimen name="fragment_estate_detail_text_subcategory_value_margin_start">50dp</dimen>
@@ -71,8 +71,8 @@
     <dimen name="item_image_card_view_margin">7dp</dimen>
     <dimen name="item_image_card_view_elevation">3dp</dimen>
     <dimen name="item_image_card_view_corner_radius">20dp</dimen>
-    <dimen name="item_image_text_description_height">40dp</dimen>
-    <dimen name="item_image_text_description_size">18sp</dimen>
+    <dimen name="item_image_text_description_height">35dp</dimen>
+    <dimen name="item_image_text_description_size">16sp</dimen>
 
     <!-- Maps Fragment -->
     <dimen name="fragment_maps_floating_button_location_margin">15dp</dimen>
@@ -83,12 +83,12 @@
     <dimen name="fragment_maps_toolbar_margin_end">18dp</dimen>
     
     <!-- Filter Fragment -->
-    <dimen name="fragment_filter_text_category_size">20sp</dimen>
-    <dimen name="fragment_filter_item_margin">25dp</dimen>
+    <dimen name="fragment_filter_text_category_size">18sp</dimen>
+    <dimen name="fragment_filter_item_margin">20dp</dimen>
     <dimen name="fragment_filter_item_filter_padding">15dp</dimen>
-    <dimen name="thumb_size">50dp</dimen>
+    <dimen name="thumb_size">40dp</dimen>
     <dimen name="fragment_filter_text_date_width">150dp</dimen>
-    <dimen name="fragment_filter_button_margin">20dp</dimen>
+    <dimen name="fragment_filter_button_margin">15dp</dimen>
     <dimen name="fragment_filter_button_remove_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_add_white_48</dimen>
     <dimen name="fragment_filter_button_apply_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_filter_list_black_48</dimen>
 
@@ -99,27 +99,27 @@
 
     <!-- Fragments Manage Estate (data, image, address, sale) -->
     <dimen name="fragments_manage_estate_linear_root_padding_bottom">150dp</dimen>
-    <dimen name="fragments_manage_estate_linear_padding">20dp</dimen>
-    <dimen name="fragments_manage_estate_text_category_margin">20dp</dimen>
-    <dimen name="fragments_manage_estate_text_category_padding">20dp</dimen>
-    <dimen name="fragments_manage_estate_text_category_size">28sp</dimen>
-    <dimen name="fragments_manage_estate_container_margin">20dp</dimen>
-    <dimen name="fragments_manage_estate_container_corner_radius">30dp</dimen>
-    <dimen name="fragments_manage_estate_relative_padding">30dp</dimen>
+    <dimen name="fragments_manage_estate_linear_padding">15dp</dimen>
+    <dimen name="fragments_manage_estate_text_category_margin">15dp</dimen>
+    <dimen name="fragments_manage_estate_text_category_padding">15dp</dimen>
+    <dimen name="fragments_manage_estate_text_category_size">20sp</dimen>
+    <dimen name="fragments_manage_estate_container_margin">15dp</dimen>
+    <dimen name="fragments_manage_estate_container_corner_radius">20dp</dimen>
+    <dimen name="fragments_manage_estate_relative_padding">20dp</dimen>
     <dimen name="fragments_manage_estate_text_sub_category_margin">10dp</dimen>
-    <dimen name="fragments_manage_estate_text_sub_category_size">26sp</dimen>
+    <dimen name="fragments_manage_estate_text_sub_category_size">18sp</dimen>
     <dimen name="fragments_manage_estate_spinner_margin_top">15dp</dimen>
     <dimen name="fragments_manage_estate_spinner_margin_bottom">6dp</dimen>
-    <dimen name="fragments_manage_estate_edit_price_width">200dp</dimen>
+    <dimen name="fragments_manage_estate_edit_price_width">150dp</dimen>
     <dimen name="fragments_manage_estate_edit_margin_start">10dp</dimen>
     <dimen name="fragments_manage_estate_edit_text_size">20sp</dimen>
     <dimen name="fragments_manage_estate_text_unity_margin_bottom">10dp</dimen>
-    <dimen name="fragments_manage_estate_text_unity_size">30sp</dimen>
-    <dimen name="fragments_manage_estate_edit_surface_width">150dp</dimen>
-    <dimen name="fragments_manage_estate_edit_rooms_width">80dp</dimen>
+    <dimen name="fragments_manage_estate_text_unity_size">22sp</dimen>
+    <dimen name="fragments_manage_estate_edit_surface_width">120dp</dimen>
+    <dimen name="fragments_manage_estate_edit_rooms_width">70dp</dimen>
     <dimen name="fragments_manage_estate_edit_description_padding">10dp</dimen>
     <dimen name="fragments_manage_estate_edit_street_name_margin_top">0dp</dimen>
-    <dimen name="fragments_manage_estate_edit_flat_and_city_margin_start_and_end">30dp</dimen>
+    <dimen name="fragments_manage_estate_edit_flat_and_city_margin_start_and_end">25dp</dimen>
 
     <!-- Item Manage Image -->
     <dimen name="item_manage_image_card_view_margin">20dp</dimen>
@@ -127,46 +127,46 @@
     <dimen name="item_manage_image_card_view_corner_radius">50dp</dimen>
     <dimen name="item_manage_image_photo_width">760dp</dimen>
     <dimen name="item_manage_image_photo_height">760dp</dimen>
-    <dimen name="item_manage_image_text_description_height">80dp</dimen>
-    <dimen name="item_manage_image_text_description_size">24sp</dimen>
-    <dimen name="item_manage_image_button_turn_width">100dp</dimen>
+    <dimen name="item_manage_image_text_description_height">70dp</dimen>
+    <dimen name="item_manage_image_text_description_size">18sp</dimen>
+    <dimen name="item_manage_image_button_turn_width">70dp</dimen>
     <dimen name="item_manage_image_primary_marker_padding">15dp</dimen>
-    <dimen name="item_manage_image_primary_marker_margin">30dp</dimen>
-    <dimen name="item_manage_image_primary_marker_text_size">22sp</dimen>
+    <dimen name="item_manage_image_primary_marker_margin">25dp</dimen>
+    <dimen name="item_manage_image_primary_marker_text_size">18sp</dimen>
 
     
     <!-- Show images Activity -->
     <dimen name="activity_show_images_toolbar_margin_top">24dp</dimen>
     
     <!-- Image Fragment -->
-    <dimen name="fragment_image_text_description_height">160dp</dimen>
-    <dimen name="fragment_image_text_description_size">34sp</dimen>
+    <dimen name="fragment_image_text_description_height">100dp</dimen>
+    <dimen name="fragment_image_text_description_size">26sp</dimen>
 
 
     <!-- Credit Simulator Activity -->
-    <dimen name="activity_credit_simulator_constraint_padding">30dp</dimen>
-    <dimen name="activity_credit_simulator_text_category_size">28sp</dimen>
+    <dimen name="activity_credit_simulator_constraint_padding">25dp</dimen>
+    <dimen name="activity_credit_simulator_text_category_size">20sp</dimen>
     <dimen name="activity_credit_simulator_edit_margin_top">10dp</dimen>
-    <dimen name="activity_credit_simulator_edit_width">100dp</dimen>
-    <dimen name="activity_credit_simulator_button_margin">20dp</dimen>
+    <dimen name="activity_credit_simulator_edit_width">70dp</dimen>
+    <dimen name="activity_credit_simulator_button_margin">15dp</dimen>
     <dimen name="activity_credit_simulator_button_minus_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_remove_circle_black_48</dimen>
     <dimen name="activity_credit_simulator_button_up_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_add_circle_black_48</dimen>
-    <dimen name="activity_credit_simulator_big_margin_top">100dp</dimen>
+    <dimen name="activity_credit_simulator_big_margin_top">70dp</dimen>
 
 
     <!-- Settings Activity -->
-    <dimen name="activity_settings_linear_container_padding_top">20dp</dimen>
-    <dimen name="activity_settings_text_category_and_divider_margin">20dp</dimen>
-    <dimen name="activity_settings_text_category_text_size">28sp</dimen>
+    <dimen name="activity_settings_linear_container_padding_top">15dp</dimen>
+    <dimen name="activity_settings_text_category_and_divider_margin">15dp</dimen>
+    <dimen name="activity_settings_text_category_text_size">20sp</dimen>
     <dimen name="activity_settings_text_category_padding_start_and_end">5dp</dimen>
     <dimen name="activity_settings_divider_height">0.2dp</dimen>
-    <dimen name="activity_settings_constraint_container_padding">20dp</dimen>
-    <dimen name="activity_settings_constraint_container_padding_start_and_end">30dp</dimen>
-    <dimen name="activity_settings_text_setting_title_text_size">26sp</dimen>
-    <dimen name="activity_settings_text_setting_description_margin_top_and_end">20dp</dimen>
-    <dimen name="activity_settings_text_settings_description_text_size">24sp</dimen>
-    <dimen name="activity_settings_text_zoom_value_margin_end">30dp</dimen>
-    <dimen name="activity_settings_text_zoom_value_text_size">28sp</dimen>
+    <dimen name="activity_settings_constraint_container_padding">15dp</dimen>
+    <dimen name="activity_settings_constraint_container_padding_start_and_end">20dp</dimen>
+    <dimen name="activity_settings_text_setting_title_text_size">18sp</dimen>
+    <dimen name="activity_settings_text_setting_description_margin_top_and_end">15dp</dimen>
+    <dimen name="activity_settings_text_settings_description_text_size">16sp</dimen>
+    <dimen name="activity_settings_text_zoom_value_margin_end">20dp</dimen>
+    <dimen name="activity_settings_text_zoom_value_text_size">20sp</dimen>
 
 
     <!-- MENU -->
@@ -183,9 +183,9 @@
     <!-- SPINNER -->
 
     <!-- Spinner item -->
-    <dimen name="spinner_item_text_size">26sp</dimen>
+    <dimen name="spinner_item_text_size">18sp</dimen>
 
     <!-- Spinner row nothing selected -->
-    <dimen name="spinner_row_nothing_selected_text_size">28sp</dimen>
+    <dimen name="spinner_row_nothing_selected_text_size">20sp</dimen>
 
 </resources>
