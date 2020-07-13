@@ -172,13 +172,17 @@ class MainFragmentManager(private val activity: AppCompatActivity,
     }
 
     /**
-     * Show previous fragment in back stack, and set fragmentKey with restored fragment.
+     * Show previous fragment in back stack, with onBackPressed support and set fragmentKey with restored fragment.
+     * @param block the super onBackPressed() call.
      */
-    internal fun fragmentBack() {
+    internal fun fragmentBack(block : () -> Unit) {
+        val tempFragmentKey = fragmentKey
+        block()
         getCurrentFragment()?.let { communication.setFragmentKey(retrievedFragKeyFromClass(it::class.java)) }
         setTitleActivity(activity, fragmentKey, isFrame2Visible)
         switchFrameSizeForTablet(frameLayout, fragmentKey, isFrame2Visible)
         fabFilter.adaptFabFilter(fragmentKey, isFrame2Visible)
+        if (tempFragmentKey == fragmentKey) fragmentBack(block)
     }
 
     // --------------

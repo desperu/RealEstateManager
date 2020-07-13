@@ -1,6 +1,7 @@
 package org.desperu.realestatemanager.utils
 
 import android.content.Context
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.google.android.gms.common.ConnectionResult
@@ -19,6 +20,7 @@ import org.desperu.realestatemanager.utils.Utils.getFolderAndFileNameFromContent
 import org.desperu.realestatemanager.utils.Utils.intDateToString
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import org.desperu.realestatemanager.utils.Utils.isInternetAvailable
+import org.desperu.realestatemanager.utils.Utils.isLocationEnabled
 import org.desperu.realestatemanager.utils.Utils.realCreditRate
 import org.desperu.realestatemanager.utils.Utils.stringToDate
 import org.desperu.realestatemanager.utils.Utils.todayDate
@@ -228,7 +230,7 @@ class UtilsTest {
 
     @Test
     @Suppress("deprecation")
-    fun given_availableNetwork_When_isInternetAvailableSdk19_20_Then_checkResult() {
+    fun given_availableNetwork_When_isInternetAvailable_Then_checkResult() {
         val mockConnectivityManager = mockk<ConnectivityManager>()
         every { mockContext.getSystemService(Context.CONNECTIVITY_SERVICE) } returns mockConnectivityManager
 
@@ -237,6 +239,19 @@ class UtilsTest {
         every { mockNetworkInfo.isConnected } returns true
 
         val output = isInternetAvailable(mockContext)
+
+        assertTrue(output)
+    }
+
+    @Test
+    fun given_enabledLocation_When_isLocationEnabled_Then_checkResult() {
+        val mockLocationManager = mockk<LocationManager>()
+        every { mockContext.getSystemService(Context.LOCATION_SERVICE) } returns mockLocationManager
+
+        every { mockLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) } returns false
+        every { mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) } returns true
+
+        val output = isLocationEnabled(mockContext)
 
         assertTrue(output)
     }

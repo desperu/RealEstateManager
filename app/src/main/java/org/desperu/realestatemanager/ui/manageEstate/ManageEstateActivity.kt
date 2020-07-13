@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_manage_estate.*
+import kotlinx.android.synthetic.main.fragment_estate_sale.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.desperu.realestatemanager.R
@@ -174,18 +175,21 @@ class ManageEstateActivity: BaseActivity(), Communication {
     }
 
     /**
-     * Save managed estate in database, show notification and toast to inform user,
+     * Save managed estate in database, check sold date, show notification and toast to inform user,
      * send manage result to main activity and hide soft keyboard if visible, and finish this activity.
      */
     private fun saveEstateAndFinish() = lifecycleScope.launch(Dispatchers.Main) {
-        viewModel?.createOrUpdateEstate()
-        val estate = viewModel?.estate?.value
-        estate?.let { showEstateNotif(it) }
-        showToast(getString(R.string.activity_manage_estate_save_estate_message))
-        setResult(RESULT_OK, Intent(baseContext, MainActivity::class.java)
-                .putExtra(NEW_ESTATE, estate))
-        hideSoftKeyBoard()
-        finish()
+        if (!isSoldDateSet()) alertDialogNoSoldDate()
+        else {
+            viewModel?.createOrUpdateEstate()
+            val estate = viewModel?.estate?.value
+            estate?.let { showEstateNotif(it) }
+            showToast(getString(R.string.activity_manage_estate_save_estate_message))
+            setResult(RESULT_OK, Intent(baseContext, MainActivity::class.java)
+                    .putExtra(NEW_ESTATE, estate))
+            hideSoftKeyBoard()
+            finish()
+        }
     }
 
     /**
@@ -221,6 +225,30 @@ class ManageEstateActivity: BaseActivity(), Communication {
         dialog.setPositiveButton(R.string.alert_dialog_save_estate_positive_button) { _, _ -> saveEstateAndFinish() }
         dialog.setNegativeButton(R.string.alert_dialog_save_estate_negative_button) { _, _ -> finish() }
         dialog.show()
+    }
+
+    /**
+     * Create alert dialog when estate state is "Sold Out" and no sold date was register.
+     */
+    private fun alertDialogNoSoldDate() {
+        val dialog: AlertDialog.Builder = AlertDialog.Builder(this, R.style.AlertDialogTheme)
+        dialog.setTitle(R.string.alert_dialog_no_sold_date_title)
+        dialog.setMessage(R.string.alert_dialog_no_sold_date_message)
+        dialog.setPositiveButton(R.string.alert_dialog_no_sold_date_positive_button) { _, _ -> showSoldDatePicker() }
+        dialog.setNegativeButton(R.string.alert_dialog_no_sold_date_negative_button) { _, _ ->
+            viewModel?.estate?.value?.state = resources.getStringArray(R.array.estate_state_list)[0]
+            saveEstateAndFinish()
+        }
+        dialog.setNeutralButton(R.string.alert_dialog_no_sold_date_neutral_button) { _, _ -> viewModel?.estate?.value?.state = ""; saveEstateAndFinish() }
+        dialog.show()
+    }
+
+    /**
+     * Show sold out date picker dialog.
+     */
+    private fun showSoldDatePicker() {
+        viewPager.currentItem = ESTATE_SALE
+        getCurrentViewPagerFragment().fragment_estate_sale_date_picker_sold_out_date.performClick()
     }
 
     /**
@@ -261,6 +289,15 @@ class ManageEstateActivity: BaseActivity(), Communication {
 
         return compareValues(originalEstate, finalEstate) != EQUALS
     }
+
+    /**
+     * Check that the sold date is register if the estate state is "Sold Out".
+     * @return true if not "Sold Out" or "Sold Out" with date set, false otherwise.
+     */
+    private fun isSoldDateSet() =
+        if (viewModel?.estate?.value?.state == resources.getStringArray(R.array.estate_state_list)[1])
+            viewModel?.soldDate?.get()?.isBlank() == false
+        else true
 
     // --- GETTERS ---
 

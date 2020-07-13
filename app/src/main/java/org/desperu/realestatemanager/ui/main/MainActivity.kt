@@ -60,7 +60,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
 
     // FOR UI
     @JvmField @State var fragmentKey: Int = NO_FRAG
-    private val fm by lazy { get<MainFragmentManager> { parametersOf(this@MainActivity) } }
+    private val fm by lazy { MainFragmentManager(this, this as MainCommunication) }
     private val fabFilter: FabFilterView by lazy<FabFilterView> { activity_main_fab_filter }
     override val isFrame2Visible get() = activity_main_frame_layout2 != null
 
@@ -215,11 +215,8 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
             fm.clearAllBackStack()
             super.onBackPressed()
         }
-        // Else show previous fragment in back stack, and set fragmentKey with restored fragment.
-        else -> {
-            super.onBackPressed()
-            fm.fragmentBack()
-        }
+        // Else show previous fragment in back stack.
+        else -> fm.fragmentBack { super.onBackPressed() }
     }
 
     override fun onUserInteraction() {
@@ -323,7 +320,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
      */
     override fun updateEstateList(estateList: List<Estate>) {
         fm.estateListFragment?.updateEstateList(estateList)
-        fm.getMapsFragment()?.updateEstateList(estateList) // TODO Mistake to update map with filter ???....
+        fm.getMapsFragment()?.updateEstateList(estateList)
     }
 
     /**

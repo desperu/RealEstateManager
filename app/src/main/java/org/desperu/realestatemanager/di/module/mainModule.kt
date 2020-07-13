@@ -2,8 +2,6 @@ package org.desperu.realestatemanager.di.module
 
 import org.desperu.realestatemanager.base.BaseActivity
 import org.desperu.realestatemanager.ui.main.MainCommunication
-import org.desperu.realestatemanager.ui.main.fragment.MainFragmentManager
-import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 /**
@@ -16,12 +14,5 @@ val mainModule = module {
      */
     single { (activity: BaseActivity) ->
         activity as MainCommunication
-    }
-
-    /**
-     * Provides a MainFragmentManager single instance for the MainActivity instance.
-     */
-    single { (activity: BaseActivity) ->
-        MainFragmentManager(activity, get { parametersOf(activity) })
     }
 }

@@ -1,7 +1,9 @@
 package org.desperu.realestatemanager.utils
 
 import android.content.Context
+import android.location.LocationManager
 import android.net.ConnectivityManager
+import androidx.core.location.LocationManagerCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.coroutines.Dispatchers
@@ -238,6 +240,20 @@ internal object Utils {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val netInfo = cm.activeNetworkInfo
         return netInfo != null && netInfo.isConnected
+    }
+
+    // -----------------
+    // GEOLOCATION
+    // -----------------
+
+    /**
+     * Check that the location is enabled.
+     * @param context the context from this function is called.
+     * @return true if the location is enabled, false otherwise.
+     */
+    internal fun isLocationEnabled(context: Context): Boolean {
+        val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return LocationManagerCompat.isLocationEnabled(lm)
     }
 
     // -----------------

@@ -4,7 +4,7 @@
     <!-- Support standard layout value -->
     <item name="match_parent" format="integer" type="dimen">-1</item>
     <item name="wrap_content" format="integer" type="dimen">-2</item>
-<!-- TODO text too large to correct ... fuck -->
+<!-- TODO text too large to correct ... -->
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="default_large_margin">25dip</dimen>
     <dimen name="default_margin">15dip</dimen>

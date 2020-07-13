@@ -30,6 +30,7 @@
     <string name="fragment_maps_popup_title_permission_location">This application need location permission.</string>
     <string name="fragment_maps_text_no_google_play_services_available">Congratulation!! You don\'t have google play services, it\'s spies services that\'s register all your activities and data. You don\'t have google map, so there\'s no map available in this application. In future version, we will add OpenStreetMap, witch provide a full secure service!!</string>
     <string name="fragment_maps_text_no_internet_connexion">There\'s no internet connexion, check your connexion and refresh this screen.</string>
+    <string name="fragment_maps_text_no_location_enabled">There\'s no geo-location service available, check your location settings and refresh this screen.</string>
     <!-- Filter Fragment -->
     <string name="fragment_filter_text_location">Location</string>
     <string name="fragment_filter_text_flat">Flat</string>
@@ -50,6 +51,12 @@
     <string name="alert_dialog_save_estate_message">Do you want save modifications?</string>
     <string name="alert_dialog_save_estate_positive_button">Save</string>
     <string name="alert_dialog_save_estate_negative_button">Dismiss</string>
+    <!-- Alert Dialog No Sold Date -->
+    <string name="alert_dialog_no_sold_date_title">No Sold date set !</string>
+    <string name="alert_dialog_no_sold_date_message">You must set the sold date to change an estate state to sold out.</string>
+    <string name="alert_dialog_no_sold_date_positive_button">Set Sold Date</string>
+    <string name="alert_dialog_no_sold_date_negative_button">Set For Sale</string>
+    <string name="alert_dialog_no_sold_date_neutral_button">Clear state</string>
 
     <!-- Estate Data Fragment -->
     <string name="fragment_estate_data_text_category_estate_data">Estate Data</string>

@@ -164,7 +164,7 @@
                                 android:hint="@null"
                                 android:importantForAutofill="no"
                                 android:maxLength="5"
-                                android:text="@={`` + viewModel.estate.surfaceArea}"/>
+                                android:text="@={viewModel.estate.surfaceArea}"/>
 
                             <TextView
                                 android:id="@+id/fragment_estate_data_text_surface_unity"
@@ -210,7 +210,7 @@
                                 android:hint="@null"
                                 android:importantForAutofill="no"
                                 android:maxLength="4"
-                                android:text="@={`` + viewModel.estate.roomNumber}"/>
+                                android:text="@={viewModel.estate.roomNumber}"/>
 
                         </RelativeLayout>
 

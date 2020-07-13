@@ -32,6 +32,7 @@ import org.desperu.realestatemanager.utils.*
 import org.desperu.realestatemanager.utils.Utils.isGooglePlayServicesAvailable
 import org.desperu.realestatemanager.animation.MapMotionLayout
 import org.desperu.realestatemanager.utils.Utils.isInternetAvailable
+import org.desperu.realestatemanager.utils.Utils.isLocationEnabled
 import pub.devrel.easypermissions.EasyPermissions
 
 /**
@@ -146,14 +147,11 @@ class MapsFragment : BaseBindingFragment() {
     /**
      * Check that the needed dependencies are available.
      */
-    private fun checkDependencies() = when {
+    private fun checkDependencies() = if (!isGooglePlayServicesAvailable(context!!))
         // If Google Play Services aren't available, hide map view and show message.
-        !isGooglePlayServicesAvailable(context!!) -> showWarningMessage(false)
-        // If there's no internet connexion available, hide map view and show message.
-        !isInternetAvailable(context!!) -> showWarningMessage(true)
+        showWarningMessage(getString(R.string.fragment_maps_text_no_google_play_services_available))
         // Else start map view.
-        else -> configureMapView()
-    }
+        else configureMapView()
 
     /**
      * Configure Map View.
@@ -169,15 +167,36 @@ class MapsFragment : BaseBindingFragment() {
      */
     private fun configureMapMode() {
         if (mapMode == FULL_MODE) { // Full mode
-            estateList?.let { viewModel?.setEstateList(it) }
-            configureMapLocation()
-            configureMapZoomButton()
-            fragment_maps_fullscreen_button.visibility = View.GONE
+            if (checkConnectivity()) {
+                estateList?.let { viewModel?.setEstateList(it) }
+                configureMapLocation()
+                configureMapZoomButton()
+                fragment_maps_fullscreen_button.visibility = View.GONE
+            }
         } else { // Little mode
             estate?.let { viewModel?.setEstate(it) }
             fragment_maps_floating_button_location.visibility = View.GONE
         }
         configureMapGestureAndListener()
+    }
+
+    /**
+     * Check connectivity status (internet and location).
+     * @return true if connectivity are available, false otherwise.
+     */
+    private fun checkConnectivity(): Boolean = when {
+        // If there's no internet connexion available, hide map view and show message.
+        !isInternetAvailable(context!!) -> {
+            showWarningMessage(getString(R.string.fragment_maps_text_no_internet_connexion))
+            false
+        }
+        // If there's no location enabled, hide map view and show message.
+        !isLocationEnabled(context!!) -> {
+            showWarningMessage(getString(R.string.fragment_maps_text_no_location_enabled))
+            false
+        }
+        // Else show full map mode.
+        else -> true
     }
 
     /**
@@ -347,11 +366,9 @@ class MapsFragment : BaseBindingFragment() {
 
     /**
      * Show warning message when there's no internet connexion or google play services on the device.
-     * @param isInternet true if there's no internet connexion available, false otherwise.
+     * @param message the warning message to show.
      */
-    private fun showWarningMessage(isInternet: Boolean) {
-        val message = getString(if (isInternet) R.string.fragment_maps_text_no_internet_connexion
-                                else R.string.fragment_maps_text_no_google_play_services_available)
+    private fun showWarningMessage(message: String) {
         fragment_maps_text_warning.visibility = View.VISIBLE
         fragment_maps_text_warning.text = message
         fragment_maps_maps_view.visibility = View.GONE
