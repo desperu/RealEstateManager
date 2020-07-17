@@ -1,6 +1,5 @@
 package org.desperu.realestatemanager.extension
 
-import android.net.Uri
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView.OnItemSelectedListener
@@ -9,6 +8,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import org.desperu.realestatemanager.R
@@ -60,10 +60,9 @@ fun SearchView.setOnQueryText(listener: SearchView.OnQueryTextListener?) {
 @Suppress("deprecation")
 @BindingAdapter("imageUri")
 fun ImageView.setImageUri(imageUri: String?) {
-    if (!imageUri.isNullOrBlank())
-        setImageURI(Uri.parse(imageUri))
-    else
-        setImageDrawable(resources.getDrawable(R.drawable.no_image))
+    Glide.with(this)
+            .load(if (!imageUri.isNullOrBlank()) imageUri else R.drawable.no_image)
+            .into(this)
 }
 
 /**
@@ -245,7 +244,7 @@ fun CustomSeekBarView.setRangeChangeListener(listener: OnRangeChangeListener) {
  * Set text watcher listener for text date in filter fragment.
  * @param listener the text watcher listener to set.
  */
-@BindingAdapter("onTextChanged")
-fun TextView.setOnTextChanged(listener: TextWatcher) {
+@BindingAdapter("textChanged")
+fun TextView.setTextChanged(listener: TextWatcher) {
     addTextChangedListener(listener)
 }

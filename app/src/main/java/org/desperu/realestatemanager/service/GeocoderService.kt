@@ -42,6 +42,7 @@ class GeocoderServiceImpl(private val context: Context) : GeocoderService {
      *
      * @return the latitude and longitude of the address in a list, or empty list otherwise.
      */
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getLatLngFromAddress(address: Address): List<Double> = withContext(Dispatchers.IO) {
         var latLng = emptyList<Double>()
 

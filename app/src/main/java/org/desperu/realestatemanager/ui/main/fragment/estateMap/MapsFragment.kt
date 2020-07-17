@@ -158,7 +158,7 @@ class MapsFragment : BaseBindingFragment() {
      */
     private fun configureMapView() {
         mMapView = fragment_maps_maps_view
-        mMapView?.onCreate(mapViewBundle)
+        mMapView?.onCreate(mapViewBundle ?: Bundle())
         mMapView?.getMapAsync { mGoogleMap = it; configureMapMode() }
     }
 

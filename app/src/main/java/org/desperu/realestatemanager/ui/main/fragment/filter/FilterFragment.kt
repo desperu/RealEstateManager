@@ -1,5 +1,6 @@
 package org.desperu.realestatemanager.ui.main.fragment.filter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
@@ -94,6 +95,7 @@ class FilterFragment: BaseBindingFragment() {
      * Configure on touch listener on scroll root, to intercept touch event.
      * It's needed to properly dispatch touch event between bottom sheet and scroll view.
      */
+    @SuppressLint("ClickableViewAccessibility")
     private fun configureInterceptTouchEvent() = fragment_filter_scroll.setOnTouchListener { v, event ->
         val isOnTop = fragment_filter_scroll.scrollY == 0
         when (event.action) {
