@@ -25,7 +25,7 @@ const val UNFILTERED = "unFiltered"
 const val FILTERED = "filtered"
 
 // Documentation url
-const val DOCUMENTATION_URL = "https://github.com/desperu/RealEstateManager/blob/master/Documentation/Documentation%20Fonctionnelle%20RealEstateManager.pdf"
+const val DOCUMENTATION_URL = "https://github.com/desperu/RealEstateManager/blob/master/Documentation/Documentation%20Fonctionnelle%20Real%20Estate%20Manager.pdf"
 
 
 // FOR MANAGE ESTATE VIEW PAGER

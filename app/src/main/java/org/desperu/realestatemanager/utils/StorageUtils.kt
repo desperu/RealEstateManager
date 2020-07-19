@@ -6,6 +6,7 @@ import android.media.MediaScannerConnection
 import android.os.Environment
 import androidx.core.content.FileProvider.getUriForFile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.desperu.realestatemanager.BuildConfig
 import java.io.*
@@ -122,7 +123,7 @@ object StorageUtils {
      * @param file the file object witch provide access to the file.
      * @return the text contained in the file, null if an error happened.
      */
-    private suspend fun readOnFile(file: File): String? = withContext(Dispatchers.IO) {
+    private fun readOnFile(file: File): String? = runBlocking(Dispatchers.IO) {
         var result: String? = null
         if (file.exists()) {
             val br: BufferedReader
@@ -142,7 +143,7 @@ object StorageUtils {
                 e.printStackTrace()
             }
         }
-        return@withContext result
+        return@runBlocking result
     }
 
     /**
@@ -151,7 +152,7 @@ object StorageUtils {
      * @param file the file access to write on.
      * @return true if the text was properly write, false otherwise.
      */
-    private suspend fun writeOnFile(text: String, file: File): Boolean = withContext(Dispatchers.IO) {
+    private fun writeOnFile(text: String, file: File): Boolean = runBlocking(Dispatchers.IO) {
         var isWrite = false
         try {
             file.parentFile!!.mkdirs()
@@ -168,7 +169,7 @@ object StorageUtils {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return@withContext isWrite
+        return@runBlocking isWrite
     }
 
     /**
@@ -178,7 +179,7 @@ object StorageUtils {
      * @param file the file object witch provide access to the file to write on.
      * @return the content uri for the created bitmap file, null if an error happened.
      */
-    private suspend fun writeImageOnFile(context: Context, bytes: ByteArrayOutputStream, file: File): String? = withContext(Dispatchers.IO) {
+    private fun writeImageOnFile(context: Context, bytes: ByteArrayOutputStream, file: File): String? = runBlocking(Dispatchers.IO) {
         var stringUri: String? = null
         try {
             file.parentFile?.mkdirs()
@@ -194,6 +195,6 @@ object StorageUtils {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return@withContext stringUri
+        return@runBlocking stringUri
     }
 }

@@ -276,7 +276,7 @@ class MainActivity : BaseActivity(mainModule), NavigationView.OnNavigationItemSe
     private fun showHelpDocumentation() {
         val browserIntent = Intent(Intent.ACTION_VIEW)
         browserIntent.setDataAndType(Uri.parse(DOCUMENTATION_URL), "text/html")
-        startActivity(browserIntent) // TODO update documentation in repo
+        startActivity(browserIntent)
     }
 
     // -----------------
