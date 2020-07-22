@@ -230,30 +230,53 @@ class UtilsTest {
 
     @Test
     @Suppress("deprecation")
-    fun given_availableNetwork_When_isInternetAvailable_Then_checkResult() {
+    fun given_enabledAndDisabledNetwork_When_isInternetAvailable_Then_checkResult() {
         val mockConnectivityManager = mockk<ConnectivityManager>()
         every { mockContext.getSystemService(Context.CONNECTIVITY_SERVICE) } returns mockConnectivityManager
 
         val mockNetworkInfo = mockk<NetworkInfo>()
         every { mockConnectivityManager.activeNetworkInfo } returns mockNetworkInfo
+
+        // Enabled Network Connexion
         every { mockNetworkInfo.isConnected } returns true
+        val enabledOutput = isInternetAvailable(mockContext)
+        assertTrue(enabledOutput)
 
-        val output = isInternetAvailable(mockContext)
-
-        assertTrue(output)
+        // Disabled Network Connexion
+        every { mockNetworkInfo.isConnected } returns false
+        val disabledOutput = isInternetAvailable(mockContext)
+        assertFalse(disabledOutput)
     }
 
     @Test
-    fun given_enabledLocation_When_isLocationEnabled_Then_checkResult() {
+    fun given_allLocationPossibilities_When_isLocationEnabled_Then_checkResult() {
         val mockLocationManager = mockk<LocationManager>()
         every { mockContext.getSystemService(Context.LOCATION_SERVICE) } returns mockLocationManager
+        var output: Boolean?
 
+        // Enabled GPS & Network
+        every { mockLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) } returns true
+        every { mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) } returns true
+        output = isLocationEnabled(mockContext)
+        assertTrue(output)
+
+        // Enabled Network & Disabled GPS
+        every { mockLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) } returns true
+        every { mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) } returns false
+        output = isLocationEnabled(mockContext)
+        assertTrue(output)
+
+        // Disabled Network and Enabled GPS
         every { mockLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) } returns false
         every { mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) } returns true
+        val disabledOutput = isLocationEnabled(mockContext)
+        assertTrue(disabledOutput)
 
-        val output = isLocationEnabled(mockContext)
-
-        assertTrue(output)
+        // Disabled GPS & Network
+        every { mockLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) } returns false
+        every { mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) } returns false
+        output = isLocationEnabled(mockContext)
+        assertFalse(output)
     }
 
     @Test
